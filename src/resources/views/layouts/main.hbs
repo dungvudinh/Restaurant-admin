@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ha Noi Cuisine Corner</title>
+    <link rel="icon" type="image/x-icon" href="/img/logo.png" >
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link href="https://cdn.lineicons.com/4.0/lineicons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/bootstrap-select/css/bootstrap-select.min.css">
+</head>
+<body>
+    <div class="wrapper">
+        {{>sidebar}}
+        <div class="main">
+            {{>navbar}}
+            {{{body}}}
+            {{>footer}}
+        </div>
+    </div>
+    {{!-- <script src="/jquery/jquery.min.js"></script>
+    <script src="/js/bootstrap.bundle.min.js"></script> --}}
+    <script src="/assets/js/script.js"></script>
+    <script src="/bootstrap-select/js/bootstrap-select.min.js"></script>
+    {{!-- <script src="/bootstrap-select/js/i18n/defaults-*.min.js"></script> --}}
+</body>
+</html>
