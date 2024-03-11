@@ -62,7 +62,7 @@
 
 
 <div class="modal fade" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="menuModalLabel">Thêm mới thực đơn</h5>
@@ -77,7 +77,7 @@
 
                         <div class="layout-modal_item d-flex justify-content-between">
                            
-                            <div class="img-area">
+                            <div class="img-area d-flex">
                                 <p class="text-center d-flex flex-column" style="color:#777">
                                     <span style="font-size: 30px;color:#111" class="mb-2">
                                         <i class="lni lni-cloud-upload fs-20"></i>
@@ -87,7 +87,8 @@
                                 
                             </div>
                              <button type="button" class="btn btn-secondary fs-12">
-                                <input type="file" id="file-input" name="file-input" class="d-none" accept="image/png, image/jpeg"/>
+                                <input type="file" id="file-input" name="file-input" class="d-none" accept="image/png, image/jpeg" multiple 
+                                enctype='multipart/form-data'/>
                                 <label id="file-input-label" for="file-input" class="mb-0">
                                     Thêm hình ảnh
                                 </label>
@@ -168,11 +169,19 @@
             console.log("hide");
         })
         $('#file-input').change(function(e){
-            var imageURL = URL.createObjectURL(e.target.files[0]);
-            const img = document.createElement('img');
+            for(var file of e.target.files)
+            {
+                 var imageURL = URL.createObjectURL(file);
+                 const img = document.createElement('img');
+                 img.src = imageURL;
+                 $('.img-area').append(img);
+            }
+            $('.img-area').removeProp('p');
+            {{!-- const img = document.createElement('img');
+            console.log(e.target.files.length);
             img.src = imageURL;
             $('.img-area').append(img);
-            $('.img-area').removeProp('p');
+            $('.img-area').removeProp('p'); --}}
         })
     })
 </script>

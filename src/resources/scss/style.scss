@@ -269,11 +269,11 @@ a.sidebar-link:hover {
   }
 
 // CUSTOM MODAL 
-.modal-dialog
-{
-    width:1000px;
-    min-width:1000px;             
-}
+// .modal-dialog
+// {
+//     width:1000px;
+//     min-width:1000px;             
+// }
 .btn-close 
 {
     border:none;
@@ -362,11 +362,12 @@ a.sidebar-link:hover {
 {
     position: relative;
     width:100%;
-    height:300px;
+    // height:300px;
     background-color:#f2f2f2;
     border-radius: 10px;
     overflow:hidden;
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     flex-direction: column;
@@ -382,7 +383,7 @@ a.sidebar-link:hover {
     width:100%;
     height:100%;
     object-fit:cover;
-    position:absolute;
+    // position:absolute;
     
 }
 // CUSTOM BOOTSTRAP-SELECT 
