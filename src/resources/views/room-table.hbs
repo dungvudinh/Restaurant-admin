@@ -1,0 +1,359 @@
+<main class="content px-3 py-4">
+  <div class="container-fluid">
+    <div class="mb-3">
+     
+        <div class="row">
+            <div class="col-2 main-left">
+                <div class="row rounded-lg p-3 mb-4" style="background-color: #fff;">
+                    <div class="left-item_header d-flex flex-row justify-content-between align-items-center mb-4 p-0" style="width:100%;">
+                        <p>Khu vực</p>
+                        <button  type="button" class="btn btn-sm btn-primary btn-floating" data-mdb-ripple-init 
+                        data-mdb-modal-init data-mdb-target="#exampleModal3">
+                            <i class="fa-solid fa-plus "></i>
+                        </button>
+                    </div>
+                    <select class="custom-select mb-3">
+                        <option selected>--Tất cả--</option>
+                        <option value="1">Tầng 1</option>
+                        <option value="2">Tầng 2</option>
+                        <option value="3">Tầng 3</option>
+                    </select>
+                </div>
+                 <div class="row rounded-lg p-3 mb-4"  style="background-color: #fff;">
+                    <div class="left-item_header d-flex flex-row justify-content-between align-items-center mb-4 p-0" style="width:100%;">
+                        <p>Tìm kiếm</p>
+                    </div>
+                    <div class="form-outline" data-mdb-input-init>
+                        <input type="text" id="form12" class="form-control" />
+                        <label class="form-label" for="form12">Theo tên phòng bàn</label>
+                    </div>
+                </div>
+                 <div class="row rounded-lg p-3 mb-4"  style="background-color: #fff;">
+                    <div class="left-item_header d-flex flex-row justify-content-between align-items-center p-0" style="width:100%;">
+                        <p>Trạng thái</p>
+                    </div>
+
+                    <div class="form-check_group">
+
+                        <div class="form-check m-2">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                            <label class="form-check-label" for="exampleRadios1">
+                                Đang hoạt động
+                            </label>
+                        </div>
+                        
+                        <div class="form-check m-2">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option1">
+                            <label class="form-check-label" for="exampleRadios2">
+                                Ngừng hoạt động
+                            </label>
+                        </div>
+
+                         <div class="form-check m-2">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option1">
+                            <label class="form-check-label" for="exampleRadios3">
+                                Tất cả
+                            </label>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+            <div class="col-10  main-right">
+                <div class="main-right_header d-flex flex-row justify-content-between align-items-center">
+                    <h3 class="fw-bold fs-3 mb-3 mt-3">Phòng/Bàn</h3>
+                    <div class="button-group">
+                        <button type="button" class="btn btn-success btn-sm " data-toggle="modal" data-mdb-target="#exampleModal" 
+                         data-mdb-ripple-init data-mdb-modal-init >
+                            <i class="lni lni-plus"></i>
+                            Thêm phòng/bàn
+                        </button>
+
+                        <button type="button" class="btn btn-success btn-sm">
+                            <i class="fa-solid fa-file-import"></i>
+                            import
+                        </button>
+
+                        <button type="button" class="btn btn-success btn-sm">
+                            <i class="fa-solid fa-file-export"></i>
+                            export
+                        </button>
+
+                    </div>
+                    
+                </div>
+
+                <div class="main-right_content mt-2">
+                    <table class="table table-light" border="1">
+                        <thead class="thead-dark">
+                            <tr>
+                                <th scope="col">Tên phòng bàn</th>
+                                <th scope="col">Ghi chú</th>
+                                <th scope="col">Khu vực</th>
+                                <th scope="col">Số ghế</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Số thứ tự</th>
+                                <th scope="col">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td scope="row">Bàn 6 người</td>
+                                <td>hihi</td>
+                                <td>Tầng 1</td>
+                                <td>6</td>
+                                <td>Đang hoạt động</td>
+                                <td>2</td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
+                                     data-mdb-target="#exampleModal">
+                                        <i class="lni lni-check-box"></i>
+                                        Cập nhật
+                                    </button>
+                                    <br/>
+                                    <button type="button" class="btn btn-danger btn-sm ">
+                                        <i class="lni lni-lock-alt"></i>
+                                        Ngừng hoạt động
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm ">
+                                        <i class="lni lni-trash-can"></i>
+                                        Xóa
+                                    </button>
+                                    <br/ >
+                                     <button type="button" class="btn btn-info btn-sm mt-2"   data-mdb-ripple-init data-mdb-modal-init 
+                                     data-mdb-target="#exampleModal2">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                        Lịch sử giao dịch
+                                    </button>
+                                </td>
+                            </tr>
+                              <tr>
+                                <td scope="row">Bàn 6 người</td>
+                                <td>hihi</td>
+                                <td>Tầng 1</td>
+                                <td>6</td>
+                                <td>Đang hoạt động</td>
+                                <td>2</td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
+                                     data-mdb-target="#exampleModal">
+                                        <i class="lni lni-check-box"></i>
+                                        Cập nhật
+                                    </button>
+                                    <br/>
+                                    <button type="button" class="btn btn-danger btn-sm ">
+                                        <i class="lni lni-lock-alt"></i>
+                                        Ngừng hoạt động
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm ">
+                                        <i class="lni lni-trash-can"></i>
+                                        Xóa
+                                    </button>
+                                    <br/ >
+                                     <button type="button" class="btn btn-info btn-sm mt-2" data-mdb-ripple-init 
+                                     data-mdb-modal-init data-mdb-target="#exampleModal2">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                        Lịch sử giao dịch
+                                    </button>
+                                </td>
+                            </tr>
+                                                          <tr>
+                                <td scope="row">Bàn 6 người</td>
+                                <td>hihi</td>
+                                <td>Tầng 1</td>
+                                <td>6</td>
+                                <td>Đang hoạt động</td>
+                                <td>2</td>
+                                <td>
+                                    <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
+                                     data-mdb-target="#exampleModal">
+                                        <i class="lni lni-check-box"></i>
+                                        Cập nhật
+                                    </button>
+                                    <br/>
+                                    <button type="button" class="btn btn-danger btn-sm ">
+                                        <i class="lni lni-lock-alt"></i>
+                                        Ngừng hoạt động
+                                    </button>
+                                    <button type="button" class="btn btn-danger btn-sm ">
+                                        <i class="lni lni-trash-can"></i>
+                                        Xóa
+                                    </button>
+                                    <br/ >
+                                     <button type="button" class="btn btn-info btn-sm mt-2" data-mdb-ripple-init 
+                                     data-mdb-modal-init data-mdb-target="#exampleModal2">
+                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                        Lịch sử giao dịch
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                 <div class="row d-flex justify-content-center">
+                    <nav aria-label="Page navigation example " style="width:auto !important;">
+                        <ul class="pagination">
+                            <li class="page-item"><a class="page-link" href="#"><i class="lni lni-angle-double-left"></i></a></li>
+                            <li class="page-item"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item"><a class="page-link" href="#"><i class="lni lni-angle-double-right"></i></a></li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+        </div>
+
+       
+
+    </div>
+  </div>
+</main>
+
+
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm phòng/bàn</h5>
+        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="form-outline mb-3" data-mdb-input-init>
+            <input type="text" id="form12" class="form-control" />
+            <label class="form-label" for="form12">Tên phòng bàn</label>
+        </div>
+
+        <div class="input-group mb-3">
+            <select class="custom-select" id="inputGroupSelect04">
+                <option selected>Lựa chọn khu vực</option>
+                <option value="1">Tầng 1</option>
+                <option value="2">Tầng 2</option>
+                <option value="3">Tầng 3</option>
+            </select>
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary btn-sm" type="button"   title="Thêm khu vực mới" data-mdb-ripple-init
+                                        data-mdb-modal-init data-mdb-target="#exampleModal3">
+                    <i class="lni lni-plus"></i>
+                </button>
+            </div>
+        </div>
+ 
+        
+        <div class="form-outline mb-3" data-mdb-input-init>
+            <input type="text" id="form12" class="form-control" />
+            <label class="form-label" for="form12">Số thứ tự</label>
+        </div>
+
+        <div class="form-outline mb-3" data-mdb-input-init>
+            <input type="text" id="form12" class="form-control" />
+            <label class="form-label" for="form12">Số ghế</label>
+        </div>
+
+        <div class="form-outline" data-mdb-input-init>
+            <input type="text" id="form12" class="form-control" />
+            
+            <label class="form-label" for="form12">Ghi chú <i class="lni lni-pencil"></i></label>
+        </div>
+      </div>
+      <div class="modal-footer">
+       <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">
+            <i class="fa-solid fa-ban"></i>
+            Bỏ qua
+        </button>
+        <button type="button" class="btn btn-success" data-mdb-ripple-init>
+            <i class="fa-regular fa-floppy-disk"></i>
+            Lưu
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Lịch sử giao dịch</h5>
+        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">Mã hóa đơn</th>
+                <th scope="col">Thời gian</th>
+                <th scope="col">Người tạo</th>
+                <th scope="col">Người nhận đơn</th>
+                <th scope="col">Tổng cộng</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                <th scope="row">HD0001</th>
+                <td>19/03/2024</td>
+                <td>Vũ Đình Dũng</td>
+                <td>Vũ Đình Dũng</td>
+                <td>80,000</td>
+
+                </tr>
+                
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">
+            <i class="fa-solid fa-xmark"></i>
+            Đóng
+        </button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm khu vực</h5>
+        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+         <div class="form-outline mb-3" data-mdb-input-init>
+            <input type="text" id="form12" class="form-control" />
+            <label class="form-label" for="form12">Tên khu vực</label>
+        </div>
+         <div class="form-outline mb-3" data-mdb-input-init>
+            <input type="text" id="form12" class="form-control" />
+            <label class="form-label" for="form12">Ghi chú <i class="lni lni-pencil"></i></label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">
+            <i class="fa-solid fa-ban"></i>
+            Bỏ qua
+        </button>
+        <button type="button" class="btn btn-success" data-mdb-ripple-init>
+            <i class="fa-regular fa-floppy-disk"></i>
+            Lưu
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+{{!-- <script>
+    $('#exampleModal3').modal('show');
+</script> --}}
+
+
+
+

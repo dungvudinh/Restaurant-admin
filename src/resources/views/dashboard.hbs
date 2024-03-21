@@ -1,34 +1,27 @@
 <main class="content px-3 py-4">
   <div class="container-fluid">
     <div class="mb-3">
-      <h3 class="fw-bold fs-4 mb-3">Admin Dashboard</h3>
-      {{! <div class="row d-flex justify-content-center">
-                            <div class="col-6 mb-2">
-                                <form>
-                                    <div class="mb-3">
-                                        <label for="exampleInputEmail1" class="form-label">Email address</label>
-                                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
-                                    </div>
-                                    <button type="submit" class="btn btn-primary">Submit</button>
-                                </form>
-                            </div>
-                        </div> }}
-      <div class="row">
+      <h3 class="fw-bold fs-4 mb-3 mt-3">Kết quả bán hàng hôm nay</h3>
+     
+      <div class="row mb-4">
         <div class="col-12 col-md-4">
           <div class="card border-0">
-            <div class="card-body py-4">
+            <div class="card-body py-4"  style="background-color:#A9A9A9;color:#fff;border-radius:10px;">
               <h5 class="mb-2 fw-bold">
-                Memebers Progress
+                1 Đơn đã xong
               </h5>
-              <p class="mb-2 fw-bold">
-                $72,540
-              </p>
+             
               <div class="mb-0">
+                 <span class="fw-bold mr-3">
+                  45,000 
+                  <i class="fa-solid fa-money-bill-wave"></i>
+                </span>
+                <br/>
                 <span class="badge text-success me-2">
                   +9.0%
                 </span>
                 <span class="fw-bold">
-                  Since Last Month
+                  so với hôm qua
                 </span>
               </div>
             </div>
@@ -36,19 +29,22 @@
         </div>
         <div class="col-12 col-md-4">
           <div class="card border-0">
-            <div class="card-body py-4">
+            <div class="card-body py-4" style="background-color:#E9967A;color:#fff;border-radius:10px;">
               <h5 class="mb-2 fw-bold">
-                Memebers Progress
+                Đơn đang phục vụ
               </h5>
-              <p class="mb-2 fw-bold">
-                $72,540
-              </p>
+             
               <div class="mb-0">
+                 <span class="fw-bold mr-3">
+                  20 
+                 <i class="fa-solid fa-user-pen"></i>
+                </span>
+                <br/>
                 <span class="badge text-success me-2">
                   +9.0%
                 </span>
                 <span class="fw-bold">
-                  Since Last Month
+                  so với hôm qua
                 </span>
               </div>
             </div>
@@ -56,61 +52,173 @@
         </div>
         <div class="col-12 col-md-4">
           <div class="card border-0">
-            <div class="card-body py-4">
+            <div class="card-body py-4" style="background-color:#87CEFA;color:#fff;border-radius:10px;">
               <h5 class="mb-2 fw-bold">
-                Memebers Progress
+                Khách hàng
               </h5>
-              <p class="mb-2 fw-bold">
-                $72,540
-              </p>
               <div class="mb-0">
+                <span class="fw-bold mr-3 d-flex align-items-center">
+                  20 
+                  <i class="lni lni-user ml-2"></i>
+                </span>
                 <span class="badge text-success me-2">
                   +9.0%
                 </span>
                 <span class="fw-bold">
-                  Since Last Month
+                  so với hôm qua
                 </span>
               </div>
             </div>
           </div>
         </div>
       </div>
-      <h3 class="fw-bold fs-4 my-3">Avg. Agent Earnings
-      </h3>
+     
 
       <div class="row">
-        <div class="col-12">
-          <table class="table table-striped">
-            <thead>
-              <tr class="highlight">
-                <th scope="col">#</th>
-                <th scope="col">First</th>
-                <th scope="col">Last</th>
-                <th scope="col">Handle</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-              </tr>
-            </tbody>
-          </table>
+        <div class="col-6 col-sm-12 col-xl-6 col-lg-12 col-md-12 d-flex align-items-center mb-4">
+          <div style="background-color:#fff;height:100%;width:100%;" class="p-2 rounded">
+            <div class="d-flex justify-content-between mt-3">
+                <h3 class="fw-bold fs-4">Doanh số hôm nay</h3>
+                  <select class="custom-select custom-select-sm" id="inputGroupSelect03" style="width:20%">
+                    <option selected>Hôm nay</option>
+                    <option value="1">Hôm qua</option>
+                    <option value="2">7 ngày qua</option>
+                    <option value="3">Tháng này</option>
+                  </select>
+            </div>
+             
+                            <!-- Tabs navs -->
+              <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <a data-mdb-tab-init class="nav-link active"id="ex1-tab-1"href="#ex1-tabs-1"role="tab"aria-controls="ex1-tabs-1"aria-selected="true">
+                    Theo ngày 
+                  </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a data-mdb-tab-init class="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false">
+                    Theo giờ
+                  </a>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <a
+                    data-mdb-tab-init
+                    class="nav-link" id="ex1-tab-3" href="#ex1-tabs-3" role="tab"aria-controls="ex1-tabs-3"aria-selected="false">
+                    Theo thứ
+                    </a>
+                </li>
+              </ul>
+              <!-- Tabs navs -->
+
+              <!-- Tabs content -->
+              <div class="tab-content" id="ex1-content">
+                <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+                    <canvas id="myChart2"></canvas>
+                </div>
+                <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                </div>
+                <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+                </div>
+              </div>
+              <!-- Tabs content -->
+            
+          </div>
+          
         </div>
+          <div class="col-6 col-sm-12 col-xl-6 col-lg-12 col-md-12 mb-4">
+            <div style="background-color:#fff;height:100%;width:100%;" class="p-2 rounded">
+              <div class="d-flex justify-content-between mt-3">
+                <h3 class="fw-bold fs-4">Số lượng khách hôm nay</h3>
+                  <select class="custom-select custom-select-sm" id="inputGroupSelect03" style="width:20%">
+                    <option selected>Hôm nay</option>
+                    <option value="1">Hôm qua</option>
+                    <option value="2">7 ngày qua</option>
+                    <option value="3">Tháng này</option>
+                  </select>
+              </div>
+              <canvas id="myChart"></canvas>
+            </div>
+          </div>
       </div>
+
+       <div class="row">
+          <div class="col-6 col-sm-12 col-xl-6 col-lg-12 col-md-12">
+            <div style="background-color:#fff;height:100%;width:100%;" class="p-2 rounded">
+              <div class="d-flex justify-content-between mt-3">
+                <h3 class="fw-bold fs-4">Top 10 món ăn bán chạy 7 ngày qua</h3>
+                  <select class="custom-select custom-select-sm" id="inputGroupSelect03" style="width:20%">
+                    <option selected>Hôm nay</option>
+                    <option value="1">Hôm qua</option>
+                    <option value="2">7 ngày qua</option>
+                    <option value="3">Tháng này</option>
+                  </select>
+              </div>
+              <canvas id="myChart3"></canvas>
+            </div>
+          </div>
+      </div>
+     
     </div>
   </div>
 </main>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('myChart');
+  const ctx2 = document.getElementById('myChart2');
+  const ctx3 = document.getElementById('myChart3');
+  new Chart(ctx3, {
+    type: 'bar',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+  new Chart(ctx2, {
+    type: 'bar',
+    data: {
+      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      datasets: [{
+        label: '# of Votes',
+        data: [12, 19, 3, 5, 2, 3],
+        borderWidth: 1
+      }]
+    },
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+</script>

@@ -6,6 +6,10 @@ class SiteController
     {
         res.render('dashboard');
     }
+    roomTable(req, res)
+    {
+        res.render('room-table');
+    }
 }
 
 module.exports = new SiteController;

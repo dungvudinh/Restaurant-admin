@@ -1,11 +1,16 @@
 // const $ = document.querySelector.bind(document);
 // const $$ = document.querySelectorAll.bind(document);
 
-// const tabs = $$(".tab-item");
+// $(document).ready(function(){
+//     $(".tab-item").click( function(e){
+//         $(".tab-item.active").removeClass("active");
+//         console.log("jihji");
+//         e.target.addClass("active");
+//     })
+// })
 
 // tabs.forEach((tab, index) => {
 //   tab.onclick = function () {
-//     $(".tab-item.active").classList.remove("active");
-//     this.classList.add("active");
+   
 //   };
 // });

@@ -14,7 +14,7 @@
                         Món chính
                     </div>
                     <div class="tab-item">
-                        món bán chạy
+                        món chay
                     </div>
                 </div>
                 <div class="p-2">
@@ -77,14 +77,14 @@
 
                         <div class="layout-modal_item d-flex justify-content-between">
                            
-                            <div class="img-area d-flex">
-                                <p class="text-center d-flex flex-column" style="color:#777">
-                                    <span style="font-size: 30px;color:#111" class="mb-2">
+                            <div class="img-area d-flex  justify-content-start">
+                                <p class="text-center" style="color:#777">
+                                    <span style="font-size: 50px;color:#111" class="mb-2">
                                         <i class="lni lni-cloud-upload fs-20"></i>
                                     </span>
                                     Không có hình ảnh đính kèm
                                 </p>
-                                
+
                             </div>
                              <button type="button" class="btn btn-secondary fs-12">
                                 <input type="file" id="file-input" name="file-input" class="d-none" accept="image/png, image/jpeg" multiple 
@@ -111,78 +111,98 @@
                                 <option value="3">Món chay</option>
                             </select>
                         </div>
-
-                        <div class="layout-modal_item">
-                             <span class="modal-item_header">Mô tả thực đơn</span>
-                            <div class="input-group">
-                                <input type="text" class="form-control" placeholder="Nhập mô tả" >
-                            </div>
-                        </div>
-                       
-                        <div class="layout-modal_item">
-                           <span class="modal-item_header">Nguyên liệu</span>
-                            <select class="selectpicker show-tick" data-live-search="true" multiple title="chọn nguyên liệu"
-                                data-width="100%" data-actions-box="true" data-selected-text-format="count > 2" data-select-text>
-                                <option data-tokens="ketchup mustard">Rau snack</option>
-                                <option data-tokens="mustard">Cà chua</option>
-                                <option data-tokens="frosting">Hành tây</option>
-                                <option data-tokens="frosting">Thịt lợn</option>
-                            </select>
-                        </div>
-
                         <div class="layout-modal_item">
                              <span class="modal-item_header">Giá tiền</span>
                             <div class="input-group">
                                 <input type="number" class="form-control" placeholder="Nhập giá tiền" >
                             </div>
                         </div>
-                        <div class="layout-modal_item">item 7</div>
-                        <div class="layout-modal_item">item 8</div>
-                        <div class="layout-modal_item">item 9</div>
+                      
+                       
+                        <div class="layout-modal_item">
+                           <span class="modal-item_header">Nguyên liệu</span>
+                            <select class="selectpicker show-tick" data-live-search="true" multiple title="Tìm nguyên liệu"
+                                data-width="100%" data-actions-box="true" data-selected-text-format="count > 2" id="ingredient" >
+                                <option data-tokens="ketchup mustard">Rau snack</option>
+                                <option data-tokens="mustard">Cà chua</option>
+                                <option data-tokens="frosting">Hành tây</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                                <option data-tokens="frosting">Thịt lợn</option>
+                            </select>
+                            
+                        </div>
+
+                          <div class="layout-modal_item">
+                             <span class="modal-item_header">Mô tả thực đơn</span>
+                            <div class="input-group">
+                                {{!-- <input type="text" class="form-control" placeholder="Nhập mô tả" > --}}
+                                 <textarea class="form-control" id="validationTextarea" placeholder="Nhập mô tả cho thực đơn" required></textarea>
+                            </div>
+                        </div>
+                      
                     </div>
                 </div>
                 <div class="modal-footer mt-3">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Send message</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary">Hoàn thành</button>
                 </div>
             </div>
         </div>
     </div>
 </div>
- <script src="/jquery/jquery.min.js"></script>
-<script src="/jquery/jquery.slim.min.js"></script>
-<script src="/js/bootstrap.bundle.min.js"></script>
+
 <script>
     $(document).ready(function()
     {
         $('#menuModal').on('show.bs.modal', function (event) {
             var button = $(event.relatedTarget)
             var recipient = button.data('whatever') 
-            console.log(recipient);
-            
         })
         $('#menuModal').on('hide.bs.modal', function (event) {
             var modal = $(this)
-            console.log(modal.find('.modal-body input'));
             modal.find('.modal-body input').val('');
             $('.custom-select option:selected').prop('selected', false);
-            console.log("hide");
         })
         $('#file-input').change(function(e){
             for(var file of e.target.files)
             {
                  var imageURL = URL.createObjectURL(file);
-                 const img = document.createElement('img');
-                 img.src = imageURL;
-                 $('.img-area').append(img);
+                 $('.img-area').append
+                 (
+                    `<div class='img-wrapper'>
+                        <img src='${imageURL}'/>
+                        <span>&times;</span>
+                    <div>
+                    `
+                );
             }
-            $('.img-area').removeProp('p');
-            {{!-- const img = document.createElement('img');
-            console.log(e.target.files.length);
-            img.src = imageURL;
-            $('.img-area').append(img);
-            $('.img-area').removeProp('p'); --}}
+              $('.img-wrapper span').click(function(e){
+                    const parentElm = e.target.parentElement;
+                    parentElm.remove();
+                    if($('.img-area').children('.img-wrapper').length === 0)
+                        $('.img-area p').show();
+                 })
+            $('.img-area p').hide();
         })
+        //MULTIPLE SELECT 
+        $('#ingredient').on('changed.bs.select', function (e, clickedIndex, isSelected, previousValue) {
+            
+        });
+
     })
 </script>
 
