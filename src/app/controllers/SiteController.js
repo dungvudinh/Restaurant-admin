@@ -10,6 +10,7 @@ class SiteController
     {
         res.render('room-table');
     }
+   
 }
 
 module.exports = new SiteController;

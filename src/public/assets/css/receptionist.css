@@ -1,0 +1,21 @@
+.see-table_btn {
+  color: #0066CC; }
+
+.see-table_btn:hover {
+  text-decoration: underline !important;
+  cursor: pointer; }
+
+.modal-second {
+  z-index: 1052; }
+
+.modal-backdrop.fade + .modal-backdrop.fade {
+  z-index: 1051; }
+
+.image-wrapper {
+  border: 1px dashed #999999;
+  position: relative;
+  display: block;
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  border-radius: 8px; }

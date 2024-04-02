@@ -14,3 +14,8 @@
    
 //   };
 // });
+$(document).on('hidden.bs.modal', function () {
+    if ($('.modal:visible').length) {
+      $('body').addClass('modal-open');
+    }
+  });

@@ -7,6 +7,9 @@
   margin: 0;
   padding: 0; }
 
+input:focus {
+  outline: none; }
+
 a:hover {
   text-decoration: unset !important; }
 
@@ -329,3 +332,31 @@ a.sidebar-link:hover {
   height: 100%;
   object-fit: cover;
   opacity: 0.8; }
+
+.booking_status-input-1 {
+  border-color: #FF9900 !important; }
+
+.booking_status-input-1:checked {
+  border-color: #FF9900 !important;
+  background-color: #FF9900 !important; }
+
+.booking_status-input-2 {
+  border-color: #28B44F !important; }
+
+.booking_status-input-2:checked {
+  border-color: #28B44F !important;
+  background-color: #28B44F !important; }
+
+.booking_status-input-3 {
+  border-color: #0066CC !important; }
+
+.booking_status-input-3:checked {
+  border-color: #0066CC !important;
+  background-color: #0066CC !important; }
+
+.booking_status-input-4 {
+  border-color: #EF3C4D !important; }
+
+.booking_status-input-4:checked {
+  border-color: #EF3C4D !important;
+  background-color: #EF3C4D !important; }
