@@ -15,6 +15,7 @@ input:focus
 }
 ::-webkit-scrollbar {
     width: 6px;
+    height:6px;
     background-color: #F5F5F5;
 } 
 
@@ -484,3 +485,7 @@ a.sidebar-link:hover {
     border-color:#EF3C4D !important;
     background-color: #EF3C4D !important;
 }
+
+// TABS 
+.tab-content>.tab-pane{ display: block; height: 0px; overflow: hidden; }
+.tab-content>.active{ height: auto;}
