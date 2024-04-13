@@ -10,7 +10,6 @@ const Menu = function(menu)
     this.ingredient = menu.ingredient;
 }
 
-
 Menu.get_all = async (result)=>
 {
     sql.query("SELECT * FROM menu", (err, res)=>

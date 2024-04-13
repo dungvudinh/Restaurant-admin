@@ -1,5 +1,5 @@
 <div class="cashier-wrapper" style="">
-    <div class="row">
+    <div class="row d-flex justify-content-between">
         <div class="left-content col-6 bg-white rounded  p-4 overflow-y-auto">
             <div class="left-content_header d-flex flex-row align-items-center justify-content-between ">
                 <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
@@ -69,7 +69,7 @@
                                 {{!-- FLOOR 1 --}}
                                 <div>
                                     <h5  class="font-weight-bold">TẦNG 1</h5>
-                                    <ul class="floor1-table_tab1 slider_carousel-5">
+                                    <ul class="floor1-table_tab1 slider_carousel-6">
 
                                         <li class="m-1">
                                             <button type="button" class="red-tooltip btn btn-light  d-flex flex-column align-items-center justify-content-center" 
@@ -166,7 +166,7 @@
                                 {{!-- FLOOR 2 --}}
                                 <div>
                                     <h5 class="font-weight-bold">TẦNG 2</h5>
-                                    <ul class="floor2-table_tab2 slider_carousel-5">
+                                    <ul class="floor2-table_tab2 slider_carousel-6">
                                         <li class="m-1">
                                             <button type="button" class="btn btn-secondary d-flex flex-column align-items-center justify-content-center" 
                                             >
@@ -226,7 +226,7 @@
                             <ul class="col-12 nav nav-tabs" id="menu-tab" role="tablist">
                                 <li class="nav-item" role="presentation">
                                     <a data-mdb-tab-init class="nav-link active" id="menu-tab-1" href="#menu-tabs-1" role="tab" 
-                                    aria-controls="menu-tabs-6" aria-selected="true" >Tất cả</a>
+                                    aria-controls="menu-tabs-1" aria-selected="true" >Tất cả</a>
                                 </li>
                                 <li class="nav-item" role="presentation">
                                     <a data-mdb-tab-init class="nav-link" id="menu-tab-2" href="#menu-tabs-2"
@@ -252,7 +252,7 @@
                                     <h5 style="font-size: 14px;" class="font-weight-bold">
                                         ĐỒ ĂN
                                     </h5>
-                                    <ul class="food_carousel-tab1 slider_carousel-4">
+                                    <ul class="food_carousel-tab1 slider_carousel-5">
                                         <li  class="p-2">
                                             <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
                                                 <div style="background-color:#e6f0fa;" 
@@ -340,7 +340,7 @@
                                     <h5 style="font-size: 14px;" class="font-weight-bold">
                                         ĐỒ UỐNG
                                     </h5>
-                                    <ul class="drink_carousel-tab1 slider_carousel-4">
+                                    <ul class="drink_carousel-tab1 slider_carousel-5">
                                         <li  class="p-2">
                                             <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
                                                 <div style="background-color:#e6f0fa;" 
@@ -415,14 +415,14 @@
 
                             </div>
                             {{!-- Tab đồ ăn của thực đơn --}}
-                            <div class="tab-pane fade active" id="menu-tabs-2" role="tabpanel" aria-labelledby="menu-tab-2">
+                            <div class="tab-pane fade " id="menu-tabs-2" role="tabpanel" aria-labelledby="menu-tab-2">
                                 {{!-- TAB MÓN CHÍNH CỦA ĐỒ ĂN --}}
                                 <div>
                                     <h5 style="font-size: 14px;" class="font-weight-bold">
                                         MÓN CHÍNH
                                     </h5>
 
-                                    <ul class="main_food-tab2 slider_carousel-4">
+                                    <ul class="main_food-tab2 slider_carousel-5">
                                         <li  class="p-2">
                                             <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
                                                 <div style="background-color:#e6f0fa;" 
@@ -479,6 +479,19 @@
                                             </div>
                                         </li>
 
+                                        <li  class="p-2">
+                                            <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
+                                                <div style="background-color:#e6f0fa;" 
+                                                class="d-flex justify-content-center align-items-center flex-column position-relative p-5">
+                                                    <img src="/img/plate-and-utensils.svg" alt="" style="font-size: 10px;" class="opacity-50">
+                                                    <span class="rounded-pill bg-white p-1 position-absolute font-weight-bold" 
+                                                    style="font-size: 12px;color:#0066cc;bottom:5px;">35,000</span>
+                                                </div>
+                                                <div style="height:62px;" class="product-info d-flex align-items-center justify-content-center">
+                                                    <p class="product-name font-weight-bold" style="font-size: 12px;">BÚN ĐẬU MẮM TÔM</p>
+                                                </div>
+                                            </div>
+                                        </li>
                                         <li  class="p-2">
                                             <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
                                                 <div style="background-color:#e6f0fa;" 
@@ -499,7 +512,7 @@
                                     <h5 style="font-size: 14px;" class="font-weight-bold">
                                         MÓN PHỤ
                                     </h5>
-                                    <ul class="second_food-tab2 slider_carousel-4">
+                                    <ul class="second_food-tab2 slider_carousel-5">
                                         <li  class="p-2">
                                             <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
                                                 <div style="background-color:#e6f0fa;" 
@@ -561,7 +574,7 @@
                                     <h5 style="font-size: 14px;" class="font-weight-bold">
                                         MÓN TRÁNG MIỆNG
                                     </h5>
-                                    <ul class="desert-tab3 slider_carousel-4">
+                                    <ul class="desert-tab3 slider_carousel-5">
                                         <li  class="p-2">
                                             <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
                                                 <div style="background-color:#e6f0fa;" 
@@ -609,13 +622,13 @@
                                 
                             </div>
                             {{!-- Tab đồ uống của thực đơn --}}
-                            <div class="tab-pane fade active" id="menu-tabs-3" role="tabpanel" aria-labelledby="menu-tab-3">
+                            <div class="tab-pane fade " id="menu-tabs-3" role="tabpanel" aria-labelledby="menu-tab-3">
                                 <div>
                                     <h5 style="font-size: 14px;" class="font-weight-bold">
                                         MÓN CHÍNH
                                     </h5>
 
-                                    <ul class="main_food-tab2 slider_carousel-4">
+                                    <ul class="main_food-tab2 slider_carousel-5">
                                         <li  class="p-2">
                                             <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
                                                 <div style="background-color:#e6f0fa;" 
@@ -692,7 +705,7 @@
                                     <h5 style="font-size: 14px;" class="font-weight-bold">
                                         MÓN PHỤ
                                     </h5>
-                                    <ul class="second_food-tab2 slider_carousel-4">
+                                    <ul class="second_food-tab2 slider_carousel-5">
                                         <li  class="p-2">
                                             <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
                                                 <div style="background-color:#e6f0fa;" 
@@ -754,7 +767,7 @@
                                     <h5 style="font-size: 14px;" class="font-weight-bold">
                                         MÓN TRÁNG MIỆNG
                                     </h5>
-                                    <ul class="desert-tab3 slider_carousel-4">
+                                    <ul class="desert-tab3 slider_carousel-5">
                                         <li  class="p-2">
                                             <div style="border:1px solid #cfe2f5; border-radius:0.25rem;">
                                                 <div style="background-color:#e6f0fa;" 
@@ -808,13 +821,64 @@
                 </div>
             </div>
         </div>
-        <div class="col-5">
+        <div class="right-content col-6 pl-3">
+            <div class="right_content-wrapper  bg-white rounded p-4 overflow-y-auto ">
+                <div class="right_content-header d-flex flex-row justify-content-start position-relative">
+                    <ul class="nav nav-tabs mb-3" id="order-tab" role="tablist">
 
+                        <li class="nav-item d-flex justify-content-center" role="presentation">
+                            <a
+                            data-mdb-tab-init
+                            class="nav-link active font-weight-bold d-flex flex-row align-items-center"
+                            id="order-tab-1"
+                            href="#order-tabs-1"
+                            role="tab"
+                            aria-controls="order-tabs-1"
+                            aria-selected="true"
+                            >
+                                HÓA ĐƠN 1
+                                <button type="button" id="dlt_tab-btn" class="btn btn-floating btn-secondary ml-2" style="width: 20px; height:20px;">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </button>
+                            </a>
+                        </li>
+                        
+                        {{!-- <li class="nav-item dropdown d-flex justify-content-center" role="presentation">
+                            <a
+                                data-mdb-dropdown-init
+                                class="nav-link dropdown-toggle"
+                                href="#"
+                                id="navbarDropdownMenuLink"
+                                role="button"
+                                aria-expanded="false"
+                                >
+                                <i class="fa-regular fa-file mr-2" style="font-size:17px;"></i> 
+                                <span style="font-size: 17px;">3</span>
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li>
+                                    <a class="dropdown-item" href="#">HÓA ĐƠN 3</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">HÓA ĐƠN 4</a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" href="#">HÓA ĐƠN 5</a>
+                                </li>
+                            </ul>
+                        </li> --}}
+                        
+                    </ul>
+                     
+                     <button type="button" class="btn btn-secondary btn-floating mt-3 ml-2" 
+                     style="width:30px;height:30px;" id="add_tab-btn">
+                        <i class="lni lni-plus"></i>
+                     </button>
+                </div>
+            </div>
         </div>
     </div>
 </div>
-
-
 {{!-- GHI CHÚ PHÒNG BÀN MODAL --}}
 <div class="modal fade" id="exampleModal" tabindex="1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
   <div class="modal-dialog modal-dialog-centered">
@@ -927,21 +991,31 @@
 </div>
 <script>
     $(document).ready(function() {
-
-        $('.slider_carousel-4').slick({
-            infinite:false,
-            slidesToShow: 4,
-            slidesToScroll: 4, 
+        $('#menu-tab .nav-item').click(function(){
+            $('.slider_carousel-5').slick('refresh');
+        })
+        $('#table-tab').click(function(){
+            $('.slider_carousel-6').slick('refresh');
+        })
+        {{!-- $('#order-tab').slick({
+            infinite:false, 
+            slidesToShow:4, 
+            slidesToScroll:4, 
             prevArrow: '<button type="button" class="slick-prev"><i class="lni lni-arrow-left"></i></button>', 
             nextArrow: '<button type="button" class="slick-next"><i class="lni lni-arrow-right"></i></button>', 
-            dots:true,
+        }) --}}
+        $('.slider_carousel-5').slick({
+            infinite:false,
+            slidesToShow: 5,
+            slidesToScroll: 5, 
+            prevArrow: '<button type="button" class="slick-prev"><i class="lni lni-arrow-left"></i></button>', 
+            nextArrow: '<button type="button" class="slick-next"><i class="lni lni-arrow-right"></i></button>', 
             responsive: [
                  {
                     breakpoint: 1335, 
                     settings: {
                         slidesToShow:4, 
                         slidesToScroll: 4, 
-                        dots:true
                     }
                 }, 
                 
@@ -950,7 +1024,6 @@
                     settings: {
                         slidesToShow:3, 
                         slidesToScroll: 3, 
-                        dots:true,
                     }
                 }, 
                  {
@@ -958,25 +1031,22 @@
                     settings: {
                         slidesToShow: 2,
                         slidesToScroll: 2, 
-                        dots:true
                     }
                 }
             ]
         });
-        $('.slider_carousel-5').slick({
+        $('.slider_carousel-6').slick({
             infinite:false,
             slidesToShow: 6,
             slidesToScroll: 6, 
             prevArrow: '<button type="button" class="slick-prev"><i class="lni lni-arrow-left"></i></button>', 
             nextArrow: '<button type="button" class="slick-next"><i class="lni lni-arrow-right"></i></button>', 
-            dots:true,
             responsive: [
                  {
-                    breakpoint: 1335, 
+                    breakpoint: 1560, 
                     settings: {
                         slidesToShow:5, 
                         slidesToScroll: 5, 
-                        dots:true
                     }
                 }, 
                 
@@ -985,7 +1055,6 @@
                     settings: {
                         slidesToShow:4, 
                         slidesToScroll: 4, 
-                        dots:true
                     }
                 }, 
                  {
@@ -993,7 +1062,6 @@
                     settings: {
                         slidesToShow: 3,
                         slidesToScroll: 3, 
-                        dots:true
                     }
                 }
             ]
@@ -1019,22 +1087,41 @@
                  })
             $('.img-area p').hide();
         })
+        var index = 1;
+        // HANDLE ADD NEW TAB WHEN CLICK ADD BTN
+        $('#add_tab-btn').click(function(){
+            index++;
+            var newTab = $("<li></li>");
+            newTab.addClass('nav-item d-flex justify-content-center');
+            newTab.attr({
+                'role': 'presentation',
+                'aria-hidden': 'false' , 
+            });
+            var aElm = $(`
+                <a>HÓA ĐƠN ${index}
+                    <button type="button" id="dlt_tab-btn" class="btn btn-floating btn-secondary ml-2" style="width: 20px; height:20px;">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </a>`);
+            aElm.attr({
+                'data-mdb-tab-init':"",           
+                'id': `order-tab-${index}`, 
+                'href': `#order-tabs-${index}`, 
+                'role': 'tab', 
+                'aria-controls':`order-tabs-${index}`, 
+                'aria-selected': 'false', 
+            })
+            aElm.addClass('nav-link font-weight-bold d-flex flex-row align-items-center');
+            newTab.append(aElm);
+            $('#order-tab').prepend(newTab);
+            $('#dlt_tab-btn').click(function()
+            {
+                console.log('click');
+            })
+        })
+        //HANDLE DELETE TAB WHEN CLICK X BTN                       
+
     });
-    //FIX BUG TABS
-    $('#table-tab .nav-link').click(function(){
-        const navLink  = $(this);
-        $('#table_tab-content .tab-pane').each(function(index){
-            if($(this).attr('id') != navLink.attr('aria-controls'))
-                 $(this).removeClass('active');
-            
-        })
-    })
-    $('#menu-tab .nav-link').click(function(){
-        const navLink  = $(this);
-        $('#menu_tab-content .tab-pane').each(function(index){
-            if($(this).attr('id') != navLink.attr('aria-controls'))
-                 $(this).removeClass('active');
-            
-        })
-    })
+    
+  
 </script>

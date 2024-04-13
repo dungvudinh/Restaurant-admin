@@ -19,7 +19,13 @@ app.use('/bootstrap-select', express.static('./node_modules/bootstrap-select/dis
 app.use('/popper.js', express.static('./node_modules/popper.js/dist/umd'));
 app.use('/chart.js',   express.static('./node_modules/chart.js/dist/chart.js'))
 app.engine('hbs', engine({
-    extname:'.hbs'
+    extname:'.hbs', 
+    helpers: {
+        formatMoney:(money)=> new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money), 
+        growthSpeed:(totalYesterday, totalToday)=> (((totalToday - totalYesterday)/totalYesterday) *100).toFixed(1), 
+        isHasRevenue: (numOfOrderCompleted) => numOfOrderCompleted > 0 ? true : false, 
+        isHasClient: (totalClientToday)=>totalClientToday > 0 ? true : false
+    }
 }));
 
 app.set('view engine', 'hbs');

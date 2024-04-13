@@ -8,21 +8,29 @@
           <div class="card border-0">
             <div class="card-body py-4"  style="background-color:#A9A9A9;color:#fff;border-radius:10px;">
               <h5 class="mb-2 fw-bold">
-                1 Đơn đã xong
+                {{numOfOrderCompleted}} Đơn đã xong
               </h5>
              
               <div class="mb-0">
                  <span class="fw-bold mr-3">
-                  45,000 
-                  <i class="fa-solid fa-money-bill-wave"></i>
+                      {{formatMoney totalMoney}} 
+                  <i class="fa-solid fa-money-bill-wav"></i>
                 </span>
                 <br/>
-                <span class="badge text-success me-2">
-                  +9.0%
-                </span>
-                <span class="fw-bold">
-                  so với hôm qua
-                </span>
+                {{#if (isHasRevenue numOfOrderCompleted)}}
+                    <span class="font-weight-bold ">
+                    Doanh thu tăng trưởng 
+                  </span>
+                  <span class="badge text-success" style="font-size:17px;">
+                    {{growthSpeed totalMoneyYesterday totalMoney}}%
+                  </span>
+                  <span class="fw-bold">
+                    so với hôm qua
+                  </span>
+                  {{else}}
+                      <span class="font-weight-bold">Chưa có doanh thu</span>
+                {{/if}}
+                
               </div>
             </div>
           </div>
@@ -36,15 +44,14 @@
              
               <div class="mb-0">
                  <span class="fw-bold mr-3">
-                  20 
+                  {{totalServing}}
                  <i class="fa-solid fa-user-pen"></i>
                 </span>
                 <br/>
-                <span class="badge text-success me-2">
-                  +9.0%
-                </span>
-                <span class="fw-bold">
-                  so với hôm qua
+                <span class="font-weight-bold">Số tiền dự tính</span>
+                 <span class="fw-bold mr-3 text-success">
+                  {{formatMoney totalMoneyServed}} 
+                  <i class="fa-solid fa-money-bill-wav"></i>
                 </span>
               </div>
             </div>
@@ -58,15 +65,21 @@
               </h5>
               <div class="mb-0">
                 <span class="fw-bold mr-3 d-flex align-items-center">
-                  20 
+                  {{totalClientToday}}
                   <i class="lni lni-user ml-2"></i>
                 </span>
-                <span class="badge text-success me-2">
-                  +9.0%
-                </span>
-                <span class="fw-bold">
-                  so với hôm qua
-                </span>
+                {{#if (isHasClient totalClientToday)}}
+                    <span class="font-weight-bold">Lượng khách hàng tăng trưởng </span>
+                    <span class="badge text-success" style="font-size:17px;">
+                      {{growthSpeed totalClientYesterday totalClientToday}}%
+                    </span>
+                    <span class="fw-bold">
+                        so với hôm qua
+                    </span>
+                    {{else}}
+                        <span class="font-weight-bold">Chưa có khách hàng mới</span>
+                {{/if}}
+                
               </div>
             </div>
           </div>
@@ -78,31 +91,32 @@
         <div class="col-6 col-sm-12 col-xl-6 col-lg-12 col-md-12 d-flex align-items-center mb-4">
           <div style="background-color:#fff;height:100%;width:100%;" class="p-2 rounded">
             <div class="d-flex justify-content-between mt-3">
-                <h3 class="fw-bold fs-4">Doanh số hôm nay</h3>
-                  <select class="custom-select custom-select-sm" id="inputGroupSelect03" style="width:20%">
-                    <option selected>Hôm nay</option>
-                    <option value="1">Hôm qua</option>
-                    <option value="2">7 ngày qua</option>
-                    <option value="3">Tháng này</option>
+                <h3 class="fw-bold fs-4 revenue-title">
+                  Doanh số hôm nay
+                </h3>
+                  <select class="custom-select custom-select-sm" id="revenue-select" style="width:20%">
+                        <option  value="today" selected>Hôm nay</option>
+                        <option value="yesterday">Hôm qua</option>
+                        <option value="7">7 ngày qua</option>
                   </select>
             </div>
              
                             <!-- Tabs navs -->
-              <ul class="nav nav-tabs mb-3" id="ex1" role="tablist">
+              <ul class="nav nav-tabs mb-3" id="date-filter" role="tablist">
                 <li class="nav-item" role="presentation">
-                  <a data-mdb-tab-init class="nav-link active"id="ex1-tab-1"href="#ex1-tabs-1"role="tab"aria-controls="ex1-tabs-1"aria-selected="true">
+                  <a data-mdb-tab-init class="nav-link active" id="date-tab-1" href="#date-tabs-1" role="tab" aria-controls="date-tabs-1" aria-selected="true">
                     Theo ngày 
                   </a>
                 </li>
                 <li class="nav-item" role="presentation">
-                  <a data-mdb-tab-init class="nav-link" id="ex1-tab-2" href="#ex1-tabs-2" role="tab" aria-controls="ex1-tabs-2" aria-selected="false">
+                  <a data-mdb-tab-init class="nav-link" id="date-tab-2" href="#date-tabs-2" role="tab" aria-controls="date-tabs-2" aria-selected="false">
                     Theo giờ
                   </a>
                 </li>
                 <li class="nav-item" role="presentation">
                   <a
                     data-mdb-tab-init
-                    class="nav-link" id="ex1-tab-3" href="#ex1-tabs-3" role="tab"aria-controls="ex1-tabs-3"aria-selected="false">
+                    class="nav-link" id="date-tab-3" href="#date-tabs-3" role="tab"aria-controls="date-tabs-3"aria-selected="false">
                     Theo thứ
                     </a>
                 </li>
@@ -110,13 +124,31 @@
               <!-- Tabs navs -->
 
               <!-- Tabs content -->
-              <div class="tab-content" id="ex1-content">
-                <div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-                    <canvas id="myChart2"></canvas>
+              <div class="tab-content" id="date-content">
+                <div class="tab-pane fade show active d-flex flex-column position-relative" id="date-tabs-1" role="tabpanel" aria-labelledby="date-tab-1">
+                  
+                    <canvas id="myChart2" class="d-none" style=""></canvas>
+                    {{!-- <div style="color:#d1d1d1;" 
+                    class="no_data-revenue d-flex align-items-center justify-content-center flex-column">
+                        <i class="lni lni-dropbox mb-2" style="font-size: 50px;"></i>
+                        <span  style="font-size: 20px;">Không có dữ liệu</span>
+                    </div> --}}
+                
                 </div>
-                <div class="tab-pane fade" id="ex1-tabs-2" role="tabpanel" aria-labelledby="ex1-tab-2">
+                <div class="tab-pane fade " id="date-tabs-2" role="tabpanel" aria-labelledby="date-tab-2">
+                    <canvas id="myChart4" class="d-none"></canvas>
+                    {{!-- <div style="color:#d1d1d1;width:100%;height:100%;" class="no_data-revenue d-flex align-items-center justify-content-center flex-column">
+                        <i class="lni lni-dropbox mb-2" style="font-size: 50px;"></i>
+                        <span  style="font-size: 20px;">Không có dữ liệu</span>
+                    </div> --}}
                 </div>
-                <div class="tab-pane fade" id="ex1-tabs-3" role="tabpanel" aria-labelledby="ex1-tab-3">
+                <div class="tab-pane fade " id="date-tabs-3" role="tabpanel" aria-labelledby="date-tab-3">
+                    
+                      <canvas id="myChart5" class="d-none"></canvas>
+                      {{!-- <div style="color:#d1d1d1;width:100%;height:100%;" class="no_data-revenue d-flex align-items-center justify-content-center flex-column ">
+                          <i class="lni lni-dropbox mb-2" style="font-size: 50px;"></i>
+                          <span  style="font-size: 20px;">Không có dữ liệu</span>
+                      </div> --}}
                 </div>
               </div>
               <!-- Tabs content -->
@@ -135,7 +167,7 @@
                     <option value="3">Tháng này</option>
                   </select>
               </div>
-              <canvas id="myChart"></canvas>
+              <canvas id="myChart" class="d-none"></canvas>
             </div>
           </div>
       </div>
@@ -152,7 +184,7 @@
                     <option value="3">Tháng này</option>
                   </select>
               </div>
-              <canvas id="myChart3"></canvas>
+              <canvas id="myChart3" class="d-none"></canvas>
             </div>
           </div>
       </div>
@@ -162,15 +194,55 @@
 </main>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{{!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script> --}}
+{{!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script> --}}
+<script >
+  const ctx = $('#myChart');
+  const ctx2 = $('#myChart2');
+  const ctx3 = $('#myChart3');
+  const ctx4 = $('#myChart4');
+  const ctx5 = $('#myChart5');
+  var totalMoney = {{totalMoney}};
+  if(totalMoney)
+  {
+   
 
-<script>
-  const ctx = document.getElementById('myChart');
-  const ctx2 = document.getElementById('myChart2');
-  const ctx3 = document.getElementById('myChart3');
+    ctx2.removeClass('d-none');
+    ctx2.addClass('d-block');
+
+    ctx4.removeClass('d-none');
+    ctx4.addClass('d-block');
+
+    ctx5.removeClass('d-none');
+    ctx5.addClass('d-block');
+  }
+  
+  function moneyFormatter(money)
+  {
+    if(money > 999&& money < 1000000)
+        return (money/1000).toFixed(0) + 'K'; // Chuyển thành M nếu giá trị từ 1000 đến dưới 1 triệu
+    else if(money > 1000000)
+        return (money/1000000).toFixed(0) + 'M'; // Chuyển thành M nếu giá trị lớn hơn 1 triệu
+    else if(money < 900)
+        return money; // Trả về đơn vị mặc định nếu giá trị dưới 1000
+    
+  }
+  const yesterdayDate = new Date().getDate() -1;
+  
+  function dayFormatter(number)
+  {
+    if(number == 0) return "Thứ 2";
+    else if(number == 1) return "Thứ 3"
+    else if(number == 2) return "Thứ 4"
+    else if(number == 3) return "Thứ 5"
+    else if(number == 4) return "Thứ 6"
+    else if(number == 5) return "Thứ 7"
+    else if(number == 6) return "Chủ nhật"
+  }
   new Chart(ctx3, {
     type: 'bar',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      labels: [yesterdayDate],
       datasets: [{
         label: '# of Votes',
         data: [12, 19, 3, 5, 2, 3],
@@ -203,14 +275,43 @@
       }
     }
   });
-  new Chart(ctx2, {
+
+// DOANH SỐ HÔM NAY\
+  //INIT CHART
+  //THEO NGÀY
+ 
+  var chart2 = new Chart(ctx2, {
     type: 'bar',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+      labels: [new Date().getDate()],
       datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
+        label: 'Doanh thu',
+        data: [{{totalMoney}}],
+        borderWidth: 1, 
+        barThickness: 80 
+      }]
+    },
+    options: {
+      
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+        
+      }
+    }
+  });
+
+  //THEO THỨ
+  var chart5 = new Chart(ctx5, {
+    type: 'bar',
+    data: {
+      labels: [dayFormatter( new Date().getDay() -1)],
+      datasets: [{
+        label: 'Doanh thu',
+        data: [{{totalMoneyYesterday}}],
+        borderWidth: 1, 
+        barThickness: 80 
       }]
     },
     options: {
@@ -221,4 +322,122 @@
       }
     }
   });
+  //THEO GIỜ
+    var dataByHourYesterday = {{{totalMoneyByHourYesterday}}};
+    var dataByHourToday  = {{{totalMoneyByHourToday}}}
+    var chart4 = new Chart(ctx4, {
+    type: 'bar',
+    data: {
+      labels:dataByHourToday.map(data=>data.hour + ":00"),
+      datasets: [{
+        label:'Doanh thu', 
+        data:  dataByHourToday.map(data=>data.total),
+        borderWidth: 1, 
+        barPercentage: 0.5, 
+        barThickness:30, 
+        minBarLength: 2
+       
+      }]
+    }, 
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    }
+  });
+
+  $("#revenue-select").on('change', function(){
+    $("#revenue-select option:selected").each(function(){
+      if($(this).val() == 'today')
+      {
+        $('.revenue-title').text("Doanh số hôm nay")
+        if(totalMoney)
+        {
+          chart2.data.labels = [];
+          chart2.data.datasets.forEach((dataset) => {
+              dataset.data = [];
+          });
+          chart2.data.labels.push(new Date().getDate());
+          chart2.data.datasets.forEach(dataset=>{
+            dataset.data.push({{totalMoney}});
+          })
+          chart2.update();
+        }
+        else 
+        {
+            ctx2.addClass('d-none');
+            ctx2.removeClass('d-block');
+        }
+        
+      }
+      else if($(this).val() == 'yesterday')
+      {
+        $('.revenue-title').text("Doanh số hôm qua")
+        chart2.data.labels.pop();
+        chart2.data.datasets.forEach((dataset) => {
+            dataset.data.pop();
+        });
+        chart2.data.labels.push("TODAY");
+        chart2.data.datasets.forEach(dataset=>{
+          dataset.data.push({{totalMoneyYesterday}});
+        })
+        chart2.update();
+      }
+      else if($(this).val() == '7')
+      {
+        $('.revenue-title').text("Doanh số 7 ngày qua")
+        var totalMoneyByDay7Day = {{{totalMoneyByDay7Day}}};
+        var totalMoneyByHour7Day  = {{{totalMoneyByHour7Day}}};
+        console.log(totalMoneyByDay7Day);
+        if(totalMoneyByDay7Day || totalMoneyByHour7Day)
+        {
+            ctx2.removeClass('d-none');
+            ctx2.addClass('d-block');
+            //DOANH SỐ THEO NGÀY
+            chart2.data.labels = [];
+            chart2.data.datasets.forEach((dataset) => {
+                dataset.data.pop();
+            });
+            totalMoneyByDay7Day.forEach(obj=>{
+              chart2.data.labels.push(obj.date);
+            })
+            chart2.data.datasets.forEach(dataset=>{
+              dataset.data = totalMoneyByDay7Day.map((data)=>data.total)
+            })
+            chart2.update();
+            //DOANH SỐ THEO GIỜ
+              chart4.data.labels = [];
+              chart4.data.datasets.forEach((dataset) => {
+                dataset.data.pop();
+              });
+              totalMoneyByHour7Day.forEach(obj=>{
+                chart4.data.labels.push(obj.hour);
+              })
+              chart4.data.datasets.forEach(dataset=>{
+                dataset.data = totalMoneyByHour7Day.map((data)=>data.total)
+              })
+              chart4.update();
+              //DOANH SỐ THEO THỨ
+              chart5.data.labels = [];
+              chart5.data.datasets.forEach((dataset) => {
+                dataset.data.pop();
+              });
+              totalMoneyByDay7Day.forEach(obj=>{
+                chart5.data.labels.push(obj.date);
+              })
+              chart5.data.datasets.forEach(dataset=>{
+                dataset.data = totalMoneyByDay7Day.map((data)=>data.total)
+              })
+        }
+        else 
+        {
+            ctx2.addClass('d-none');
+            ctx2.removeClass('d-block');
+        }
+        
+      }
+    })
+  })
 </script>
