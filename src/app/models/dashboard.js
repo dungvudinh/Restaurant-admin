@@ -21,7 +21,7 @@ const getOrderCompleted = ()=>
     })
 }
 
-const getTotalMoney = ()=> 
+const getTotalMoneyToday = ()=> 
 {
     return new Promise((resolve, reject)=>{
         var sql = "SELECT order_table.client_id , SUM(menu.price * order_table.quantity) as total FROM booking JOIN order_table ON booking.client_id = order_table.client_id JOIN menu ON order_table.menu_id  = menu.id WHERE booking_status = 6 AND booking_date = CURRENT_DATE";
@@ -70,6 +70,22 @@ const getTotalMoneyByHourToday = ()=>
         })
     })
 }
+
+const getTotalMoneyByDayToday = ()=>
+{
+    return new Promise((resolve, reject)=>{
+        var sql = "SELECT booking_date as date,  SUM(menu.price * order_table.quantity) as total FROM booking JOIN order_table ON booking.client_id = order_table.client_id JOIN menu ON order_table.menu_id  = menu.id   WHERE booking_date = CURRENT_DATE AND time_checkout IS NOT NULL GROUP BY DAY(booking_date);"
+        connection.query(sql, (err, res)=>{
+            if(!err)
+                resolve(res);
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err
+                })
+        })
+    })
+}
 const getTotalMoneyByHourYesterday = ()=> 
 {
     return new Promise((resolve, reject)=>{
@@ -86,7 +102,7 @@ const getTotalMoneyByHourYesterday = ()=>
     })
 }
 
-const getTotalMoneyByDay7Day = ()=> 
+const getTotalMoney7Day = ()=> 
 {
     return new Promise((resolve, reject)=>{
         var sql = "SELECT booking_date as date,  SUM(menu.price * order_table.quantity) as total FROM booking JOIN order_table ON booking.client_id = order_table.client_id JOIN menu ON order_table.menu_id  = menu.id   WHERE booking_date > CURRENT_DATE - INTERVAL 7 DAY AND booking_date < CURRENT_DATE AND time_checkout IS NOT NULL GROUP BY DAY(booking_date);";
@@ -182,6 +198,6 @@ const getTotalClientYesterday  = ()=>
     })
 }
 
-module.exports = {getOrderCompleted, getTotalMoney, getTotalMoneyYesterday,getOrderBeingServed,getTotalMoneyServed,  
-getTotalClientToday,getTotalClientYesterday, getTotalMoneyByHourYesterday, getTotalMoneyByDay7Day, getTotalMoneyByHourToday,
-getTotalMoneyByHour7Day};
+module.exports = {getOrderCompleted, getTotalMoneyToday, getTotalMoneyYesterday,getOrderBeingServed,getTotalMoneyServed,  
+getTotalClientToday,getTotalClientYesterday, getTotalMoneyByHourYesterday, getTotalMoney7Day, getTotalMoneyByHourToday,
+getTotalMoneyByDayToday, getTotalMoneyByHour7Day};

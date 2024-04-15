@@ -13,7 +13,7 @@
              
               <div class="mb-0">
                  <span class="fw-bold mr-3">
-                      {{formatMoney totalMoney}} 
+                      {{formatMoney totalMoneyToday}} 
                   <i class="fa-solid fa-money-bill-wav"></i>
                 </span>
                 <br/>
@@ -22,7 +22,7 @@
                     Doanh thu tăng trưởng 
                   </span>
                   <span class="badge text-success" style="font-size:17px;">
-                    {{growthSpeed totalMoneyYesterday totalMoney}}%
+                    {{growthSpeed totalMoneyYesterday totalMoneyToday}}%
                   </span>
                   <span class="fw-bold">
                     so với hôm qua
@@ -127,7 +127,7 @@
               <div class="tab-content" id="date-content">
                 <div class="tab-pane fade show active d-flex flex-column position-relative" id="date-tabs-1" role="tabpanel" aria-labelledby="date-tab-1">
                   
-                    <canvas id="myChart2" class="d-none" style=""></canvas>
+                    <canvas id="revenue-by-date-chart" class="d-none" style=""></canvas>
                     {{!-- <div style="color:#d1d1d1;" 
                     class="no_data-revenue d-flex align-items-center justify-content-center flex-column">
                         <i class="lni lni-dropbox mb-2" style="font-size: 50px;"></i>
@@ -136,7 +136,7 @@
                 
                 </div>
                 <div class="tab-pane fade " id="date-tabs-2" role="tabpanel" aria-labelledby="date-tab-2">
-                    <canvas id="myChart4" class="d-none"></canvas>
+                    <canvas id="revenue-by-hour-chart" class="d-none"></canvas>
                     {{!-- <div style="color:#d1d1d1;width:100%;height:100%;" class="no_data-revenue d-flex align-items-center justify-content-center flex-column">
                         <i class="lni lni-dropbox mb-2" style="font-size: 50px;"></i>
                         <span  style="font-size: 20px;">Không có dữ liệu</span>
@@ -144,7 +144,7 @@
                 </div>
                 <div class="tab-pane fade " id="date-tabs-3" role="tabpanel" aria-labelledby="date-tab-3">
                     
-                      <canvas id="myChart5" class="d-none"></canvas>
+                      <canvas id="revenue-by-day-chart" class="d-none"></canvas>
                       {{!-- <div style="color:#d1d1d1;width:100%;height:100%;" class="no_data-revenue d-flex align-items-center justify-content-center flex-column ">
                           <i class="lni lni-dropbox mb-2" style="font-size: 50px;"></i>
                           <span  style="font-size: 20px;">Không có dữ liệu</span>
@@ -197,26 +197,21 @@
 {{!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script> --}}
 {{!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script> --}}
 <script >
-  const ctx = $('#myChart');
-  const ctx2 = $('#myChart2');
-  const ctx3 = $('#myChart3');
-  const ctx4 = $('#myChart4');
-  const ctx5 = $('#myChart5');
-  var totalMoney = {{totalMoney}};
-  if(totalMoney)
-  {
-   
+  var ctx = $('#myChart');
+  var revenueByDateCtx = $('#revenue-by-date-chart');
+  var ctx3 = $('#myChart3');
+  var revenueByHourCtx = $('#revenue-by-hour-chart');
+  var revenueByDayCtx = $('#revenue-by-day-chart');
 
-    ctx2.removeClass('d-none');
-    ctx2.addClass('d-block');
+  var totalMoneyToday = {{totalMoneyToday}};
+  var totalMoneyByHourToday  = {{{totalMoneyByHourToday}}}
 
-    ctx4.removeClass('d-none');
-    ctx4.addClass('d-block');
+  var totalMoneyYesterday  = {{totalMoneyYesterday}}
+  var totalMoneyByHourYesterday = {{{totalMoneyByHourYesterday}}};
 
-    ctx5.removeClass('d-none');
-    ctx5.addClass('d-block');
-  }
-  
+  var totalMoney7Day = {{{totalMoney7Day}}};
+  var totalMoneyByHour7Day  = {{{totalMoneyByHour7Day}}};
+
   function moneyFormatter(money)
   {
     if(money > 999&& money < 1000000)
@@ -227,52 +222,56 @@
         return money; // Trả về đơn vị mặc định nếu giá trị dưới 1000
     
   }
-  const yesterdayDate = new Date().getDate() -1;
-  
+
   function dayFormatter(number)
   {
-    if(number == 0) return "Thứ 2";
-    else if(number == 1) return "Thứ 3"
-    else if(number == 2) return "Thứ 4"
-    else if(number == 3) return "Thứ 5"
-    else if(number == 4) return "Thứ 6"
-    else if(number == 5) return "Thứ 7"
-    else if(number == 6) return "Chủ nhật"
+    if(number == 0) return "Chủ nhật";
+    else if(number == 1) return "Thứ 2"
+    else if(number == 2) return "Thứ 3"
+    else if(number == 3) return "Thứ 4"
+    else if(number == 4) return "Thứ 5"
+    else if(number == 5) return "Thứ 6"
+    else if(number == 6) return "Thứ 7"
   }
+  function getYesterday(date)
+  {
+    date.setDate(date.getDate()-1);
+    return new Intl.DateTimeFormat("vi-VN").format(date);
+  }
+  
+  if(totalMoneyToday)
+  {
+   
+    revenueByDateCtx.removeClass('d-none');
+    revenueByDateCtx.addClass('d-block');
+
+    revenueByHourCtx.removeClass('d-none');
+    revenueByHourCtx.addClass('d-block');
+
+    revenueByDayCtx.removeClass('d-none');
+    revenueByDayCtx.addClass('d-block');
+  }
+  
+  
+  
   new Chart(ctx3, {
     type: 'bar',
     data: {
-      labels: [yesterdayDate],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
+      labels: [getYesterday(new Date())],
+      datasets: [{label: '# of Votes',ata: [12, 19, 3, 5, 2, 3],borderWidth: 1}]
     },
     options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
+      scales: {y: {beginAtZero: true} }
     }
   });
   new Chart(ctx, {
     type: 'line',
     data: {
       labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{
-        label: '# of Votes',
-        data: [12, 19, 3, 5, 2, 3],
-        borderWidth: 1
-      }]
+      datasets: [{label: '# of Votes',data: [12, 19, 3, 5, 2, 3],borderWidth: 1}]
     },
     options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
+      scales: {y: {beginAtZero: true} }
     }
   });
 
@@ -280,164 +279,235 @@
   //INIT CHART
   //THEO NGÀY
  
-  var chart2 = new Chart(ctx2, {
+  var revenueByDateChart = new Chart(revenueByDateCtx, {
     type: 'bar',
     data: {
-      labels: [new Date().getDate()],
-      datasets: [{
-        label: 'Doanh thu',
-        data: [{{totalMoney}}],
-        borderWidth: 1, 
-        barThickness: 80 
-      }]
+      labels: [new Date().getDate() + "/" +(new Date().getMonth()+ 1) + "/"  + new Date().getFullYear()],
+      datasets: [{label: 'Doanh thu',data: [totalMoneyToday],borderWidth: 1, barThickness: 80 }]
     },
     options: {
-      
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-        
-      }
+      scales: {y: {beginAtZero: true} } 
     }
   });
-
   //THEO THỨ
-  var chart5 = new Chart(ctx5, {
+  var revenueByDayChart = new Chart(revenueByDayCtx, {
     type: 'bar',
     data: {
-      labels: [dayFormatter( new Date().getDay() -1)],
-      datasets: [{
-        label: 'Doanh thu',
-        data: [{{totalMoneyYesterday}}],
-        borderWidth: 1, 
-        barThickness: 80 
-      }]
+      labels: [dayFormatter(new Date().getDay())],
+      datasets: [{label: 'Doanh thu',data: [totalMoneyToday],borderWidth: 1, barThickness: 80 }]
     },
     options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
+      scales: {y: { beginAtZero: true} }
     }
   });
   //THEO GIỜ
-    var dataByHourYesterday = {{{totalMoneyByHourYesterday}}};
-    var dataByHourToday  = {{{totalMoneyByHourToday}}}
-    var chart4 = new Chart(ctx4, {
+    
+    var revenueByHourChart = new Chart(revenueByHourCtx, {
     type: 'bar',
     data: {
-      labels:dataByHourToday.map(data=>data.hour + ":00"),
-      datasets: [{
-        label:'Doanh thu', 
-        data:  dataByHourToday.map(data=>data.total),
-        borderWidth: 1, 
-        barPercentage: 0.5, 
-        barThickness:30, 
-        minBarLength: 2
-       
-      }]
+      labels:totalMoneyByHourToday.map(data=>data.hour + ":00"),
+      datasets: [{label:'Doanh thu', data:  totalMoneyByHourToday.map(data=>data.total), borderWidth: 1, barPercentage: 0.5,barThickness:30,minBarLength: 2}]
     }, 
     options: {
-      scales: {
-        y: {
-          beginAtZero: true
-        }
-      }
+      scales: {y: {beginAtZero: true} }
     }
   });
-
+  //HANDLE SELECT REVENUE
   $("#revenue-select").on('change', function(){
     $("#revenue-select option:selected").each(function(){
+      
+      //REVENUE TODAY
       if($(this).val() == 'today')
       {
-        $('.revenue-title').text("Doanh số hôm nay")
-        if(totalMoney)
+        $('.revenue-title').text("Doanh số hôm nay"); 
+        if(totalMoneyToday)
         {
-          chart2.data.labels = [];
-          chart2.data.datasets.forEach((dataset) => {
+          revenueByDateCtx.removeClass('d-none');
+            revenueByDateCtx.addClass('d-block');
+
+            revenueByHourCtx.removeClass('d-none');
+            revenueByHourCtx.addClass('d-block');
+
+            revenueByDayCtx.removeClass('d-none');
+            revenueByDayCtx.addClass('d-block');
+          //THEO NGÀY
+          revenueByDateChart.data.labels = [];
+          revenueByDateChart.data.datasets.forEach((dataset) => {
               dataset.data = [];
           });
-          chart2.data.labels.push(new Date().getDate());
-          chart2.data.datasets.forEach(dataset=>{
-            dataset.data.push({{totalMoney}});
+          revenueByDateChart.data.labels.push(new Date().getDate() + "/" + (new Date().getMonth() +1) + "/" + new Date().getFullYear());
+          revenueByDateChart.data.datasets.forEach(dataset=>{
+            dataset.data.push(totalMoneyToday);
           })
-          chart2.update();
+          revenueByDateChart.update();
+          //THEO GIỜ 
+          revenueByHourChart.data.labels = [];
+          revenueByHourChart.data.datasets.forEach((dataset) => {
+              dataset.data = [];
+          });
+          
+            totalMoneyByHourToday.forEach(obj=>{
+                revenueByHourChart.data.labels.push(obj.hour + ":00");
+            })
+            revenueByHourChart.data.datasets.forEach(dataset=>{
+              dataset.data = totalMoneyByHourToday.map((data)=>data.total)
+            })
+            revenueByHourChart.update()
+            //THEO THỨ
+            revenueByDayChart.data.labels = [];
+            revenueByDayChart.data.datasets.forEach((dataset) => {
+                dataset.data = [];
+            });
+            revenueByDayChart.data.labels.push(dayFormatter(new Date().getDay()));
+            revenueByDayChart.data.datasets.forEach(dataset=>{
+              dataset.data.push(totalMoneyToday);
+            })
+            revenueByDayChart.update();
         }
         else 
         {
-            ctx2.addClass('d-none');
-            ctx2.removeClass('d-block');
+            revenueByDateCtx.addClass('d-none');
+            revenueByDateCtx.removeClass('d-block');
+
+            revenueByHourCtx.removeClass('d-none');
+            revenueByHourCtx.addClass('d-block');
+
+            revenueByDayCtx.removeClass('d-none');
+            revenueByDayCtx.addClass('d-block');
         }
         
       }
+      //REVENUE YESTERDAY
       else if($(this).val() == 'yesterday')
       {
         $('.revenue-title').text("Doanh số hôm qua")
-        chart2.data.labels.pop();
-        chart2.data.datasets.forEach((dataset) => {
-            dataset.data.pop();
-        });
-        chart2.data.labels.push("TODAY");
-        chart2.data.datasets.forEach(dataset=>{
-          dataset.data.push({{totalMoneyYesterday}});
-        })
-        chart2.update();
-      }
-      else if($(this).val() == '7')
-      {
-        $('.revenue-title').text("Doanh số 7 ngày qua")
-        var totalMoneyByDay7Day = {{{totalMoneyByDay7Day}}};
-        var totalMoneyByHour7Day  = {{{totalMoneyByHour7Day}}};
-        console.log(totalMoneyByDay7Day);
-        if(totalMoneyByDay7Day || totalMoneyByHour7Day)
+        if(totalMoneyYesterday)
         {
-            ctx2.removeClass('d-none');
-            ctx2.addClass('d-block');
-            //DOANH SỐ THEO NGÀY
-            chart2.data.labels = [];
-            chart2.data.datasets.forEach((dataset) => {
-                dataset.data.pop();
+          //THEO NGÀY
+            revenueByDateCtx.removeClass('d-none');
+            revenueByDateCtx.addClass('d-block');
+
+            revenueByHourCtx.removeClass('d-none');
+            revenueByHourCtx.addClass('d-block');
+
+            revenueByDayCtx.removeClass('d-none');
+            revenueByDayCtx.addClass('d-block');
+            
+            revenueByDateChart.data.labels = [];
+            revenueByDateChart.data.datasets.forEach((dataset) => {
+                dataset.data = [];
             });
-            totalMoneyByDay7Day.forEach(obj=>{
-              chart2.data.labels.push(obj.date);
+            revenueByDateChart.data.labels.push(getYesterday(new Date()));
+            revenueByDateChart.data.datasets.forEach(dataset=>{
+              dataset.data.push(totalMoneyYesterday);
             })
-            chart2.data.datasets.forEach(dataset=>{
-              dataset.data = totalMoneyByDay7Day.map((data)=>data.total)
+            revenueByDateChart.update();
+          //THEO GIỜ 
+            revenueByHourChart.data.labels = [];
+            revenueByHourChart.data.datasets.forEach((dataset) => {
+                dataset.data = [];
+            });
+          
+            totalMoneyByHourYesterday.forEach(obj=>{
+                revenueByHourChart.data.labels.push(obj.hour + ":00");
             })
-            chart2.update();
-            //DOANH SỐ THEO GIỜ
-              chart4.data.labels = [];
-              chart4.data.datasets.forEach((dataset) => {
-                dataset.data.pop();
-              });
-              totalMoneyByHour7Day.forEach(obj=>{
-                chart4.data.labels.push(obj.hour);
-              })
-              chart4.data.datasets.forEach(dataset=>{
-                dataset.data = totalMoneyByHour7Day.map((data)=>data.total)
-              })
-              chart4.update();
-              //DOANH SỐ THEO THỨ
-              chart5.data.labels = [];
-              chart5.data.datasets.forEach((dataset) => {
-                dataset.data.pop();
-              });
-              totalMoneyByDay7Day.forEach(obj=>{
-                chart5.data.labels.push(obj.date);
-              })
-              chart5.data.datasets.forEach(dataset=>{
-                dataset.data = totalMoneyByDay7Day.map((data)=>data.total)
-              })
+            revenueByHourChart.data.datasets.forEach(dataset=>{
+              dataset.data = totalMoneyByHourYesterday.map((data)=>data.total)
+            })
+            revenueByHourChart.update()
+            //THEO THỨ
+            revenueByDayChart.data.labels = [];
+            revenueByDayChart.data.datasets.forEach((dataset) => {
+                dataset.data = [];
+            });
+            revenueByDayChart.data.labels.push(dayFormatter((new Date().getDay() -1) >=0 ? (new Date().getDay() -1) : 6));
+            revenueByDayChart.data.datasets.forEach(dataset=>{
+              dataset.data.push(totalMoneyYesterday);
+            })
+            revenueByDayChart.update();
         }
         else 
         {
-            ctx2.addClass('d-none');
-            ctx2.removeClass('d-block');
+            revenueByDateCtx.addClass('d-none');
+            revenueByDateCtx.removeClass('d-block');
+
+            revenueByHourCtx.removeClass('d-none');
+            revenueByHourCtx.addClass('d-block');
+
+            revenueByDayCtx.removeClass('d-none');
+            revenueByDayCtx.addClass('d-block');
+        }
+      }
+      //REVENUE 7 DAYS
+      else if($(this).val() == '7')
+      {
+        $('.revenue-title').text("Doanh số 7 ngày qua")
+        
+        if(totalMoney7Day)
+        {
+            revenueByDateCtx.removeClass('d-none');
+            revenueByDateCtx.addClass('d-block');
+
+            revenueByHourCtx.removeClass('d-none');
+            revenueByHourCtx.addClass('d-block');
+
+            revenueByDayCtx.removeClass('d-none');
+            revenueByDayCtx.addClass('d-block');
+
+            //DOANH SỐ THEO NGÀY
+            revenueByDateChart.data.labels = [];
+            revenueByDateChart.data.datasets.forEach((dataset) => {
+                dataset.data.pop();
+            });
+            totalMoney7Day.forEach(obj=>{
+              revenueByDateChart.data.labels.push(new Date(obj.date).getDate()+ "/" + (new Date(obj.date).getMonth() +1)  + '/' + new Date(obj.date).getFullYear()) ;
+            })
+            revenueByDateChart.data.datasets.forEach(dataset=>{
+              dataset.data = totalMoney7Day.map((data)=>data.total)
+            })
+            revenueByDateChart.update();
+            //DOANH SỐ THEO GIỜ
+            
+              revenueByHourChart.data.labels = [];
+              revenueByHourChart.data.datasets.forEach((dataset) => {
+                dataset.data.pop();
+              });
+              totalMoneyByHour7Day.forEach(obj=>{
+                revenueByHourChart.data.labels.push(obj.hour + ":00");
+              })
+              revenueByHourChart.data.datasets.forEach(dataset=>{
+                dataset.data = totalMoneyByHour7Day.map((data)=>data.total)
+              })
+              revenueByHourChart.update();
+              //DOANH SỐ THEO THỨ
+             
+              revenueByDayChart.data.labels = [];
+              revenueByDayChart.data.datasets.forEach((dataset) => {
+                dataset.data.pop();
+              });
+              totalMoney7Day.forEach(obj=>{
+                revenueByDayChart.data.labels.push(dayFormatter(new Date(obj.date).getDay()));
+              })
+              revenueByDayChart.data.datasets.forEach(dataset=>{
+                dataset.data = totalMoney7Day.map((data)=>data.total)
+              })
+              revenueByDayChart.update();
+        }
+        else 
+        {
+            revenueByDateCtx.addClass('d-none');
+            revenueByDateCtx.removeClass('d-block');
+
+            revenueByHourCtx.addClass('d-none');
+            revenueByHourCtx.removeClass('d-block');
+
+            revenueByDayCtx.addClass('d-none');
+            revenueByDayCtx.removeClass('d-block');
         }
         
       }
     })
   })
+  //HANDLE SELECT CLIENT QUANTITY 
+  
 </script>

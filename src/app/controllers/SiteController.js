@@ -1,6 +1,7 @@
-const {getOrderCompleted, getTotalMoney,getTotalMoneyYesterday, getOrderBeingServed, 
+const {getOrderCompleted, getTotalMoneyToday,getTotalMoneyYesterday, getOrderBeingServed, 
     getTotalClientToday,getTotalClientYesterday,getTotalMoneyServed, getTotalMoneyByHourYesterday,
-    getTotalMoneyByDay7Day, getTotalMoneyByHourToday, getTotalMoneyByHour7Day}  = require('../models/dashboard');
+    getTotalMoney7Day, getTotalMoneyByHourToday,getTotalMoneyByDayToday, 
+    getTotalMoneyByHour7Day}  = require('../models/dashboard');
 class SiteController 
 {
      async dashboard(req,res)
@@ -8,34 +9,29 @@ class SiteController
         
         try 
         {
-            var result = await getOrderCompleted();
-            var totalMoney  = await getTotalMoney();
+            var orderCompleted = await getOrderCompleted();
+            var totalMoneyToday  = await getTotalMoneyToday();
             var totalMoneyYesterday = await getTotalMoneyYesterday();
             var orderServed = await getOrderBeingServed();
             var totalMoneyServed = await getTotalMoneyServed();
             var totalClientToday = await getTotalClientToday();
             var totalClientYesterday = await getTotalClientYesterday();
             var totalMoneyByHourYesterday = await getTotalMoneyByHourYesterday();
-            var totalMoneyByDay7Day = await getTotalMoneyByDay7Day();
+            var totalMoney7Day = await getTotalMoney7Day();
             var totalMoneyByHourToday = await getTotalMoneyByHourToday();
             var totalMoneyByHour7Day = await getTotalMoneyByHour7Day();
-            var newtotalMoneyByDay7Day = totalMoneyByDay7Day.map(data=>{
-                var utcDate = new Date(Date.UTC(data.date.getFullYear(), data.date.getMonth(), data.date.getDate(), data.date.getHours(), data.date.getMinutes()));
-                return JSON.stringify(utcDate);
-            })
-            console.log('newtotalMoneyByDay7Day ',JSON.stringify(newtotalMoneyByDay7Day));
             res.render('dashboard',{
-                numOfOrderCompleted:result[0].numOfOrderCompleted, 
-                totalMoney: totalMoney[0].total  ? totalMoney[0].total : 0, 
-                totalMoneyYesterday :totalMoneyYesterday[0].total, 
-                totalServing: orderServed[0].orderServed, 
-                totalClientToday: totalClientToday[0].totalClient, 
-                totalClientYesterday: totalClientYesterday[0].totalClient, 
-                totalMoneyServed: totalMoneyServed[0].total, 
+                numOfOrderCompleted:orderCompleted.length > 0 ? orderCompleted[0].numOfOrderCompleted : 0, 
+                totalMoneyToday: totalMoneyToday[0].total ? totalMoneyToday[0].total : 0, 
+                totalMoneyYesterday :totalMoneyYesterday.length > 0 ? totalMoneyYesterday[0].total : 0, 
+                totalServing: orderServed.length > 0 ? orderServed[0].orderServed : 0, 
+                totalClientToday: totalClientToday.length > 0 ? totalClientToday[0].totalClient : 0, 
+                totalClientYesterday:totalClientYesterday.length > 0 ?  totalClientYesterday[0].totalClient : 0, 
+                totalMoneyServed: totalMoneyServed.length >  0 ? totalMoneyServed[0].total : 0, 
                 totalMoneyByHourYesterday:JSON.stringify(totalMoneyByHourYesterday), 
-                totalMoneyByDay7Day: JSON.stringify(totalMoneyByDay7Day), 
+                totalMoney7Day:JSON.stringify(totalMoney7Day.map(data=> ({total: data.total, date: data.date.toString()}))), 
                 totalMoneyByHour7Day:JSON.stringify(totalMoneyByHour7Day),
-                totalMoneyByHourToday: JSON.stringify(totalMoneyByHourToday)
+                totalMoneyByHourToday: JSON.stringify(totalMoneyByHourToday), 
             });
         }
         catch(error)
