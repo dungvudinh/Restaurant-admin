@@ -40,9 +40,6 @@ p {
 body {
   font-family: 'Poppins', sans-serif; }
 
-.content {
-  background-color: #eeeeee; }
-
 .wrapper {
   display: flex; }
 

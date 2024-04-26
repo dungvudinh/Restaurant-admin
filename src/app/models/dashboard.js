@@ -108,8 +108,6 @@ const getTotalMoney7Day = ()=>
         var sql = "SELECT booking_date as date,  SUM(menu.price * order_table.quantity) as total FROM booking JOIN order_table ON booking.client_id = order_table.client_id JOIN menu ON order_table.menu_id  = menu.id   WHERE booking_date > CURRENT_DATE - INTERVAL 7 DAY AND booking_date < CURRENT_DATE AND time_checkout IS NOT NULL GROUP BY DAY(booking_date);";
         connection.query(sql, (err, res)=>{
             if(!err){
-                console.log(res);
-                console.log(res[0].date);
                 resolve(res);
 
             }
@@ -198,6 +196,100 @@ const getTotalClientYesterday  = ()=>
     })
 }
 
+const getClientQuantityToday  = ()=>
+{
+    return new Promise((resolve, reject)=>{
+        var sql = "SELECT COUNT(*) as quantity, HOUR(booking_time) as hour FROM booking WHERE booking_date = CURRENT_DATE AND time_checkout IS NOT NULL GROUP BY HOUR(booking_time)";
+        connection.query(sql, (err, res)=>{
+            if(!err)
+                resolve(res);
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err
+                })
+        })
+    })
+}
+
+const getClientQuantityYesterday  = ()=>
+{
+    return new Promise((resolve, reject)=>{
+        var sql = "SELECT COUNT(*) as quantity, HOUR(booking_time) as hour FROM booking WHERE booking_date = CURRENT_DATE - INTERVAL 1 DAY AND time_checkout IS NOT NULL GROUP BY HOUR(booking_time)";
+        connection.query(sql, (err, res)=>{
+            if(!err)
+                resolve(res);
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err
+                })
+        })
+    })
+}
+
+const getClientQuantity7Day  = ()=>
+{
+    return new Promise((resolve, reject)=>{
+        var sql = "SELECT COUNT(*) as quantity, HOUR(booking_time) as hour FROM booking WHERE booking_date > CURRENT_DATE - INTERVAL 7 DAY AND booking_date < CURRENT_DATE AND time_checkout IS NOT NULL GROUP BY HOUR(booking_time)";
+        connection.query(sql, (err, res)=>{
+            if(!err)
+                resolve(res);
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err
+                })
+        })
+    })
+}
+
+const getTop10MenuToday = ()=>
+{
+    return new Promise((resolve, reject)=>{
+        var sql = "SELECT order_table.menu_id,menu.name,  SUM(order_table.quantity) as total_quantity FROM order_table JOIN menu ON order_table.menu_id = menu.id WHERE date(order_table.created_at) = CURRENT_DATE GROUP BY order_table.menu_id ORDER BY SUM(order_table.quantity) DESC LIMIT 10";
+        connection.query(sql, (err, res)=>{
+            if(!err)
+                resolve(res);
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err
+                })
+        })
+    })
+}
+const getTop10MenuYesterday = ()=>
+{
+    return new Promise((resolve, reject)=>{
+        var sql = "SELECT order_table.menu_id as menu_id, menu.name, SUM(order_table.quantity) as total_quantity FROM order_table JOIN menu ON order_table.menu_id = menu.id WHERE date(order_table.created_at) = CURRENT_DATE - INTERVAL 1 DAY GROUP BY order_table.menu_id ORDER BY SUM(order_table.quantity) DESC LIMIT 10";
+        connection.query(sql, (err, res)=>{
+            if(!err)
+                resolve(res);
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err
+                })
+        })
+    })
+}
+const getTop10Menu7Day = ()=>
+{
+    return new Promise((resolve, reject)=>{
+        var sql = "SELECT order_table.menu_id as menu_id, menu.name, SUM(order_table.quantity) as total_quantity FROM order_table JOIN menu ON order_table.menu_id = menu.id WHERE date(order_table.created_at) > CURRENT_DATE - INTERVAL 7 DAY AND date(order_table.created_at) < CURRENT_DATE GROUP BY order_table.menu_id ORDER BY SUM(order_table.quantity) DESC LIMIT 10";
+        connection.query(sql, (err, res)=>{
+            if(!err)
+                resolve(res);
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err
+                })
+        })
+    })
+}
 module.exports = {getOrderCompleted, getTotalMoneyToday, getTotalMoneyYesterday,getOrderBeingServed,getTotalMoneyServed,  
 getTotalClientToday,getTotalClientYesterday, getTotalMoneyByHourYesterday, getTotalMoney7Day, getTotalMoneyByHourToday,
-getTotalMoneyByDayToday, getTotalMoneyByHour7Day};
+getTotalMoneyByDayToday, getTotalMoneyByHour7Day, getClientQuantityToday, getClientQuantityYesterday, 
+getClientQuantity7Day, getTop10MenuToday, getTop10MenuYesterday, getTop10Menu7Day};

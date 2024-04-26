@@ -159,15 +159,14 @@
           <div class="col-6 col-sm-12 col-xl-6 col-lg-12 col-md-12 mb-4">
             <div style="background-color:#fff;height:100%;width:100%;" class="p-2 rounded">
               <div class="d-flex justify-content-between mt-3">
-                <h3 class="fw-bold fs-4">Số lượng khách hôm nay</h3>
-                  <select class="custom-select custom-select-sm" id="inputGroupSelect03" style="width:20%">
-                    <option selected>Hôm nay</option>
-                    <option value="1">Hôm qua</option>
-                    <option value="2">7 ngày qua</option>
-                    <option value="3">Tháng này</option>
+                <h3 class="fw-bold fs-4" id="client_quantity-title">Số lượng khách hôm nay</h3>
+                  <select class=" custom-select custom-select-sm" id="client_quantity-select" style="width:20%">
+                    <option selected value="today">Hôm nay</option>
+                    <option value="yesterday">Hôm qua</option>
+                    <option value="7">7 ngày qua</option>
                   </select>
               </div>
-              <canvas id="myChart" class="d-none"></canvas>
+              <canvas id="client-quantity-chart" class="d-none"></canvas>
             </div>
           </div>
       </div>
@@ -176,15 +175,14 @@
           <div class="col-6 col-sm-12 col-xl-6 col-lg-12 col-md-12">
             <div style="background-color:#fff;height:100%;width:100%;" class="p-2 rounded">
               <div class="d-flex justify-content-between mt-3">
-                <h3 class="fw-bold fs-4">Top 10 món ăn bán chạy 7 ngày qua</h3>
-                  <select class="custom-select custom-select-sm" id="inputGroupSelect03" style="width:20%">
-                    <option selected>Hôm nay</option>
-                    <option value="1">Hôm qua</option>
-                    <option value="2">7 ngày qua</option>
-                    <option value="3">Tháng này</option>
+                <h3 class="fw-bold fs-4" id="top_menu-title">Top 10 món ăn bán chạy hôm nay</h3>
+                  <select class="custom-select custom-select-sm" id="top_menu-select" style="width:20%">
+                    <option selected value="today">Hôm nay</option>
+                    <option value="yesterday">Hôm qua</option>
+                    <option value="7">7 ngày qua</option>
                   </select>
               </div>
-              <canvas id="myChart3" class="d-none"></canvas>
+              <canvas id="top-menu-chart" class="d-none"></canvas>
             </div>
           </div>
       </div>
@@ -197,11 +195,11 @@
 {{!-- <script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script> --}}
 {{!-- <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script> --}}
 <script >
-  var ctx = $('#myChart');
   var revenueByDateCtx = $('#revenue-by-date-chart');
-  var ctx3 = $('#myChart3');
   var revenueByHourCtx = $('#revenue-by-hour-chart');
   var revenueByDayCtx = $('#revenue-by-day-chart');
+  var clientQuantityCtx = $('#client-quantity-chart');
+  var topMenuCtx = $('#top-menu-chart');
 
   var totalMoneyToday = {{totalMoneyToday}};
   var totalMoneyByHourToday  = {{{totalMoneyByHourToday}}}
@@ -211,6 +209,23 @@
 
   var totalMoney7Day = {{{totalMoney7Day}}};
   var totalMoneyByHour7Day  = {{{totalMoneyByHour7Day}}};
+
+  var clientQuantityToday = {{{clientQuantityToday}}}
+  var clientQuantityYesterday = {{{clientQuantityYesterday}}}
+  var clientQuantity7Day = {{{clientQuantity7Day}}}
+
+  var top10MenuToday = {{{top10MenuToday}}}
+  var top10MenuYesterday = {{{top10MenuYesterday}}}
+  var top10Menu7Day = {{{top10Menu7Day}}}
+
+  var timeActiveInit = ()=>{
+    var arrInit = [];
+    for(var i = 8; i<=20; i ++)
+    {
+      arrInit.push(i);
+    }
+    return arrInit;
+  }
 
   function moneyFormatter(money)
   {
@@ -239,43 +254,73 @@
     return new Intl.DateTimeFormat("vi-VN").format(date);
   }
   
-  if(totalMoneyToday)
+  const setDataIntoLabelChart = (arr)=>
   {
-   
-    revenueByDateCtx.removeClass('d-none');
-    revenueByDateCtx.addClass('d-block');
-
-    revenueByHourCtx.removeClass('d-none');
-    revenueByHourCtx.addClass('d-block');
-
-    revenueByDayCtx.removeClass('d-none');
-    revenueByDayCtx.addClass('d-block');
+    return timeActiveInit().reduce((init, item)=>
+    {
+      var data = 0;
+        arr.forEach(client=>
+        {
+          if(client.hour == item)
+            data = client.quantity;
+        })
+      return [...init, data];
+    }, [])
   }
   
   
-  
-  new Chart(ctx3, {
+// #region TOP 10 MÓN ĂN BÁN CHẠY HÔM NAY 
+  if(top10MenuToday.length > 0)
+  {
+    topMenuCtx.removeClass('d-none');
+    topMenuCtx.addClass('d-block');
+  }
+  //INIT 
+  var topMenuChart = new Chart(topMenuCtx, {
     type: 'bar',
     data: {
-      labels: [getYesterday(new Date())],
-      datasets: [{label: '# of Votes',ata: [12, 19, 3, 5, 2, 3],borderWidth: 1}]
+      labels: top10MenuToday.map((menu=>menu.name)),
+      datasets: [{label:'Số lượng', data: top10MenuToday.map((menu=>menu.total_quantity)) ,borderWidth: 1, barThickness: 80 }]
     },
     options: {
       scales: {y: {beginAtZero: true} }
     }
   });
-  new Chart(ctx, {
+//#endregion
+//#region SỐ LƯỢNG KHÁCH HÔM NAY
+  if(clientQuantityToday.length > 0)
+  {
+    clientQuantityCtx.removeClass('d-none');
+    clientQuantityCtx.addClass('d-block');
+  }
+  //INIT 
+  
+ 
+
+  var clientQuantityChart = new Chart(clientQuantityCtx, {
     type: 'line',
     data: {
-      labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-      datasets: [{label: '# of Votes',data: [12, 19, 3, 5, 2, 3],borderWidth: 1}]
+      labels: timeActiveInit().map(item=>item + ":00"),
+      datasets: [{label: 'Số lượng khách',data: clientQuantityToday.map(client=>client.quantity),borderWidth: 1, tension:0.4}],
     },
     options: {
       scales: {y: {beginAtZero: true} }
     }
   });
+//#endregion
+//#region DOANH SỐ HÔM NAY
+if(totalMoneyToday)
+{
+  
+  revenueByDateCtx.removeClass('d-none');
+  revenueByDateCtx.addClass('d-block');
 
-// DOANH SỐ HÔM NAY\
+  revenueByHourCtx.removeClass('d-none');
+  revenueByHourCtx.addClass('d-block');
+
+  revenueByDayCtx.removeClass('d-none');
+  revenueByDayCtx.addClass('d-block');
+}
   //INIT CHART
   //THEO NGÀY
  
@@ -312,6 +357,7 @@
       scales: {y: {beginAtZero: true} }
     }
   });
+//#endregio
   //HANDLE SELECT REVENUE
   $("#revenue-select").on('change', function(){
     $("#revenue-select option:selected").each(function(){
@@ -322,7 +368,7 @@
         $('.revenue-title').text("Doanh số hôm nay"); 
         if(totalMoneyToday)
         {
-          revenueByDateCtx.removeClass('d-none');
+            revenueByDateCtx.removeClass('d-none');
             revenueByDateCtx.addClass('d-block');
 
             revenueByHourCtx.removeClass('d-none');
@@ -330,21 +376,21 @@
 
             revenueByDayCtx.removeClass('d-none');
             revenueByDayCtx.addClass('d-block');
-          //THEO NGÀY
-          revenueByDateChart.data.labels = [];
-          revenueByDateChart.data.datasets.forEach((dataset) => {
-              dataset.data = [];
-          });
-          revenueByDateChart.data.labels.push(new Date().getDate() + "/" + (new Date().getMonth() +1) + "/" + new Date().getFullYear());
-          revenueByDateChart.data.datasets.forEach(dataset=>{
-            dataset.data.push(totalMoneyToday);
-          })
-          revenueByDateChart.update();
-          //THEO GIỜ 
-          revenueByHourChart.data.labels = [];
-          revenueByHourChart.data.datasets.forEach((dataset) => {
-              dataset.data = [];
-          });
+            //THEO NGÀY
+            revenueByDateChart.data.labels = [];
+            revenueByDateChart.data.datasets.forEach((dataset) => {
+                dataset.data = [];
+            });
+            revenueByDateChart.data.labels.push(new Date().getDate() + "/" + (new Date().getMonth() +1) + "/" + new Date().getFullYear());
+            revenueByDateChart.data.datasets.forEach(dataset=>{
+              dataset.data.push(totalMoneyToday);
+            })
+            revenueByDateChart.update();
+            //THEO GIỜ 
+            revenueByHourChart.data.labels = [];
+            revenueByHourChart.data.datasets.forEach((dataset) => {
+                dataset.data = [];
+            });
           
             totalMoneyByHourToday.forEach(obj=>{
                 revenueByHourChart.data.labels.push(obj.hour + ":00");
@@ -369,11 +415,11 @@
             revenueByDateCtx.addClass('d-none');
             revenueByDateCtx.removeClass('d-block');
 
-            revenueByHourCtx.removeClass('d-none');
-            revenueByHourCtx.addClass('d-block');
+            revenueByHourCtx.addClass('d-none');
+            revenueByHourCtx.removeClass('d-block');
 
-            revenueByDayCtx.removeClass('d-none');
-            revenueByDayCtx.addClass('d-block');
+            revenueByDayCtx.addClass('d-none');
+            revenueByDayCtx.removeClass('d-block');
         }
         
       }
@@ -509,5 +555,163 @@
     })
   })
   //HANDLE SELECT CLIENT QUANTITY 
-  
+  $('#client_quantity-select').on('change', function(){
+    $('#client_quantity-select option:selected').each(function(){
+      if($(this).val() == 'today')
+      {
+        $('#client_quantity-title').text("Số lượng khách hôm nay")
+        if(clientQuantityToday)
+        {
+          clientQuantityCtx.removeClass('d-none');
+          clientQuantityCtx.addClass('d-block');
+
+          clientQuantityChart.data.datasets.forEach((dataset) => {
+              dataset.data = [];
+          });
+          
+          clientQuantityChart.data.datasets.forEach(dataset=>{
+            dataset.data.push = clientQuantityToday.map(client=>client.quantity);
+          })
+          clientQuantityChart.update();
+        }
+        else 
+        {
+          clientQuantityCtx.removeClass('d-block');
+          clientQuantityCtx.addClass('d-none');
+        }
+      }
+      else if($(this).val() == 'yesterday')
+      {
+        $('#client_quantity-title').text("Số lượng khách hôm qua")
+        if(clientQuantityYesterday)
+        {
+          
+          clientQuantityCtx.removeClass('d-none');
+          clientQuantityCtx.addClass('d-block');
+
+          clientQuantityChart.data.datasets.forEach((dataset) => {
+              dataset.data = [];
+          });
+          
+          clientQuantityChart.data.datasets.forEach(dataset=>{
+            dataset.data= setDataIntoLabelChart(clientQuantityYesterday)
+          })
+          clientQuantityChart.update();
+        }
+        else 
+        {
+          clientQuantityCtx.removeClass('d-block');
+          clientQuantityCtx.addClass('d-none');
+        }
+      }
+      else if($(this).val() == '7')
+      {
+        $('#client_quantity-title').text("Số lượng khách 7 ngày qua")
+        if(clientQuantity7Day)
+        {
+          clientQuantityCtx.removeClass('d-none');
+          clientQuantityCtx.addClass('d-block');
+
+          clientQuantityChart.data.datasets.forEach((dataset) => {
+              dataset.data = [];
+          });
+          
+          clientQuantityChart.data.datasets.forEach(dataset=>{
+            dataset.data= setDataIntoLabelChart(clientQuantity7Day)
+          })
+          clientQuantityChart.update();
+
+        }
+        else 
+        {
+          clientQuantityCtx.removeClass('d-block');
+          clientQuantityCtx.addClass('d-none');
+        }
+      }
+    })
+  })
+  $('#top_menu-select').on('change', function(){
+    $('#top_menu-select option:selected').each(function(){
+      if($(this).val() == 'today')
+      {
+        $("#top_menu-title").text("Top 10 món ăn bán chạy hôm nay")
+        if(top10MenuToday.length > 0)
+        {
+            topMenuCtx.removeClass('d-none');
+            topMenuCtx.addClass('d-block');
+
+            topMenuChart.data.labels = [];
+            topMenuChart.data.datasets.forEach((dataset) => {
+                dataset.data = [];
+            });
+            top10MenuToday.forEach(menu=>{
+              topMenuChart.data.labels.push(menu.name);
+            })
+            topMenuChart.data.datasets.forEach(dataset=>{
+              dataset.data = top10MenuToday.map(menu=>menu.total_quantity)
+            })
+            topMenuChart.update();
+
+        }
+        else 
+        {
+            topMenuCtx.addClass('d-none');
+            topMenuCtx.removeClass('d-block');
+        }
+
+      }
+      else if($(this).val() == 'yesterday')
+      {
+        $("#top_menu-title").text("Top 10 món ăn bán chạy hôm qua")
+        if(top10MenuYesterday.length > 0 )
+        {
+            topMenuCtx.removeClass('d-none');
+            topMenuCtx.addClass('d-block');
+
+            topMenuChart.data.labels = [];
+            topMenuChart.data.datasets.forEach((dataset) => {
+                dataset.data = [];
+            });
+            top10MenuYesterday.forEach(menu=>{
+              topMenuChart.data.labels.push(menu.name);
+            })
+            topMenuChart.data.datasets.forEach(dataset=>{
+              dataset.data = top10MenuYesterday.map(menu=>menu.total_quantity)
+            })
+            topMenuChart.update();
+        }
+        else 
+        {
+            topMenuCtx.addClass('d-none');
+            topMenuCtx.removeClass('d-block');
+        }
+      }
+      else if($(this).val() == '7')
+      {
+        $("#top_menu-title").text("Top 10 món ăn bán chạy 7 ngày qua")
+        if(top10Menu7Day.length > 0)
+        {
+            topMenuCtx.removeClass('d-none');
+            topMenuCtx.addClass('d-block');
+
+            topMenuChart.data.labels = [];
+            topMenuChart.data.datasets.forEach((dataset) => {
+                dataset.data = [];
+            });
+            top10Menu7Day.forEach(menu=>{
+              topMenuChart.data.labels.push(menu.name);
+            })
+            topMenuChart.data.datasets.forEach(dataset=>{
+              dataset.data = top10Menu7Day.map(menu=>menu.total_quantity)
+            })
+            topMenuChart.update();
+        }
+        else 
+        {
+            topMenuCtx.addClass('d-none');
+            topMenuCtx.removeClass('d-block');
+        }
+      }
+    })
+  })
 </script>
