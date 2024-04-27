@@ -1,12 +1,12 @@
-<main class="content px-3 py-4">
+<main class="content">
   <div class="container-fluid">
     <div class="mb-3">
      
         <div class="row">
-            <div class="col-2 main-left">
-                <div class="row rounded-lg p-3 mb-4" style="background-color: #fff;">
-                    <div class="left-item_header d-flex flex-row justify-content-between align-items-center mb-4 p-0" style="width:100%;">
-                        <p>Khu vực</p>
+            <div class="col-3 main-left">
+                <div class="row rounded-lg p-2 mb-4" style="background-color: #fff;">
+                    <div class="left-item_header d-flex flex-row justify-content-between align-items-center mb-2 p-0" style="width:100%;">
+                        <p class="font-weight-bold">Khu vực</p>
                         <button  type="button" class="btn btn-sm btn-primary btn-floating" data-mdb-ripple-init 
                         data-mdb-modal-init data-mdb-target="#exampleModal3">
                             <i class="fa-solid fa-plus "></i>
@@ -19,18 +19,18 @@
                         <option value="3">Tầng 3</option>
                     </select>
                 </div>
-                 <div class="row rounded-lg p-3 mb-4"  style="background-color: #fff;">
-                    <div class="left-item_header d-flex flex-row justify-content-between align-items-center mb-4 p-0" style="width:100%;">
-                        <p>Tìm kiếm</p>
+                 <div class="row rounded-lg p-2 mb-4"  style="background-color: #fff;">
+                    <div class="left-item_header d-flex flex-row justify-content-between align-items-center mb-2 p-0" style="width:100%;">
+                        <p class="font-weight-bold">Tìm kiếm</p>
                     </div>
                     <div class="form-outline" data-mdb-input-init>
                         <input type="text" id="form12" class="form-control" />
                         <label class="form-label" for="form12">Theo tên phòng bàn</label>
                     </div>
                 </div>
-                 <div class="row rounded-lg p-3 mb-4"  style="background-color: #fff;">
+                 <div class="row rounded-lg mb-4 p-2"  style="background-color: #fff;">
                     <div class="left-item_header d-flex flex-row justify-content-between align-items-center p-0" style="width:100%;">
-                        <p>Trạng thái</p>
+                        <p class="font-weight-bold">Trạng thái</p>
                     </div>
 
                     <div class="form-check_group">
@@ -60,7 +60,7 @@
 
                 </div>
             </div>
-            <div class="col-10  main-right">
+            <div class="col-9  main-right">
                 <div class="main-right_header d-flex flex-row justify-content-between align-items-center">
                     <h3 class="fw-bold fs-3 mb-3 mt-3">Phòng/Bàn</h3>
                     <div class="button-group">
@@ -93,8 +93,7 @@
                                 <th scope="col">Khu vực</th>
                                 <th scope="col">Số ghế</th>
                                 <th scope="col">Trạng thái</th>
-                                <th scope="col">Số thứ tự</th>
-                                <th scope="col">Thao tác</th>
+                                <th scope="col" >Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -103,8 +102,9 @@
                                 <td>hihi</td>
                                 <td>Tầng 1</td>
                                 <td>6</td>
-                                <td>Đang hoạt động</td>
-                                <td>2</td>
+                                <td>
+                                    <span class="badge badge-success">Đang hoạt động</span>
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
                                      data-mdb-target="#exampleModal">
@@ -112,7 +112,7 @@
                                         Cập nhật
                                     </button>
                                     <br/>
-                                    <button type="button" class="btn btn-danger btn-sm ">
+                                    <button type="button" class="btn btn-danger btn-sm mb-2">
                                         <i class="lni lni-lock-alt"></i>
                                         Ngừng hoạt động
                                     </button>
@@ -133,8 +133,9 @@
                                 <td>hihi</td>
                                 <td>Tầng 1</td>
                                 <td>6</td>
-                                <td>Đang hoạt động</td>
-                                <td>2</td>
+                                <td>
+                                    <span class="badge badge-light">Ngừng hoạt động</span>
+                                </td>
                                 <td>
                                     <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
                                      data-mdb-target="#exampleModal">
@@ -142,7 +143,7 @@
                                         Cập nhật
                                     </button>
                                     <br/>
-                                    <button type="button" class="btn btn-danger btn-sm ">
+                                    <button type="button" class="btn btn-danger btn-sm mb-2">
                                         <i class="lni lni-lock-alt"></i>
                                         Ngừng hoạt động
                                     </button>
@@ -158,36 +159,7 @@
                                     </button>
                                 </td>
                             </tr>
-                                                          <tr>
-                                <td scope="row">Bàn 6 người</td>
-                                <td>hihi</td>
-                                <td>Tầng 1</td>
-                                <td>6</td>
-                                <td>Đang hoạt động</td>
-                                <td>2</td>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
-                                     data-mdb-target="#exampleModal">
-                                        <i class="lni lni-check-box"></i>
-                                        Cập nhật
-                                    </button>
-                                    <br/>
-                                    <button type="button" class="btn btn-danger btn-sm ">
-                                        <i class="lni lni-lock-alt"></i>
-                                        Ngừng hoạt động
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-sm ">
-                                        <i class="lni lni-trash-can"></i>
-                                        Xóa
-                                    </button>
-                                    <br/ >
-                                     <button type="button" class="btn btn-info btn-sm mt-2" data-mdb-ripple-init 
-                                     data-mdb-modal-init data-mdb-target="#exampleModal2">
-                                        <i class="fa-solid fa-clock-rotate-left"></i>
-                                        Lịch sử giao dịch
-                                    </button>
-                                </td>
-                            </tr>
+                                                          
                         </tbody>
                     </table>
                 </div>

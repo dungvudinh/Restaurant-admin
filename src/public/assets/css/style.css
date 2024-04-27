@@ -29,16 +29,21 @@ a:hover {
   text-decoration: unset !important; }
 
 a {
-  text-decoration: none; }
+  text-decoration: none;
+  font-size: 14px; }
 
 li {
   list-style: none; }
+
+select {
+  font-size: 14px !important; }
 
 p {
   margin-bottom: 0px !important; }
 
 body {
-  font-family: 'Poppins', sans-serif; }
+  font-family: 'Poppins', sans-serif;
+  font-size: 14px !important; }
 
 .wrapper {
   display: flex; }

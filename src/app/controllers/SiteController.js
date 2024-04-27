@@ -3,6 +3,8 @@ const {getOrderCompleted, getTotalMoneyToday,getTotalMoneyYesterday, getOrderBei
     getTotalMoney7Day, getTotalMoneyByHourToday,  getTotalMoneyByHour7Day, getClientQuantityToday, 
     getClientQuantityYesterday, getClientQuantity7Day, getTop10MenuToday, getTop10MenuYesterday, 
     getTop10Menu7Day}  = require('../models/dashboard');
+
+const {getAllArea} = require('../models/roomTable');
 class SiteController 
 {
      async dashboard(req,res)
@@ -59,6 +61,8 @@ class SiteController
     {
         try 
         {
+            const areas = await getAllArea();
+            console.log(areas)
             res.render('room-table');
         }
         catch(error)
