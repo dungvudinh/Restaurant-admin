@@ -1,9 +1,13 @@
+<script>
+    var queryParameters = new URLSearchParams(window.location.search);
+    console.log(queryParameters.get(status));
+</script>
 <main class="content">
   <div class="container-fluid">
     <div class="mb-3">
      
         <div class="row">
-            <div class="col-3 main-left">
+            <div class="col-2 main-left">
                 <div class="row rounded-lg p-2 mb-4" style="background-color: #fff;">
                     <div class="left-item_header d-flex flex-row justify-content-between align-items-center mb-2 p-0" style="width:100%;">
                         <p class="font-weight-bold">Khu vực</p>
@@ -12,11 +16,11 @@
                             <i class="fa-solid fa-plus "></i>
                         </button>
                     </div>
-                    <select class="custom-select mb-3">
-                        <option selected>--Tất cả--</option>
-                        <option value="1">Tầng 1</option>
-                        <option value="2">Tầng 2</option>
-                        <option value="3">Tầng 3</option>
+                    <select class="custom-select mb-3" id="area-select">
+                        <option selected value="all">--Tất cả--</option>
+                        {{#each listArea}}
+                            <option value="{{this.id}}">{{this.name}}</option>
+                        {{/each}}
                     </select>
                 </div>
                  <div class="row rounded-lg p-2 mb-4"  style="background-color: #fff;">
@@ -24,7 +28,7 @@
                         <p class="font-weight-bold">Tìm kiếm</p>
                     </div>
                     <div class="form-outline" data-mdb-input-init>
-                        <input type="text" id="form12" class="form-control" />
+                        <input type="text" id="form12" class="form-control" name="search-input"/>
                         <label class="form-label" for="form12">Theo tên phòng bàn</label>
                     </div>
                 </div>
@@ -35,34 +39,35 @@
 
                     <div class="form-check_group">
 
+                         <div class="form-check m-2">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="all" `${queryParameters.get('status') == 'all' ? 'checked' : '' }`
+                            >
+                            <label class="form-check-label" for="exampleRadios3">
+                                Tất cả
+                            </label>
+                        </div>
                         <div class="form-check m-2">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="1">
                             <label class="form-check-label" for="exampleRadios1">
                                 Đang hoạt động
                             </label>
                         </div>
                         
                         <div class="form-check m-2">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option1">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="2">
                             <label class="form-check-label" for="exampleRadios2">
                                 Ngừng hoạt động
                             </label>
                         </div>
 
-                         <div class="form-check m-2">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="option1">
-                            <label class="form-check-label" for="exampleRadios3">
-                                Tất cả
-                            </label>
-                        </div>
 
                     </div>
 
                 </div>
             </div>
-            <div class="col-9  main-right">
+            <div class="col-10  main-right">
                 <div class="main-right_header d-flex flex-row justify-content-between align-items-center">
-                    <h3 class="fw-bold fs-3 mb-3 mt-3">Phòng/Bàn</h3>
+                    <h5 class="fw-bold mb-3 mt-3">Phòng/Bàn</h5>
                     <div class="button-group">
                         <button type="button" class="btn btn-success btn-sm " data-toggle="modal" data-mdb-target="#exampleModal" 
                          data-mdb-ripple-init data-mdb-modal-init >
@@ -86,22 +91,24 @@
 
                 <div class="main-right_content mt-2">
                     <table class="table table-light" border="1">
-                        <thead class="thead-dark">
+                        <thead class="thead-dark" >
                             <tr>
                                 <th scope="col">Tên phòng bàn</th>
                                 <th scope="col">Ghi chú</th>
                                 <th scope="col">Khu vực</th>
                                 <th scope="col">Số ghế</th>
-                                <th scope="col">Trạng thái</th>
-                                <th scope="col" >Thao tác</th>
+                                <th scope="col">Mô tả</th>
+                                <th scope="col" >Trạng thái</th>
+                                <th scope="col" style="width:200px">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td scope="row">Bàn 6 người</td>
+                                <td scope="row">Bàn số 1</td>
                                 <td>hihi</td>
                                 <td>Tầng 1</td>
                                 <td>6</td>
+                                <td>Bàn 6 người</td>
                                 <td>
                                     <span class="badge badge-success">Đang hoạt động</span>
                                 </td>
@@ -129,10 +136,12 @@
                                 </td>
                             </tr>
                               <tr>
-                                <td scope="row">Bàn 6 người</td>
+                                <td scope="row">Bàn số 2</td>
                                 <td>hihi</td>
                                 <td>Tầng 1</td>
                                 <td>6</td>
+                                <td>Bàn 6 người</td>
+
                                 <td>
                                     <span class="badge badge-light">Ngừng hoạt động</span>
                                 </td>
@@ -294,25 +303,27 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Thêm khu vực</h5>
+        <h5 class="modal-title " id="exampleModalLabel" style="font-size: 18px !important;" >Thêm khu vực</h5>
         <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-         <div class="form-outline mb-3" data-mdb-input-init>
-            <input type="text" id="form12" class="form-control" />
-            <label class="form-label" for="form12">Tên khu vực</label>
-        </div>
-         <div class="form-outline mb-3" data-mdb-input-init>
-            <input type="text" id="form12" class="form-control" />
-            <label class="form-label" for="form12">Ghi chú <i class="lni lni-pencil"></i></label>
-        </div>
+        <form action="room-table/area/new" method="POST" id="new-area_form">
+            <div class="form-outline mb-3" data-mdb-input-init>
+                <input type="text" id="form12" class="form-control" name="area_name"/>
+                <label class="form-label" for="form12">Tên khu vực</label>
+            </div>
+            <div class="form-outline mb-3" data-mdb-input-init>
+                <input type="text" id="form12" class="form-control" name="area_note"/>
+                <label class="form-label" for="form12">Ghi chú <i class="lni lni-pencil"></i></label>
+            </div>
+        </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">
             <i class="fa-solid fa-ban"></i>
             Bỏ qua
         </button>
-        <button type="button" class="btn btn-success" data-mdb-ripple-init>
+        <button type="button" class="btn btn-success" data-mdb-ripple-init id="save-new_area">
             <i class="fa-regular fa-floppy-disk"></i>
             Lưu
         </button>
@@ -320,8 +331,55 @@
     </div>
   </div>
 </div>
+<form action="" id="form-submit">
+    <input name="area" hidden/>
+    <input type="text" name="status" hidden>
+</form>
+<script>
+    $(document).ready(function(){
+        $('#save-new_area').click(function(e){
+            $('#new-area_form').submit();
+        })
+        //area select 
+        $('#area-select').change(function(e){
+            var queryParams = new URLSearchParams(window.location.search);
+            $('input[name="status"]').val(queryParams.get('status'));
+            $('input[name="area"]').val($(this).val());
+            $('#form-submit').submit();
+        })
+        //search input 
+        $('input[name="search-input"]').on('keydown', function(e){
+           
+            if(e.keyCode == 13)
+            {
+                const input = document.createElement('input');
+                var queryParams = new URLSearchParams(window.location.search);
+                input.name = "q";
+                input.value = $(this).val();
+                $('input[name="status"]').val(queryParams.get('status'));
+                $('input[name="area"]').val(queryParams.get('area'));
+                $('#form-submit').append(input);
+                $('#form-submit').submit();
 
-
+            }
+        })
+        //status change
+        console.log($('.form-check-input:checked'))
+        $('.form-check-input').change(function(e){
+            var queryParams = new URLSearchParams(window.location.search);
+            var statusInput = $('input[name="status"]');
+            var searchInput = document.createElement('input');
+            var areaInput = $('input[name="area"]');
+            searchInput.name = "q";
+            searchInput.value = queryParams.get('q');
+            areaInput.val(queryParams.get('area'));
+            statusInput.val($(this).val());
+            console.log($(".form-check-input:checked").val())
+            $('#form-submit').append(searchInput);
+            $('#form-submit').submit();
+        })
+    })
+</script>
 {{!-- <script>
     $('#exampleModal3').modal('show');
 </script> --}}

@@ -4,7 +4,7 @@ const {getOrderCompleted, getTotalMoneyToday,getTotalMoneyYesterday, getOrderBei
     getClientQuantityYesterday, getClientQuantity7Day, getTop10MenuToday, getTop10MenuYesterday, 
     getTop10Menu7Day}  = require('../models/dashboard');
 
-const {getAllArea} = require('../models/roomTable');
+const {getAllArea, insertArea} = require('../models/roomTable');
 class SiteController 
 {
      async dashboard(req,res)
@@ -29,8 +29,6 @@ class SiteController
             var top10MenuToday  = await getTop10MenuToday();
             var top10MenuYesterday = await getTop10MenuYesterday();
             var top10Menu7Day = await getTop10Menu7Day();
-            console.log(top10Menu7Day)
-            console.log(top10MenuYesterday)
             res.render('dashboard',{
                 numOfOrderCompleted:orderCompleted.length > 0 ? orderCompleted[0].numOfOrderCompleted : 0, 
                 totalMoneyToday: totalMoneyToday[0].total ? totalMoneyToday[0].total : 0, 
@@ -61,13 +59,26 @@ class SiteController
     {
         try 
         {
-            const areas = await getAllArea();
-            console.log(areas)
-            res.render('room-table');
+            const listArea = await getAllArea();
+            res.render('room-table', {
+                listArea
+            });
         }
         catch(error)
         {
-
+            console.log(error);
+        }
+    }
+    async newArea(req, res)
+    {
+        try 
+        {
+            await insertArea(req.body);
+            res.redirect('back');
+        }
+        catch(error)
+        {
+            console.log(error);
         }
     }
    

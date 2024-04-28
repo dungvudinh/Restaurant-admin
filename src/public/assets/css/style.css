@@ -7,6 +7,12 @@
   margin: 0;
   padding: 0; }
 
+button {
+  font-size: 10px !important; }
+
+input {
+  font-size: 12px !important; }
+
 input:focus {
   outline: none; }
 
@@ -30,23 +36,26 @@ a:hover {
 
 a {
   text-decoration: none;
-  font-size: 14px; }
+  font-size: 12px !important; }
 
 li {
   list-style: none; }
 
 select {
-  font-size: 14px !important; }
+  font-size: 12px !important; }
 
 p {
   margin-bottom: 0px !important; }
 
 body {
   font-family: 'Poppins', sans-serif;
-  font-size: 14px !important; }
+  font-size: 12px !important; }
 
 .wrapper {
   display: flex; }
+
+table, nav {
+  font-size: 12px !important; }
 
 .main {
   display: flex;
@@ -59,8 +68,8 @@ body {
   min-width: 0; }
 
 #sidebar {
-  width: 260px;
-  min-width: 260px;
+  width: 220px;
+  min-width: 220px;
   z-index: 1000;
   transition: all .25s ease-in-out;
   background-color: #0e2238;
@@ -68,8 +77,8 @@ body {
   flex-direction: column; }
 
 #sidebar.expand {
-  width: 260px;
-  min-width: 260px; }
+  width: 220px;
+  min-width: 220px; }
 
 .toggle-btn {
   background-color: transparent;
