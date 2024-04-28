@@ -8,10 +8,7 @@ class MenuController
        {
             var foodGroupId = req.query.id;
             var page = req.query.page;
-            console.log(page)
-            console.log(foodGroupId)
             var listMenuByGroupId = await getMenuByGroupId(foodGroupId, page);
-            console.log(listMenuByGroupId)
             var pageQUantity = await recordQuantity(foodGroupId);
             
             var listMenuByGroupPromise = await listMenuByGroupId.map(async (mainMenu)=>{

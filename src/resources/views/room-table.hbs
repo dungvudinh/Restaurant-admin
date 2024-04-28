@@ -331,15 +331,35 @@
     </div>
   </div>
 </div>
-<form action="" id="form-submit">
+<form action="/room-table/filter" id="form-submit" method="GET">
     <input name="area" hidden/>
     <input type="text" name="status" hidden>
+    {{!-- <input type="text"  hidden > --}}
+    <button type="submit">Submit</button>
 </form>
+<script src="/jquery/jquery.min.js"></script>
 <script>
+    
     $(document).ready(function(){
+        
         $('#save-new_area').click(function(e){
             $('#new-area_form').submit();
         })
+        {{!-- $('#form-submit').submit(function(event){
+            event.preventDefault();
+            $.ajax({
+                type: 'GET',
+                data: $(this).serialize(),
+                success: function(response) {
+                    console.log(response);  
+                    // Handle success response
+                },
+                error: function(err) {
+                    alert('Error submitting form!');
+                    // Handle error response
+                }
+            });
+         }); --}}
         //area select 
         $('#area-select').change(function(e){
             var queryParams = new URLSearchParams(window.location.search);
@@ -349,10 +369,11 @@
         })
         //search input 
         $('input[name="search-input"]').on('keydown', function(e){
-           
+            
             if(e.keyCode == 13)
             {
                 const input = document.createElement('input');
+                console.log($('#form-submit'))
                 var queryParams = new URLSearchParams(window.location.search);
                 input.name = "q";
                 input.value = $(this).val();
@@ -363,21 +384,22 @@
 
             }
         })
+        
         //status change
-        console.log($('.form-check-input:checked'))
         $('.form-check-input').change(function(e){
             var queryParams = new URLSearchParams(window.location.search);
             var statusInput = $('input[name="status"]');
-            var searchInput = document.createElement('input');
+            {{!-- var searchInput = document.createElement('input'); --}}
             var areaInput = $('input[name="area"]');
-            searchInput.name = "q";
-            searchInput.value = queryParams.get('q');
+            {{!-- searchInput.name = "q";
+            searchInput.setAttribute('hidden');
+            searchInput.value = queryParams.get('q'); --}}
             areaInput.val(queryParams.get('area'));
             statusInput.val($(this).val());
-            console.log($(".form-check-input:checked").val())
-            $('#form-submit').append(searchInput);
+            {{!-- $('#form-submit').append(searchInput); --}}
             $('#form-submit').submit();
         })
+         
     })
 </script>
 {{!-- <script>

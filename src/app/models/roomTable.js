@@ -17,7 +17,24 @@ const getAllArea = ()=>
         })
     })
 }
-
+const searchQuery = (query)=>
+{
+    return new Promise((resolve, reject)=>
+    {
+        var sql = `SELECT * FROM area WHERE name = ${query}`;
+        connection.query(sql, (err, res)=>
+        {
+            if(!err)
+                resolve(res);
+            else 
+                resolve({
+                    status:"error", 
+                    message: "Error getting data", 
+                    debug:err
+                })
+        })
+    })
+}
 const insertArea = (data) =>
 {
     return new Promise((resolve, reject)=>
@@ -38,4 +55,4 @@ const insertArea = (data) =>
     })
 }
 
-module.exports= {getAllArea, insertArea}
+module.exports= {getAllArea, insertArea, searchQuery}
