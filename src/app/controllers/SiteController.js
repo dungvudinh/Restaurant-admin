@@ -4,7 +4,7 @@ const {getOrderCompleted, getTotalMoneyToday,getTotalMoneyYesterday, getOrderBei
     getClientQuantityYesterday, getClientQuantity7Day, getTop10MenuToday, getTop10MenuYesterday, 
     getTop10Menu7Day}  = require('../models/dashboard');
 
-const {getAllArea, insertArea, searchQuery} = require('../models/roomTable');
+const {getAllArea, insertArea, searchQuery, filterData} = require('../models/roomTable');
 class SiteController 
 {
      async dashboard(req,res)
@@ -60,11 +60,8 @@ class SiteController
         try 
         {
             const listArea = await getAllArea();
-            const searchQuery2 = await searchQuery();
-            console.log(searchQuery)
             res.render('room-table', {
-                listArea, 
-                searchQuery: JSON.stringify(searchQuery2)
+                listArea
             });
         }
         catch(error)
@@ -76,7 +73,8 @@ class SiteController
     {
         try 
         {
-            res.json(req.params);
+            const result  =  await filterData(req.query.status, req.query.area);
+            res.json(result);
         }
         catch(error)
         {
@@ -93,6 +91,21 @@ class SiteController
         catch(error)
         {
             console.log(error);
+        }
+    }
+
+    async search(req,res)
+    {
+        try 
+        {
+            const result = await searchQuery(req.query.search);
+            console.log("Dungg")
+            console.log(req)
+            res.json(result);
+        }
+        catch(error)
+        {
+            console.log(error)
         }
     }
    

@@ -94,7 +94,6 @@
                         <thead class="thead-dark" >
                             <tr>
                                 <th scope="col">Tên phòng bàn</th>
-                                <th scope="col">Ghi chú</th>
                                 <th scope="col">Khu vực</th>
                                 <th scope="col">Số ghế</th>
                                 <th scope="col">Mô tả</th>
@@ -105,7 +104,6 @@
                         <tbody>
                             <tr>
                                 <td scope="row">Bàn số 1</td>
-                                <td>hihi</td>
                                 <td>Tầng 1</td>
                                 <td>6</td>
                                 <td>Bàn 6 người</td>
@@ -137,7 +135,6 @@
                             </tr>
                               <tr>
                                 <td scope="row">Bàn số 2</td>
-                                <td>hihi</td>
                                 <td>Tầng 1</td>
                                 <td>6</td>
                                 <td>Bàn 6 người</td>
@@ -331,75 +328,147 @@
     </div>
   </div>
 </div>
-<form action="/room-table/filter" id="form-submit" method="GET">
+<form action="" id="form-submit">
     <input name="area" hidden/>
     <input type="text" name="status" hidden>
-    {{!-- <input type="text"  hidden > --}}
+    <input type="text" name="search" hidden>
+</form>
+
+<form  id="form-submit2">
+    <input type="text" name="search">
     <button type="submit">Submit</button>
 </form>
+<div id="searchResults">
+        <!-- Search results will be displayed here -->
+</div>
 <script src="/jquery/jquery.min.js"></script>
 <script>
-    
     $(document).ready(function(){
-        
+         function displayResults(results) {
+            $('#searchResults').empty();
+            results.forEach(function(result){
+                $('#searchResults').append(`<div><h3>${result.name}</h3><p>${result.note}</p></div>`);
+            });
+        }
+        function addRowTable(response)
+        {
+             $('table tbody').empty();
+            response.forEach(item=>{
+                console.log(item)
+                $('table tbody').append(`<tr>
+                    <td>${item.name}</td>   
+                    <td>${item.area}</td>
+                    <td>${item.chair_quantity}</td>
+                    <td>${item.desc}</td>
+                    <td><span class="badge badge-${item.table_status ==1 ? 'success' :'light'}">${item.table_status == 1 ? 'Đang hoạt động' : 'Ngừng hoạt động'}</span></td>
+                    <td>
+                        <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
+                            data-mdb-target="#exampleModal">
+                            <i class="lni lni-check-box"></i>
+                            Cập nhật
+                        </button>
+                        <br/>
+                        <button type="button" class="btn btn-danger btn-sm mb-2">
+                            <i class="lni lni-lock-alt"></i>
+                            Ngừng hoạt động
+                        </button>
+                        <button type="button" class="btn btn-danger btn-sm ">
+                            <i class="lni lni-trash-can"></i>
+                            Xóa
+                        </button>
+                        <br/ >
+                            <button type="button" class="btn btn-info btn-sm mt-2" data-mdb-ripple-init 
+                            data-mdb-modal-init data-mdb-target="#exampleModal2">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            Lịch sử giao dịch
+                        </button>
+                    </td>
+                </tr>`)
+            })
+        }
+        $('#form-submit2').submit(function(e){
+            e.preventDefault();
+            const searchTerm = $('input[name="search"]').val();
+            $.ajax({
+                    url: '/search',
+                    type: 'GET',
+                    data: { search: searchTerm },
+                    success: function(response){
+                        displayResults(response);
+                    },
+                    error: function(xhr, status, error){
+                        console.error(error);
+                    }
+                });
+        })
         $('#save-new_area').click(function(e){
             $('#new-area_form').submit();
         })
-        {{!-- $('#form-submit').submit(function(event){
-            event.preventDefault();
-            $.ajax({
-                type: 'GET',
-                data: $(this).serialize(),
-                success: function(response) {
-                    console.log(response);  
-                    // Handle success response
-                },
-                error: function(err) {
-                    alert('Error submitting form!');
-                    // Handle error response
-                }
-            });
-         }); --}}
         //area select 
         $('#area-select').change(function(e){
+            e.preventDefault();
             var queryParams = new URLSearchParams(window.location.search);
-            $('input[name="status"]').val(queryParams.get('status'));
-            $('input[name="area"]').val($(this).val());
+            var areaValue = $(this).val();
+            var path = window.location.href.split('?')[0];
+            queryParams.set('area',areaValue );
+            var newUrl = `${path}?${queryParams}`;
+            window.history.pushState({}, '', newUrl);
+            $('#form-submit').submit(function(e){
+                e.preventDefault();
+                $.ajax({
+                    url: '/room-table/filter',
+                    type: 'GET',
+                    data: { status:queryParams.get('status'), area:areaValue  },
+                    success: function(response){
+                       addRowTable(response);
+                    },
+                    error: function(xhr, status, error){
+                        console.error(error);
+                    }
+                });
+            });
             $('#form-submit').submit();
         })
         //search input 
-        $('input[name="search-input"]').on('keydown', function(e){
-            
-            if(e.keyCode == 13)
-            {
-                const input = document.createElement('input');
-                console.log($('#form-submit'))
+        $('input[name="search-input"]').on('input', function(e){
+           
                 var queryParams = new URLSearchParams(window.location.search);
-                input.name = "q";
-                input.value = $(this).val();
-                $('input[name="status"]').val(queryParams.get('status'));
-                $('input[name="area"]').val(queryParams.get('area'));
-                $('#form-submit').append(input);
+                var searchValue = $(this).val();
+                var path = window.location.href.split('?')[0];
+                queryParams.set('q',searchValue );
+                var newUrl = `${path}?${queryParams}`;
+                window.history.pushState({}, '', newUrl);
+                $('#form-submit').submit(function(e){
+                    e.preventDefault();
+                    $.ajax({
+                        url: '/room-table/filter',
+                        type: 'GET',
+                        data: { status:queryParams.get('status'), area:queryParams.get('area'), q:searchValue },
+                        success: function(response){
+                        addRowTable(response);
+                        },
+                        error: function(xhr, status, error){
+                            console.error(error);
+                        }
+                    });
+                });
                 $('#form-submit').submit();
 
-            }
         })
-        
         //status change
-        $('.form-check-input').change(function(e){
+        {{!-- $('.form-check-input').change(function(e){
             var queryParams = new URLSearchParams(window.location.search);
             var statusInput = $('input[name="status"]');
-            {{!-- var searchInput = document.createElement('input'); --}}
+            var searchInput = document.createElement('input');
             var areaInput = $('input[name="area"]');
-            {{!-- searchInput.name = "q";
-            searchInput.setAttribute('hidden');
-            searchInput.value = queryParams.get('q'); --}}
+            searchInput.name = "q";
+            searchInput.value = queryParams.get('q');
             areaInput.val(queryParams.get('area'));
             statusInput.val($(this).val());
-            {{!-- $('#form-submit').append(searchInput); --}}
+            console.log($(".form-check-input:checked").val())
+            $('#form-submit').append(searchInput);
             $('#form-submit').submit();
-        })
-         
+        }) --}}
     })
 </script>
 {{!-- <script>
