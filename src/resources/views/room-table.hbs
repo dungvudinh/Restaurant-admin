@@ -102,13 +102,19 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td scope="row">Bàn số 1</td>
-                                <td>Tầng 1</td>
-                                <td>6</td>
-                                <td>Bàn 6 người</td>
+                            {{#each listRoomTable}}
+                                <tr>
+                                <td scope="row">{{this.name}}</td>
+                                <td>Tầng {{this.area}}</td>
+                                <td>{{this.chair_quantity}}</td>
+                                <td>{{this.desc}}</td>
                                 <td>
-                                    <span class="badge badge-success">Đang hoạt động</span>
+                                    {{#if (isRoomTableActive this.status)}}
+                                        <span class="badge badge-success">Đang hoạt động</span>
+                                        {{else}}
+                                        <span class="badge badge-light">Ngừng hoạt động</span>
+                                    {{/if}}
+                                    
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
@@ -133,53 +139,32 @@
                                     </button>
                                 </td>
                             </tr>
-                              <tr>
-                                <td scope="row">Bàn số 2</td>
-                                <td>Tầng 1</td>
-                                <td>6</td>
-                                <td>Bàn 6 người</td>
-
-                                <td>
-                                    <span class="badge badge-light">Ngừng hoạt động</span>
-                                </td>
-                                <td>
-                                    <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
-                                     data-mdb-target="#exampleModal">
-                                        <i class="lni lni-check-box"></i>
-                                        Cập nhật
-                                    </button>
-                                    <br/>
-                                    <button type="button" class="btn btn-danger btn-sm mb-2">
-                                        <i class="lni lni-lock-alt"></i>
-                                        Ngừng hoạt động
-                                    </button>
-                                    <button type="button" class="btn btn-danger btn-sm ">
-                                        <i class="lni lni-trash-can"></i>
-                                        Xóa
-                                    </button>
-                                    <br/ >
-                                     <button type="button" class="btn btn-info btn-sm mt-2" data-mdb-ripple-init 
-                                     data-mdb-modal-init data-mdb-target="#exampleModal2">
-                                        <i class="fa-solid fa-clock-rotate-left"></i>
-                                        Lịch sử giao dịch
-                                    </button>
-                                </td>
-                            </tr>
-                                                          
+                            {{/each}}
                         </tbody>
                     </table>
                 </div>
 
                  <div class="row d-flex justify-content-center">
-                    <nav aria-label="Page navigation example " style="width:auto !important;">
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#"><i class="lni lni-angle-double-left"></i></a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">3</a></li>
-                            <li class="page-item"><a class="page-link" href="#"><i class="lni lni-angle-double-right"></i></a></li>
+                    {{#if (isMultiplePage pageQuantity)}}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination d-flex justify-content-center">
+                            {{!-- {{pageQuantityRendering}} --}}
+                            <li class="page-item">
+                                <a class="page-link" href="#" aria-label="previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            {{#each (pageQuantityRendering pageQuantity)}}
+                                <li class="page-item"><a class="page-link" href="" aria-label="{{this}}">{{this}}</a></li>
+                            {{/each}}
+                            <li class="page-item">
+                            <a class="page-link" href="#" aria-label="next" >
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                            </li>
                         </ul>
                     </nav>
+                {{/if}}
                 </div>
 
             </div>
@@ -331,36 +316,23 @@
 <form action="" id="form-submit">
     <input name="area" hidden/>
     <input type="text" name="status" hidden>
-    <input type="text" name="search" hidden>
 </form>
 
-<form  id="form-submit2">
-    <input type="text" name="search">
-    <button type="submit">Submit</button>
-</form>
-<div id="searchResults">
-        <!-- Search results will be displayed here -->
-</div>
+<form action="" id="form-submit2"></form>
+
 <script src="/jquery/jquery.min.js"></script>
 <script>
     $(document).ready(function(){
-         function displayResults(results) {
-            $('#searchResults').empty();
-            results.forEach(function(result){
-                $('#searchResults').append(`<div><h3>${result.name}</h3><p>${result.note}</p></div>`);
-            });
-        }
         function addRowTable(response)
         {
              $('table tbody').empty();
             response.forEach(item=>{
-                console.log(item)
                 $('table tbody').append(`<tr>
                     <td>${item.name}</td>   
                     <td>${item.area}</td>
                     <td>${item.chair_quantity}</td>
                     <td>${item.desc}</td>
-                    <td><span class="badge badge-${item.table_status ==1 ? 'success' :'light'}">${item.table_status == 1 ? 'Đang hoạt động' : 'Ngừng hoạt động'}</span></td>
+                    <td><span class="badge badge-${item.status ==1 ? 'success' :'light'}">${item.status == 1 ? 'Đang hoạt động' : 'Ngừng hoạt động'}</span></td>
                     <td>
                         <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
                             data-mdb-target="#exampleModal">
@@ -386,39 +358,42 @@
                 </tr>`)
             })
         }
-        $('#form-submit2').submit(function(e){
-            e.preventDefault();
-            const searchTerm = $('input[name="search"]').val();
-            $.ajax({
-                    url: '/search',
-                    type: 'GET',
-                    data: { search: searchTerm },
-                    success: function(response){
-                        displayResults(response);
-                    },
-                    error: function(xhr, status, error){
-                        console.error(error);
-                    }
-                });
-        })
         $('#save-new_area').click(function(e){
             $('#new-area_form').submit();
         })
+        $('#form-submit').submit(function(e){
+            e.preventDefault();
+            var queryParams = new URLSearchParams(window.location.search);
+            var searchValue = $('input[name="search-input"]').val();
+            $.ajax({
+                url: '/room-table/filter',
+                type: 'GET',
+                data: { status:queryParams.get('status'), area:queryParams.get('area'), q:searchValue },
+                success: function(response){
+                    addRowTable(response)
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        });
         //area select 
+        let areaSelect;
         $('#area-select').change(function(e){
             e.preventDefault();
+            clearTimeout(areaSelect);
             var queryParams = new URLSearchParams(window.location.search);
             var areaValue = $(this).val();
             var path = window.location.href.split('?')[0];
             queryParams.set('area',areaValue );
             var newUrl = `${path}?${queryParams}`;
             window.history.pushState({}, '', newUrl);
-            $('#form-submit').submit(function(e){
+            {{!-- $('#form-submit').submit(function(e){
                 e.preventDefault();
                 $.ajax({
                     url: '/room-table/filter',
                     type: 'GET',
-                    data: { status:queryParams.get('status'), area:areaValue  },
+                    data: { status:queryParams.get('status'), area:areaValue},
                     success: function(response){
                        addRowTable(response);
                     },
@@ -426,49 +401,38 @@
                         console.error(error);
                     }
                 });
-            });
-            $('#form-submit').submit();
+            }); --}}
+            areaSelect  = setTimeout(()=>$('#form-submit').submit(), 500)
         })
         //search input 
+        
+        
+        let typingTimer;
         $('input[name="search-input"]').on('input', function(e){
-           
+                clearTimeout(typingTimer);
                 var queryParams = new URLSearchParams(window.location.search);
-                var searchValue = $(this).val();
                 var path = window.location.href.split('?')[0];
+                var searchValue = $('input[name="search-input"]').val();
                 queryParams.set('q',searchValue );
                 var newUrl = `${path}?${queryParams}`;
                 window.history.pushState({}, '', newUrl);
-                $('#form-submit').submit(function(e){
-                    e.preventDefault();
-                    $.ajax({
-                        url: '/room-table/filter',
-                        type: 'GET',
-                        data: { status:queryParams.get('status'), area:queryParams.get('area'), q:searchValue },
-                        success: function(response){
-                        addRowTable(response);
-                        },
-                        error: function(xhr, status, error){
-                            console.error(error);
-                        }
-                    });
-                });
-                $('#form-submit').submit();
+                typingTimer  = setTimeout(()=>$('#form-submit').submit(), 500);
 
         })
         //status change
-        {{!-- $('.form-check-input').change(function(e){
+        let statusRadio;
+        $('.form-check-input').change(function(e){
+             clearTimeout(statusRadio);
             var queryParams = new URLSearchParams(window.location.search);
-            var statusInput = $('input[name="status"]');
-            var searchInput = document.createElement('input');
-            var areaInput = $('input[name="area"]');
-            searchInput.name = "q";
-            searchInput.value = queryParams.get('q');
-            areaInput.val(queryParams.get('area'));
-            statusInput.val($(this).val());
-            console.log($(".form-check-input:checked").val())
-            $('#form-submit').append(searchInput);
-            $('#form-submit').submit();
-        }) --}}
+            console.log($(this).val())
+            var queryParams = new URLSearchParams(window.location.search);
+            var path = window.location.href.split('?')[0];
+            queryParams.set('status',$(this).val());
+            var newUrl = `${path}?${queryParams}`;
+            window.history.pushState({}, '', newUrl);
+            statusRadio = setTimeout(()=>$('#form-submit').submit(), 500)
+
+        })
     })
 </script>
 {{!-- <script>

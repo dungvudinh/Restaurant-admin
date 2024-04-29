@@ -4,7 +4,7 @@ const {getOrderCompleted, getTotalMoneyToday,getTotalMoneyYesterday, getOrderBei
     getClientQuantityYesterday, getClientQuantity7Day, getTop10MenuToday, getTop10MenuYesterday, 
     getTop10Menu7Day}  = require('../models/dashboard');
 
-const {getAllArea, insertArea, searchQuery, filterData} = require('../models/roomTable');
+const {getAllArea, insertArea, searchQuery, filterData, getAllRoomTable, recordQuantity} = require('../models/roomTable');
 class SiteController 
 {
      async dashboard(req,res)
@@ -60,8 +60,11 @@ class SiteController
         try 
         {
             const listArea = await getAllArea();
+            const listRoomTable = await getAllRoomTable();
             res.render('room-table', {
-                listArea
+                listArea, 
+                listRoomTable, 
+                pageQuantity: Math.ceil(recordQuantity/5)
             });
         }
         catch(error)
@@ -73,7 +76,8 @@ class SiteController
     {
         try 
         {
-            const result  =  await filterData(req.query.status, req.query.area);
+            console.log(req);
+            const result  =  await filterData(req.query.status, req.query.area, req.query.q);
             res.json(result);
         }
         catch(error)

@@ -44,7 +44,8 @@ app.engine('hbs', engine({
             console.log(pageArr);
             return pageArr;
         }, 
-        isMultiplePage: (pageQuantity)=>pageQuantity >1  ? true : false
+        isMultiplePage: (pageQuantity)=>pageQuantity >1  ? true : false, 
+        isRoomTableActive:(status) => status == 0 ? false :true
     }
 }));
 
