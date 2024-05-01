@@ -45,7 +45,12 @@ const insertArea = (data) =>
         connection.query(sql,[value],  (err, res)=>
         {
             if(!err)
-                resolve(res);
+            {
+                connection.query(`SELECT  * FROM area WHERE id = ${res.insertId}`, (error, result)=>{
+                    if(!error)
+                        resolve(result);
+                })
+            }
             else 
                 resolve({
                     status:"error", 
@@ -79,7 +84,7 @@ const getAllRoomTable = (pageNumber = 0)=>
 {
     return new Promise((resolve, reject)=>
     {
-        var sql = `SELECT * FROM roomtable  LIMIT 5 OFFSET ${pageNumber}`;
+        var sql = `SELECT * FROM roomtable  LIMIT 4 OFFSET ${pageNumber}`;
         connection.query(sql,  (err, res)=>
         {
             if(!err)
@@ -97,7 +102,7 @@ const recordQuantity  = ()=>
 {
     return new Promise((resolve, reject)=>
     {
-        var sql = `SELECT COUNT(*) FROM roomtable`;
+        var sql = `SELECT COUNT(*) as recordQuantity FROM roomtable`;
         connection.query(sql,  (err, res)=>
         {
             if(!err)
@@ -111,4 +116,86 @@ const recordQuantity  = ()=>
         })
     })
 }
-module.exports= {getAllArea, insertArea, searchQuery, filterData, getAllRoomTable, recordQuantity}
+const insertRoomTable = (data)=>
+{
+    return new Promise((resolve, reject)=>
+    {
+        var sql = "INSERT INTO roomtable (name, area,chair_quantity, note, status) VALUES(?)";
+        var values = [data.name, data.area, data.chair_quantity, data.note, 1];
+        connection.query(sql,[values],  (err, res)=>
+        {
+            if(!err)
+            {
+                connection.query(`SELECT * FROM roomtable WHERE id = ${res.insertId}`, (error, result)=>
+                {
+                    if(!error)
+                    resolve({
+                        status:'success', 
+                        data:result
+                    });
+                })
+            }
+            else 
+                resolve({
+                    status:"error", 
+                    message: "Error getting data", 
+                    debug:err
+                })
+        })
+    })
+}
+const updateRoomTable = (data)=>
+{
+    return new Promise((resolve, reject)=>
+    {
+        var sql = `UPDATE roomtable SET name = '${data.name}', area =${data.area}, chair_quantity=${data.chair_quantity}, note='${data.note}', status='${data.status}' WHERE id= ${data.id}`;
+        connection.query(sql, (err, res)=>
+        {
+            if(!err)
+            {
+                connection.query(`SELECT * FROM roomtable WHERE id = ${data.id}`, (error, result)=>{
+                    if(!error)
+                        resolve({
+                            status:'success', 
+                            data:result
+                        });
+                    else 
+                        resolve({
+                            status:"error", 
+                            message: "Error getting data", 
+                            debug:err
+                        })  
+                })
+            }
+            else 
+                resolve({
+                    status:"error", 
+                    message: "Error getting data", 
+                    debug:err
+                })  
+        })
+    })
+}
+const getHistoryByTableId = (tableId)=>
+{
+    return new Promise((resolve, reject)=>
+    {
+        var sql = `SELECT bill_id, date, created_by, client.full_name, total FROM table_history JOIN client ON table_history.client_id = client.id WHERE table_id = ${tableId}`;
+        connection.query(sql,  (err, res)=>
+        {
+            if(!err)
+                resolve({
+                    status:'success', 
+                    data: res
+                });
+            else 
+                resolve({
+                    status:"error", 
+                    message: "Error getting data", 
+                    debug:err
+                })
+        })
+    })
+}
+module.exports= {getAllArea, insertArea, searchQuery, filterData, getAllRoomTable, recordQuantity, 
+    insertRoomTable,updateRoomTable, getHistoryByTableId}

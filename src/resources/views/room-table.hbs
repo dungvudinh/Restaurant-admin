@@ -1,7 +1,7 @@
-<script>
+{{!-- <script>
     var queryParameters = new URLSearchParams(window.location.search);
     console.log(queryParameters.get(status));
-</script>
+</script> --}}
 <main class="content">
   <div class="container-fluid">
     <div class="mb-3">
@@ -12,14 +12,14 @@
                     <div class="left-item_header d-flex flex-row justify-content-between align-items-center mb-2 p-0" style="width:100%;">
                         <p class="font-weight-bold">Khu vực</p>
                         <button  type="button" class="btn btn-sm btn-primary btn-floating" data-mdb-ripple-init 
-                        data-mdb-modal-init data-mdb-target="#exampleModal3">
+                        data-mdb-modal-init data-mdb-target="#newAreaModal">
                             <i class="fa-solid fa-plus "></i>
                         </button>
                     </div>
                     <select class="custom-select mb-3" id="area-select">
                         <option selected value="all">--Tất cả--</option>
                         {{#each listArea}}
-                            <option value="{{this.id}}">{{this.name}}</option>
+                            <option value="{{this.area_id}}">{{this.name}}</option>
                         {{/each}}
                     </select>
                 </div>
@@ -41,7 +41,7 @@
 
                          <div class="form-check m-2">
                             <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="all" `${queryParameters.get('status') == 'all' ? 'checked' : '' }`
-                            >
+                            checked>
                             <label class="form-check-label" for="exampleRadios3">
                                 Tất cả
                             </label>
@@ -69,16 +69,12 @@
                 <div class="main-right_header d-flex flex-row justify-content-between align-items-center">
                     <h5 class="fw-bold mb-3 mt-3">Phòng/Bàn</h5>
                     <div class="button-group">
-                        <button type="button" class="btn btn-success btn-sm " data-toggle="modal" data-mdb-target="#exampleModal" 
+                        <button type="button" class="btn btn-success btn-sm " data-mdb-target="#exampleModal" 
                          data-mdb-ripple-init data-mdb-modal-init >
                             <i class="lni lni-plus"></i>
                             Thêm phòng/bàn
                         </button>
 
-                        <button type="button" class="btn btn-success btn-sm">
-                            <i class="fa-solid fa-file-import"></i>
-                            import
-                        </button>
 
                         <button type="button" class="btn btn-success btn-sm">
                             <i class="fa-solid fa-file-export"></i>
@@ -96,18 +92,18 @@
                                 <th scope="col">Tên phòng bàn</th>
                                 <th scope="col">Khu vực</th>
                                 <th scope="col">Số ghế</th>
-                                <th scope="col">Mô tả</th>
+                                <th scope="col">Ghi chú</th>
                                 <th scope="col" >Trạng thái</th>
                                 <th scope="col" style="width:200px">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody>
                             {{#each listRoomTable}}
-                                <tr>
+                                <tr id="row-id-{{this.id}}">
                                 <td scope="row">{{this.name}}</td>
                                 <td>Tầng {{this.area}}</td>
                                 <td>{{this.chair_quantity}}</td>
-                                <td>{{this.desc}}</td>
+                                <td>{{this.note}}</td>
                                 <td>
                                     {{#if (isRoomTableActive this.status)}}
                                         <span class="badge badge-success">Đang hoạt động</span>
@@ -118,23 +114,24 @@
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
-                                     data-mdb-target="#exampleModal">
+                                     data-mdb-target="#exampleModal3" data-mdb-whatever='{{jsonFormatter this}}' modal-type="update">
                                         <i class="lni lni-check-box"></i>
                                         Cập nhật
                                     </button>
+                                    
                                     <br/>
                                     <button type="button" class="btn btn-danger btn-sm mb-2">
                                         <i class="lni lni-lock-alt"></i>
                                         Ngừng hoạt động
                                     </button>
-                                    <button type="button" class="btn btn-danger btn-sm ">
+                                    <button type="button" class="btn btn-danger btn-sm mb-2">
                                         <i class="lni lni-trash-can"></i>
                                         Xóa
                                     </button>
                                     <br/ >
-                                     <button type="button" class="btn btn-info btn-sm mt-2"   data-mdb-ripple-init data-mdb-modal-init 
-                                     data-mdb-target="#exampleModal2">
-                                        <i class="fa-solid fa-clock-rotate-left"></i>
+                                    <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
+                                     data-mdb-target="#exampleModal2" data-mdb-whatever='{{this.id}}' >
+                                       <i class="fa-solid fa-clock-rotate-left"></i>
                                         Lịch sử giao dịch
                                     </button>
                                 </td>
@@ -176,9 +173,9 @@
   </div>
 </main>
 
+{{!-- new room table modal --}}
 
-
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -186,49 +183,106 @@
         <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <div class="form-outline mb-3" data-mdb-input-init>
-            <input type="text" id="form12" class="form-control" />
-            <label class="form-label" for="form12">Tên phòng bàn</label>
-        </div>
-
-        <div class="input-group mb-3">
-            <select class="custom-select" id="inputGroupSelect04">
-                <option selected>Lựa chọn khu vực</option>
-                <option value="1">Tầng 1</option>
-                <option value="2">Tầng 2</option>
-                <option value="3">Tầng 3</option>
-            </select>
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary btn-sm" type="button"   title="Thêm khu vực mới" data-mdb-ripple-init
-                                        data-mdb-modal-init data-mdb-target="#exampleModal3">
-                    <i class="lni lni-plus"></i>
-                </button>
+        <form action="/room-table/new" method="POST" id="newRoomTable">
+            <div class="form-outline mb-3" data-mdb-input-init>
+                <input type="text" id="form12" class="form-control" name="name"/>
+                <label class="form-label" for="form12">Tên phòng bàn</label>
             </div>
-        </div>
- 
-        
-        <div class="form-outline mb-3" data-mdb-input-init>
-            <input type="text" id="form12" class="form-control" />
-            <label class="form-label" for="form12">Số thứ tự</label>
-        </div>
+            <div class="input-group mb-3">
+                <select class="custom-select" id="area-select" name="area">
+                    <option selected>Lựa chọn khu vực</option>
+                    {{#each listArea}}
+                        <option value="{{this.area_id}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                    data-mdb-ripple-init data-mdb-ripple-color="dark" data-mdb-modal-init  
+                    data-mdb-target="#newAreaModal">
+                        <i class="lni lni-plus"></i>
+                    </button>
+                
+                </div>
+            </div>
+            <div class="form-outline mb-3" data-mdb-input-init>
+                <input type="text" id="form12" class="form-control" name="chair_quantity"/>
+                <label class="form-label" for="form12">Số ghế</label>
+            </div>
 
-        <div class="form-outline mb-3" data-mdb-input-init>
-            <input type="text" id="form12" class="form-control" />
-            <label class="form-label" for="form12">Số ghế</label>
-        </div>
-
-        <div class="form-outline" data-mdb-input-init>
-            <input type="text" id="form12" class="form-control" />
-            
-            <label class="form-label" for="form12">Ghi chú <i class="lni lni-pencil"></i></label>
-        </div>
+            <div class="form-outline" data-mdb-input-init>
+                <input type="text" id="form12" class="form-control" name="note"/>
+                <label class="form-label" for="form12">Ghi chú <i class="lni lni-pencil"></i></label>
+            </div>
+        </form>
       </div>
       <div class="modal-footer">
        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">
             <i class="fa-solid fa-ban"></i>
             Bỏ qua
         </button>
-        <button type="button" class="btn btn-success" data-mdb-ripple-init>
+        <button type="button" class="btn btn-success" data-mdb-ripple-init id="saveNewRoomTable">
+            <i class="fa-regular fa-floppy-disk"></i>
+            Lưu
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{{!-- update room table modal --}}
+<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Thêm phòng/bàn</h5>
+        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="/room-table/new" method="POST" id="updateRoomTable">
+            <input type="text" class="form-control" name="id"  hidden/>
+            <div class="form-outline mb-3" data-mdb-input-init>
+                <input type="text"  class="form-control" name="name"/>
+                <label class="form-label" for="form12">Tên phòng bàn</label>
+            </div>
+            <div class="input-group mb-3">
+                <select class="custom-select" id="area-select" name="area">
+                    <option selected>Lựa chọn khu vực</option>
+                    {{#each listArea}}
+                        <option value="{{this.area_id}}">{{this.name}}</option>
+                    {{/each}}
+                </select>
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button" id="button-addon2"
+                    data-mdb-ripple-init data-mdb-ripple-color="dark" data-mdb-modal-init  
+                    data-mdb-target="#newAreaModal">
+                        <i class="lni lni-plus"></i>
+                    </button>
+                
+                </div>
+            </div>
+            <div class="form-outline mb-3" data-mdb-input-init>
+                <input type="text"  class="form-control" name="chair_quantity"/>
+                <label class="form-label" for="form12">Số ghế</label>
+            </div>
+
+            <div class="form-outline mb-3" data-mdb-input-init>
+                <input type="text" class="form-control" name="note"/>
+                <label class="form-label" for="form12">Ghi chú <i class="lni lni-pencil"></i></label>
+            </div>
+            <div class="form-outline">
+                <select class="custom-select" id="status-select" name="status" >
+                    <option selected>Trạng thái</option>
+                    <option value="1">Đang hoạt động</option>
+                    <option value="0">Ngừng hoạt động</option>
+                </select>
+            </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+       <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">
+            <i class="fa-solid fa-ban"></i>
+            Bỏ qua
+        </button>
+        <button type="button" class="btn btn-success" data-mdb-ripple-init id="saveUpdateRoomTable">
             <i class="fa-regular fa-floppy-disk"></i>
             Lưu
         </button>
@@ -251,20 +305,12 @@
                 <th scope="col">Mã hóa đơn</th>
                 <th scope="col">Thời gian</th>
                 <th scope="col">Người tạo</th>
-                <th scope="col">Người nhận đơn</th>
+                <th scope="col">Khách hàng</th>
                 <th scope="col">Tổng cộng</th>
 
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                <th scope="row">HD0001</th>
-                <td>19/03/2024</td>
-                <td>Vũ Đình Dũng</td>
-                <td>Vũ Đình Dũng</td>
-                <td>80,000</td>
-
-                </tr>
                 
             </tbody>
         </table>
@@ -281,7 +327,7 @@
 </div>
 
 
-<div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
+<div class="modal fade" id="newAreaModal" tabindex="-1" aria-labelledby="exampleModalLabel3" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -318,24 +364,46 @@
     <input type="text" name="status" hidden>
 </form>
 
-<form action="" id="form-submit2"></form>
+<form action="" id="history-submit">
+    <input type="text" name="tableId" hidden>
+</form>
 
 <script src="/jquery/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
+    
+   
     $(document).ready(function(){
+        toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+            }
         function addRowTable(response)
         {
              $('table tbody').empty();
             response.forEach(item=>{
-                $('table tbody').append(`<tr>
+                $('table tbody').append(`<tr id="row-id-${item.id}">
                     <td>${item.name}</td>   
                     <td>${item.area}</td>
                     <td>${item.chair_quantity}</td>
-                    <td>${item.desc}</td>
+                    <td>${item.note}</td>
                     <td><span class="badge badge-${item.status ==1 ? 'success' :'light'}">${item.status == 1 ? 'Đang hoạt động' : 'Ngừng hoạt động'}</span></td>
                     <td>
-                        <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
-                            data-mdb-target="#exampleModal">
+                         <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
+                            data-mdb-target="#exampleModal3" data-mdb-whatever='${JSON.stringify(item)}' modal-type="update">
                             <i class="lni lni-check-box"></i>
                             Cập nhật
                         </button>
@@ -359,17 +427,40 @@
             })
         }
         $('#save-new_area').click(function(e){
+            $('#new-area_form').submit(function(e){
+                e.preventDefault();
+                var formData = $(this).serialize();
+                $.ajax({
+                url: '/room-table/area/new',
+                type: 'POST',
+                data: formData,
+                success: function(response){
+                    $('#area-select').append(`
+                    <option value=${response[0].id}>
+                        ${response[0].name}
+                    </option>`)
+                    $('#newAreaModal').modal('hide');
+                    toastr.success('Thêm khu vực thành công');
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                    toastr.error('Lỗi khi thêm khu vực');
+                }
+            });
+            })
             $('#new-area_form').submit();
         })
         $('#form-submit').submit(function(e){
             e.preventDefault();
             var queryParams = new URLSearchParams(window.location.search);
             var searchValue = $('input[name="search-input"]').val();
+            console.log(searchValue);
             $.ajax({
                 url: '/room-table/filter',
                 type: 'GET',
                 data: { status:queryParams.get('status'), area:queryParams.get('area'), q:searchValue },
                 success: function(response){
+                    console.log(response);
                     addRowTable(response)
                 },
                 error: function(xhr, status, error){
@@ -388,24 +479,9 @@
             queryParams.set('area',areaValue );
             var newUrl = `${path}?${queryParams}`;
             window.history.pushState({}, '', newUrl);
-            {{!-- $('#form-submit').submit(function(e){
-                e.preventDefault();
-                $.ajax({
-                    url: '/room-table/filter',
-                    type: 'GET',
-                    data: { status:queryParams.get('status'), area:areaValue},
-                    success: function(response){
-                       addRowTable(response);
-                    },
-                    error: function(xhr, status, error){
-                        console.error(error);
-                    }
-                });
-            }); --}}
             areaSelect  = setTimeout(()=>$('#form-submit').submit(), 500)
         })
         //search input 
-        
         
         let typingTimer;
         $('input[name="search-input"]').on('input', function(e){
@@ -424,7 +500,6 @@
         $('.form-check-input').change(function(e){
              clearTimeout(statusRadio);
             var queryParams = new URLSearchParams(window.location.search);
-            console.log($(this).val())
             var queryParams = new URLSearchParams(window.location.search);
             var path = window.location.href.split('?')[0];
             queryParams.set('status',$(this).val());
@@ -433,10 +508,134 @@
             statusRadio = setTimeout(()=>$('#form-submit').submit(), 500)
 
         })
+        //save new room table 
+        $('#newRoomTable').submit(function(e){
+                e.preventDefault();
+                var formData = $(this).serialize();
+                    $.ajax({
+                url: '/room-table/new',
+                type: 'POST',
+                data: formData,
+                success: function(response){
+                    console.log(response);
+                    if(response.status == 'success')
+                    {
+                        addRowTable(response.data)
+                        toastr.success('Thêm phòng bàn thành công');
+                         $('#exampleModal').modal('hide')
+                        setTimeout(()=>{
+                            if(confirm("Trang web cần tải lại để hiển thị bản ghi đã cập nhập") == true)
+                            location.reload();
+                        },1000)
+                    }
+                    else 
+                    {
+                        toastr['error']('Tên phòng bàn đã tồn tại','Thêm phòng bàn không thành công');
+                        
+                    }
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                    toastr.error('Thêm phòng bàn thất bại')
+                }
+            });
+            })
+        $('#saveNewRoomTable').on('click', function(e){
+            $('#newRoomTable').submit();
+        })
+
+         
+    })
+    //update record 
+    const updateRoomTableModal = document.getElementById('exampleModal3');
+    updateRoomTableModal.addEventListener('show.mdb.modal', (e) => {
+        const button = e.relatedTarget;
+        if(button.getAttribute('modal-type') == 'update')
+        {
+                const data = JSON.parse(button.getAttribute('data-mdb-whatever'));
+                console.log(data)
+                const modalTitle = updateRoomTableModal.querySelector('.modal-title');
+                $('#exampleModal3 input[name="id"]').val(data.id);
+                $('#exampleModal3 input[name="name"]').val(data.name);
+                $('#exampleModal3 #area-select option').each((index, item)=>{
+                    if(item.value == data.area)
+                        item.setAttribute('selected', true)
+                })
+                $('#exampleModal3 #status-select option').each((index, item)=>{
+                    if(item.value == data.status)
+                        item.setAttribute('selected', true)
+                })
+                $('#exampleModal3 input[name="chair_quantity"]').val(data.chair_quantity);
+                $('#exampleModal3 input[name="note"]').val(data.note)
+                modalTitle.textContent = `Cập nhập phòng/bàn`;
+        }
+    })
+   
+    $('#saveUpdateRoomTable').on('click', function(){
+        $('#updateRoomTable').submit(function(e){
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: '/room-table/update',
+                type: 'POST',
+                data: formData,
+                success: function(response){
+                    if(response.status == 'success')
+                    {
+                        toastr.success('Cập nhập phòng bàn thành công');
+                        $('#exampleModal3').modal('hide')
+                        setTimeout(()=>{
+                            if(confirm("Trang web cần tải lại để hiển thị bản ghi đã cập nhập") == true)
+                            location.reload();
+                        },1000)
+                    }
+                    else 
+                        toastr.error('Tên phòng bàn đã tồn tại','Cập nhập phòng bàn không thành công');
+
+                },
+                error: function(xhr, status, error){
+                    toastr.error('Cập nhập phòng bàn thất bại')
+
+                }
+            });
+        })
+        $('#updateRoomTable').submit();
+    })
+    //show history table 
+
+    $('#history-submit').submit(function(e){
+            e.preventDefault();
+            $.ajax({
+                url: '/room-table/history',
+                type: 'GET',
+                data:{tableId: $('input[name="tableId"]').val()}, 
+                success: function(response){
+                    {{!-- const result = response.data.map(item=>{...item, date:JSON.stringify(date)}) --}}
+                    $('#exampleModal2 table tbody').append(` <tr>
+                        <th scope="row">${response.data[0].bill_id}</th>
+                        <td>${Intl.DateTimeFormat("vi-VN").format(new Date(response.data[0].date))}</td>
+                        <td>${response.data[0].created_by}</td>
+                        <td>${response.data[0].full_name}</td>
+                        <td>${response.data[0].total}</td>
+                    </tr>`)
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        });
+    const showTableHistoryModal = document.getElementById('exampleModal2');
+    showTableHistoryModal.addEventListener('show.mdb.modal', (e) => {
+        const button = e.relatedTarget;
+        const tableId = JSON.parse(button.getAttribute('data-mdb-whatever'));
+        $('input[name="tableId"]').val(tableId);
+        $('#history-submit').submit();
+        console.log(tableId)
+                
     })
 </script>
 {{!-- <script>
-    $('#exampleModal3').modal('show');
+    $('#newAreaModal').modal('show');
 </script> --}}
 
 

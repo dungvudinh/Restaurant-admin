@@ -4,7 +4,8 @@ const {getOrderCompleted, getTotalMoneyToday,getTotalMoneyYesterday, getOrderBei
     getClientQuantityYesterday, getClientQuantity7Day, getTop10MenuToday, getTop10MenuYesterday, 
     getTop10Menu7Day}  = require('../models/dashboard');
 
-const {getAllArea, insertArea, searchQuery, filterData, getAllRoomTable, recordQuantity} = require('../models/roomTable');
+const {getAllArea, insertArea, searchQuery, filterData, getAllRoomTable, recordQuantity
+, insertRoomTable, updateRoomTable, getHistoryByTableId} = require('../models/roomTable');
 class SiteController 
 {
      async dashboard(req,res)
@@ -61,10 +62,11 @@ class SiteController
         {
             const listArea = await getAllArea();
             const listRoomTable = await getAllRoomTable();
+            var recordNumber = await recordQuantity();
             res.render('room-table', {
                 listArea, 
                 listRoomTable, 
-                pageQuantity: Math.ceil(recordQuantity/5)
+                pageQuantity: Math.ceil(recordNumber[0].recordQuantity/4)
             });
         }
         catch(error)
@@ -76,7 +78,6 @@ class SiteController
     {
         try 
         {
-            console.log(req);
             const result  =  await filterData(req.query.status, req.query.area, req.query.q);
             res.json(result);
         }
@@ -89,8 +90,9 @@ class SiteController
     {
         try 
         {
-            await insertArea(req.body);
-            res.redirect('back');
+            const data = await insertArea(req.body);
+            console.log(data);
+            res.json(data);
         }
         catch(error)
         {
@@ -98,18 +100,46 @@ class SiteController
         }
     }
 
-    async search(req,res)
+    async newRoomTable(req,res)
     {
         try 
         {
-            const result = await searchQuery(req.query.search);
-            console.log("Dungg")
-            console.log(req)
+            const result = await insertRoomTable(req.body);
+            console.log(result)
             res.json(result);
         }
         catch(error)
         {
             console.log(error)
+        }
+    }
+    async updateRoomTable(req, res)
+    {
+        try 
+        {
+            console.log(req.body)
+            const result = await updateRoomTable(req.body);
+            res.json(result);   
+            
+        }
+        catch(error)
+        {
+            console.log(error);
+        }
+    }
+    async tableHistory(req, res)
+    {
+        try 
+        {
+            console.log(req.query);
+            var result = await getHistoryByTableId(req.query.tableId);
+            // if(result.status == 'success')
+            //         result = {status:result.status, data: result.data.map(item=>())}
+            res.json(result);
+        }
+        catch(error)
+        {
+            console.log(error);
         }
     }
    
