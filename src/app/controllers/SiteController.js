@@ -5,12 +5,12 @@ const {getOrderCompleted, getTotalMoneyToday,getTotalMoneyYesterday, getOrderBei
     getTop10Menu7Day}  = require('../models/dashboard');
 
 const {getAllArea, insertArea, searchQuery, filterData, getAllRoomTable, recordQuantity
-, insertRoomTable, updateRoomTable, getHistoryByTableId} = require('../models/roomTable');
+, insertRoomTable, updateRoomTable, getHistoryByTableId, deleteTable} = require('../models/roomTable');
+const jwt = require('jsonwebtoken');
 class SiteController 
 {
      async dashboard(req,res)
     {
-        
         try 
         {
             var orderCompleted = await getOrderCompleted();
@@ -33,7 +33,7 @@ class SiteController
             res.render('dashboard',{
                 numOfOrderCompleted:orderCompleted.length > 0 ? orderCompleted[0].numOfOrderCompleted : 0, 
                 totalMoneyToday: totalMoneyToday[0].total ? totalMoneyToday[0].total : 0, 
-                totalMoneyYesterday :totalMoneyYesterday.length > 0 ? totalMoneyYesterday[0].total : 0, 
+                totalMoneyYesterday :totalMoneyYesterday[0].total  ? totalMoneyYesterday[0].total : 0, 
                 totalServing: orderServed.length > 0 ? orderServed[0].orderServed : 0, 
                 totalClientToday: totalClientToday.length > 0 ? totalClientToday[0].totalClient : 0, 
                 totalClientYesterday:totalClientYesterday.length > 0 ?  totalClientYesterday[0].totalClient : 0, 
@@ -62,6 +62,7 @@ class SiteController
         {
             const listArea = await getAllArea();
             const listRoomTable = await getAllRoomTable();
+            console.log(listRoomTable)
             var recordNumber = await recordQuantity();
             res.render('room-table', {
                 listArea, 
@@ -78,6 +79,7 @@ class SiteController
     {
         try 
         {
+            console.log(req.query.status);
             const result  =  await filterData(req.query.status, req.query.area, req.query.q);
             res.json(result);
         }
@@ -140,6 +142,78 @@ class SiteController
         catch(error)
         {
             console.log(error);
+        }
+    }
+    async deleteTable(req, res)
+    {
+        try 
+        {
+            var result = await deleteTable(req.query.tableName);
+            res.json(result);
+        }
+        catch(error)
+        {
+            console.log(error);
+        }
+    }
+
+    async login(req ,res)
+    {
+        try 
+        {
+            res.render('login', {layout:'login'})
+        }
+        catch(error)
+        {
+            console.log(error);
+        }
+    }
+    async logout(req ,res)
+    {
+        try 
+        {
+            res.clearCookie('token');
+            res.redirect('/login')
+        }
+        catch(error)
+        {
+            console.log(error);
+        }
+    }
+    async signup(req ,res)
+    {
+        try 
+        {
+            res.render('signup', {layout:'login'})
+        }
+        catch(error)
+        {
+            console.log(error);
+        }
+    }
+    async verifyAccount(req,res, next)
+    {
+        try 
+        {
+
+            const token = req.cookies.token;
+            if(!token)
+                // return res.json({message:'Phiên đăng nhập đã hết hạn.Vui lòng đăng nhập lại'})
+                return res.redirect('/login');
+            else 
+                jwt.verify(token, process.env.JWT_SECRET, (err, decode)=>{
+                    if(err)
+                        return res.json({message:'Xác thực thông tin thất bại'})
+                    else 
+                    {
+                        req.name = decode.name;
+                        next();
+                    }
+                })
+        }
+        catch(error)
+        {
+            throw(error);
         }
     }
    

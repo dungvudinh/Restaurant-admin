@@ -40,7 +40,7 @@
                     <div class="form-check_group">
 
                          <div class="form-check m-2">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="all" `${queryParameters.get('status') == 'all' ? 'checked' : '' }`
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios3" value="all" 
                             checked>
                             <label class="form-check-label" for="exampleRadios3">
                                 Tất cả
@@ -54,7 +54,7 @@
                         </div>
                         
                         <div class="form-check m-2">
-                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="2">
+                            <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="0">
                             <label class="form-check-label" for="exampleRadios2">
                                 Ngừng hoạt động
                             </label>
@@ -85,7 +85,7 @@
                     
                 </div>
 
-                <div class="main-right_content mt-2">
+                <div class="main-right_content mt-2" style="height:600px;overflow:auto">
                     <table class="table table-light" border="1">
                         <thead class="thead-dark" >
                             <tr>
@@ -124,10 +124,12 @@
                                         <i class="lni lni-lock-alt"></i>
                                         Ngừng hoạt động
                                     </button>
-                                    <button type="button" class="btn btn-danger btn-sm mb-2">
+                                    <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init
+                                    data-mdb-target="#exampleModal4" data-mdb-whatever='{{ this.name}}'>
                                         <i class="lni lni-trash-can"></i>
                                         Xóa
                                     </button>
+                                   
                                     <br/ >
                                     <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
                                      data-mdb-target="#exampleModal2" data-mdb-whatever='{{this.id}}' >
@@ -145,7 +147,6 @@
                     {{#if (isMultiplePage pageQuantity)}}
                     <nav aria-label="Page navigation example">
                         <ul class="pagination d-flex justify-content-center">
-                            {{!-- {{pageQuantityRendering}} --}}
                             <li class="page-item">
                                 <a class="page-link" href="#" aria-label="previous">
                                     <span aria-hidden="true">&laquo;</span>
@@ -292,7 +293,7 @@
 </div>
 
 <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
-  <div class="modal-dialog modal-xl">
+  <div class="modal-dialog modal-xl modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="exampleModalLabel">Lịch sử giao dịch</h5>
@@ -321,6 +322,29 @@
             Đóng
         </button>
         
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModal4" tabindex="-1" aria-labelledby="exampleModalLabel4" aria-hidden="true">
+  <div class="modal-dialog modal-sm ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa phòng/bàn</h5>
+        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size:15px"></p>
+      </div>
+      <div class="modal-footer">
+         <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">
+            <i class="fa-solid fa-ban"></i>
+            Bỏ qua
+        </button>
+        <button type="button" class="btn btn-success" data-mdb-ripple-init id="delete-table_btn">
+            <i class="fa-regular fa-floppy-disk"></i>
+            Đồng ý
+        </button>
       </div>
     </div>
   </div>
@@ -368,6 +392,9 @@
     <input type="text" name="tableId" hidden>
 </form>
 
+<form action="" id="delete-table_submit">
+    <input type="text" name="tableName" hidden>
+</form>
 <script src="/jquery/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <script>
@@ -517,7 +544,6 @@
                 type: 'POST',
                 data: formData,
                 success: function(response){
-                    console.log(response);
                     if(response.status == 'success')
                     {
                         addRowTable(response.data)
@@ -610,14 +636,15 @@
                 type: 'GET',
                 data:{tableId: $('input[name="tableId"]').val()}, 
                 success: function(response){
-                    {{!-- const result = response.data.map(item=>{...item, date:JSON.stringify(date)}) --}}
-                    $('#exampleModal2 table tbody').append(` <tr>
-                        <th scope="row">${response.data[0].bill_id}</th>
-                        <td>${Intl.DateTimeFormat("vi-VN").format(new Date(response.data[0].date))}</td>
-                        <td>${response.data[0].created_by}</td>
-                        <td>${response.data[0].full_name}</td>
-                        <td>${response.data[0].total}</td>
-                    </tr>`)
+                    response.data.forEach(item=>{
+                        $('#exampleModal2 table tbody').append(` <tr>
+                            <th scope="row">${item.bill_id} </th>
+                            <td>${Intl.DateTimeFormat("vi-VN").format(new Date(item.date))}</td>
+                            <td>${item.created_by}</td>
+                            <td>${item.full_name}</td>
+                            <td>${item.total}</td>
+                        </tr>`)
+                    })
                 },
                 error: function(xhr, status, error){
                     console.error(error);
@@ -627,10 +654,44 @@
     const showTableHistoryModal = document.getElementById('exampleModal2');
     showTableHistoryModal.addEventListener('show.mdb.modal', (e) => {
         const button = e.relatedTarget;
-        const tableId = JSON.parse(button.getAttribute('data-mdb-whatever'));
+        const tableId = button.getAttribute('data-mdb-whatever');
         $('input[name="tableId"]').val(tableId);
         $('#history-submit').submit();
         console.log(tableId)
+                
+    })
+    const deleteRoomTableModal = document.getElementById('exampleModal4');
+    deleteRoomTableModal.addEventListener('show.mdb.modal', (e) => {
+        const button = e.relatedTarget;
+        const tableName = button.getAttribute('data-mdb-whatever');
+        $('#exampleModal4 .modal-body p').text(`Bạn có chắc chắn muốn xóa phòng/bàn ${tableName}`);
+        $('#delete-table_submit').submit(function(e){
+            e.preventDefault();
+            $.ajax({
+                url: '/room-table/delete',
+                type: 'GET',
+                data:{tableName: tableName}, 
+                success: function(response){
+                    if(response.status == 'success')
+                    {
+                        toastr.success('Xóa phòng bàn thành công');
+                        $('#exampleModal4').modal('hide')
+                        setTimeout(()=>{
+                            if(confirm("Trang web cần tải lại để hiển thị bản ghi mới") == true)
+                            location.reload();
+                        },1000)
+                    }
+                    else 
+                        toastr.error('Có lỗi xảy ra','Xin vui lòng thử lại!');
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        })
+        $('#delete-table_btn').on('click',function(e){
+            $('#delete-table_submit').submit();
+        })
                 
     })
 </script>

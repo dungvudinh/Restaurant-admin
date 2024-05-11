@@ -10,11 +10,18 @@
 button {
   font-size: 10px !important; }
 
+textarea {
+  font-size: 12px !important; }
+
 input {
   font-size: 12px !important; }
 
 input:focus {
   outline: none; }
+
+#sidebar {
+  position: fixed;
+  height: 100vh; }
 
 ::-webkit-scrollbar {
   width: 6px;
@@ -65,7 +72,8 @@ table, nav {
   overflow: hidden;
   transition: all 0.35s ease-in-out;
   background-color: #fff;
-  min-width: 0; }
+  min-width: 0;
+  margin-left: 220px; }
 
 #sidebar {
   width: 220px;

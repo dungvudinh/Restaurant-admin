@@ -37,7 +37,7 @@
         data-parent="#sidebar"
       >
         <li class="sidebar-item">
-          <a href="/menu/food/food-group?id=1&page=1" class="sidebar-link">
+          <a href="/menu/food" class="sidebar-link">
             <i class="lni lni-pizza"></i>
             Đồ ăn
           </a>
@@ -56,91 +56,49 @@
         <span>Phòng/Bàn</span>                                              
       </a>
     </li>
-     <li class="sidebar-item">
-      <a href="/bin" class="sidebar-link">
-        <i class="fa-solid fa-recycle"></i>
-        <span>Thùng rác</span>                                              
-      </a>
-    </li>
-    {{!-- <li class="sidebar-item">
+    
+    <li class="sidebar-item">
       <a
-        href="#"
+        href="/bin"
         class="sidebar-link collapsed has-dropdown"
         data-toggle="collapse"
-        data-target="#auth"
+        data-target="#bin"
         aria-expanded="false"
         aria-controls="auth"
+        
       >
-        <i class="lni lni-protection"></i>
-        <span>Auth</span>
+         <i class="fa-solid fa-recycle"></i>
+        <span>Thùng rác</span>  
       </a>
       <ul
-        id="auth"
+        id="bin"
         class="sidebar-dropdown list-unstyled collapse"
         data-parent="#sidebar"
       >
         <li class="sidebar-item">
-          <a href="#" class="sidebar-link">Login</a>
-        </li>
-        <li class="sidebar-item">
-          <a href="#" class="sidebar-link">Register</a>
-        </li>
-      </ul>
-    </li> --}}
-    {{!-- <li class="sidebar-item">
-      <a
-        href="#"
-        class="sidebar-link collapsed has-dropdown"
-        data-toggle="collapse"
-        data-target="#multi"
-        aria-expanded="false"
-        aria-controls="multi"
-      >
-        <i class="lni lni-layout"></i>
-        <span>Multi Level</span>
-      </a>
-      <ul
-        id="multi"
-        class="sidebar-dropdown list-unstyled collapse"
-        data-parent="#sidebar"
-      >
-        <li class="sidebar-item">
-          <a
-            href="#"
-            class="sidebar-link collapsed"
-            data-toggle="collapse"
-            data-target="#multi-two"
-            aria-expanded="false"
-            aria-controls="multi-two"
-          >
-            Two Links
+          <a href="/bin/food" class="sidebar-link">
+            <i class="lni lni-pizza"></i>
+            Đồ ăn đã xóa
           </a>
-          <ul id="multi-two" class="sidebar-dropdown list-unstyled collapse">
-            <li class="sidebar-item">
-              <a href="#" class="sidebar-link">Link 1</a>
-            </li>
-            <li class="sidebar-item">
-              <a href="#" class="sidebar-link">Link 2</a>
-            </li>
-          </ul>
+        </li>
+        <li class="sidebar-item">
+          <a href="/bin/drink" class="sidebar-link">
+            <i class="lni lni-juice"></i>
+            Đồ uống đã xóa
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a href="/bin/room-table" class="sidebar-link">
+             <i class="fa-solid fa-table"></i>
+            Phòng/bàn đã xóa
+          </a>
         </li>
       </ul>
-    </li> --}}
-    {{!-- <li class="sidebar-item">
-      <a href="#" class="sidebar-link">
-        <i class="lni lni-popup"></i>
-        <span>Notification</span>
-      </a>
-    </li> --}}
-    {{!-- <li class="sidebar-item">
-      <a href="#" class="sidebar-link">
-        <i class="lni lni-cog"></i>
-        <span>Setting</span>
-      </a>
-    </li> --}}
+    </li>
+    
   </ul>
   <div class="sidebar-footer">
-    <a href="#" class="sidebar-link">
+    <a href="/logout" class="sidebar-link">
       <i class="lni lni-exit"></i>
       <span>Logout</span>
     </a>

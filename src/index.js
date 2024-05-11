@@ -1,13 +1,18 @@
 const express = require('express');
 const app = express();
-const port = 8080;
+const port = 4049;
 const morgan = require('morgan');
 const path  = require('path');
 const {engine} = require('express-handlebars');
 const route = require('./routes');
+const dotenv = require('dotenv');
+const cookieParser = require('cookie-parser');
+const cors = require('cors');
 require('./config/db');
-require('dotenv').config();
+dotenv.config({ path: './src/.env' });
 
+app.use(cors());
+app.use(cookieParser());
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -22,7 +27,14 @@ app.engine('hbs', engine({
     extname:'.hbs', 
     helpers: {
         formatMoney:(money)=> new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(money), 
-        growthSpeed:(totalYesterday, totalToday)=> (((totalToday - totalYesterday)/totalYesterday) *100).toFixed(1), 
+        growthSpeed:(totalYesterday, totalToday)=> {
+            console.log(typeof totalYesterday)
+            console.log((((totalToday - totalYesterday)/totalYesterday) *100))
+            if(totalYesterday == 0)
+                return 100;
+            else 
+                return (((totalToday - totalYesterday)/totalYesterday) *100).toFixed(1)
+        }, 
         isHasRevenue: (numOfOrderCompleted) => numOfOrderCompleted > 0 ? true : false, 
         isHasClient: (totalClientToday)=>totalClientToday > 0 ? true : false, 
         isHasData: (data)=>data.length > 0 ? true : false, 

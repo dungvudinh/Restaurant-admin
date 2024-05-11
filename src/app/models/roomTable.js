@@ -65,7 +65,10 @@ const filterData = (status, area, q)=>
 {
     return new Promise((resolve, reject)=>
     {
-        var sql = `SELECT * FROM roomtable WHERE area ${area == 'all' ? 'IS NOT NULL' : `LIKE '%${area}%'`} AND status ${status =='all' ? 'IS NOT NULL' : `= ${status}`} AND name ${q == null ? 'IS NOT NULL' : `LIKE '%${q}%'`}`;
+        console.log(status)
+        console.log(area);
+        var sql = `SELECT * FROM roomtable WHERE area ${area == 'all' ? 'IS NOT NULL' : `LIKE '%${area}%'`} AND status ${status =='all' ? 'IS NOT NULL' : `= 0`} AND name ${(q == null || q== '') ? 'IS NOT NULL' : `LIKE '%${q}%'`} AND deleted_at IS NULL`;
+        console.log(sql)
         connection.query(sql,  (err, res)=>
         {
             if(!err)
@@ -84,7 +87,7 @@ const getAllRoomTable = (pageNumber = 0)=>
 {
     return new Promise((resolve, reject)=>
     {
-        var sql = `SELECT * FROM roomtable  LIMIT 4 OFFSET ${pageNumber}`;
+        var sql = `SELECT * FROM roomtable  WHERE deleted_at IS NULL LIMIT 4 OFFSET ${pageNumber}`;
         connection.query(sql,  (err, res)=>
         {
             if(!err)
@@ -197,5 +200,27 @@ const getHistoryByTableId = (tableId)=>
         })
     })
 }
+
+const deleteTable = (tableName)=>
+{
+    return new Promise((resolve, reject)=>
+    {
+        var sql = `UPDATE roomtable SET deleted_at = CURRENT_TIMESTAMP WHERE name LIKE '%${tableName}%'`;
+        connection.query(sql,  (err, res)=>
+        {
+            if(!err)
+                resolve({
+                    status:'success', 
+                    data: res
+                });
+            else 
+                resolve({
+                    status:"error", 
+                    message: "Error getting data", 
+                    debug:err
+                })
+        })
+    })
+}
 module.exports= {getAllArea, insertArea, searchQuery, filterData, getAllRoomTable, recordQuantity, 
-    insertRoomTable,updateRoomTable, getHistoryByTableId}
+    insertRoomTable,updateRoomTable, getHistoryByTableId, deleteTable}

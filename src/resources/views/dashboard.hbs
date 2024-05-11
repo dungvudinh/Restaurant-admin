@@ -69,7 +69,7 @@
                   <i class="lni lni-user ml-2"></i>
                 </span>
                 {{#if (isHasClient totalClientToday)}}
-                    <span class="font-weight-bold">Lượng khách hàng tăng trưởng </span>
+                    <span class="font-weight-bold">Tăng trưởng </span>
                     <span class="badge text-success" style="font-size:17px;">
                       {{growthSpeed totalClientYesterday totalClientToday}}%
                     </span>
@@ -204,6 +204,7 @@
   var totalMoneyToday = {{totalMoneyToday}};
   var totalMoneyByHourToday  = {{{totalMoneyByHourToday}}}
 
+  
   var totalMoneyYesterday  = {{totalMoneyYesterday}}
   var totalMoneyByHourYesterday = {{{totalMoneyByHourYesterday}}};
 
@@ -217,7 +218,7 @@
   var top10MenuToday = {{{top10MenuToday}}}
   var top10MenuYesterday = {{{top10MenuYesterday}}}
   var top10Menu7Day = {{{top10Menu7Day}}}
-
+  console.log("RESULT:")
   var timeActiveInit = ()=>{
     var arrInit = [];
     for(var i = 8; i<=20; i ++)
