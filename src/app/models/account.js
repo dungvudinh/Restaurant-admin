@@ -1,9 +1,9 @@
 const connection = require('../../config/db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const signToken = (id)=>
+const signToken = (full_name)=>
 {
-    return jwt.sign({id}, process.env.JWT_SECRET, {
+    return jwt.sign({full_name}, process.env.JWT_SECRET, {
         expiresIn:process.env.JWT_EXPIRES_IN
     })
 }
@@ -45,13 +45,14 @@ const register = (data)=>
                                     if(!er)
                                         resolve({
                                             status:'success', 
-                                            message: 'create account successfully', 
+                                            message: 'Đăng ký tài khoản thành công', 
                                             token, 
                                             data:rs
                                         });
                                     else 
                                         resolve({
                                             status:'error', 
+                                            message:'Lỗi khi truy xuất thông tin người dùng', 
                                             debug: er
                                         });
                                 })
@@ -60,6 +61,7 @@ const register = (data)=>
                             else 
                             resolve({
                                 status:'error', 
+                                message:'Tạo tài khoản không thành công', 
                                 debug: error
                             });
                         });
@@ -71,6 +73,7 @@ const register = (data)=>
             else 
                 resolve({
                     status:'error', 
+                    message:'Gặp lỗi khi truy xuất thông tin tài khoản', 
                     debug:err
                 })
         })
@@ -89,7 +92,7 @@ const login = (data)=>
             })
         else 
         {
-            connection.query(`SELECT * FROM account WHERE phone_number = ${phone_number}`, async (err, res)=>{
+            connection.query(`SELECT full_name, password FROM account JOIN user ON account.id = user.account_id WHERE phone_number = ${phone_number}`, async (err, res)=>{
                 if(!err)
                 {
                     if(res.length > 0)
@@ -102,7 +105,8 @@ const login = (data)=>
                             })
                         else 
                         {
-                            const token = signToken(res[0].id);
+                            console.log(res[0].full_name)
+                            const token = signToken(res[0].full_name);
                             resolve({
                                 status:'success', 
                                 message:'Đăng nhập thành công', 

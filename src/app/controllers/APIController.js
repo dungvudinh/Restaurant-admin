@@ -1,7 +1,10 @@
 const {getListBooking, getListArea, getListTable, getListClient, insertBooking, getTableById, insertClient, getLastIdClient,
 getLastIdBooking, updateBooking, deleteBooking, cancelBooking,
 getListMenu, getListMenuGroup, updateTable, insertMenu, getListOrder, getLastIdOrder, getMenuById, updateOrder, getOrderById, 
-updateOrderQuantity, deleteOrderMenu, insertOrder, updateOrderOther, updateTableStatus, deleteOrder}  = require('../models/api');
+updateOrderQuantity, deleteOrderMenu, insertOrder, updateOrderOther, updateTableStatus, deleteOrder, updateOrderNote, getClientById, 
+updateStatusOrder, updateBookingStatus, getListMenuClient, insertClientFromClient, insertBookingFromClient, deleteOrderByBooking}  = require('../models/api');
+const {login} = require('../models/account');
+const jwt = require('jsonwebtoken');
 
 
 class APIController 
@@ -11,7 +14,6 @@ class APIController
         try 
         {
             var {booking_code, status, table_id, timeline} = req.query;
-            console.log(timeline);
             var statusConvert =[];
             if(status.waiting == 'true')
                 statusConvert.push(1)
@@ -48,7 +50,6 @@ class APIController
         {
            
             const result = await insertBooking(req.body);
-            console.log(result)
             res.json(result)
         }
         catch(error)
@@ -112,7 +113,8 @@ class APIController
         try 
         {
             const clientName = req.query.name;
-            const result = await getListClient(clientName);
+            const clientId = req.query.id;
+            const result = await getListClient(clientName, clientId);
             res.json(result);
         }
         catch(error)
@@ -125,9 +127,7 @@ class APIController
         try 
         {
             var data ={...req.body, 'img_path': req.file ? req.file.path : null}
-            console.log(data)
             const result = await insertClient(data);
-            console.log(result)
             res.json(result);
             // if(req.file)
         }
@@ -141,7 +141,6 @@ class APIController
         try 
         {
             const result = await updateBooking(req.body);
-            console.log(result);
             res.json(result)
         }
         catch(error)
@@ -153,7 +152,6 @@ class APIController
     {
         try 
         {
-            console.log(req)
             const result = await deleteBooking(req.body.booking_code);
             res.json(result)
         }
@@ -167,7 +165,6 @@ class APIController
         try 
         {
             const result = await cancelBooking(req.body.data.booking_code);
-            console.log(result)
             res.json(result)
         }
         catch(error)
@@ -219,10 +216,7 @@ class APIController
         try 
         {
             var data ={...req.body, 'img_path': req.files ? req.files.map(file=>file.path) : null}
-            console.log(data)
-            console.log(req);
             const result = await insertMenu(data);
-            console.log(result)
             res.json(result);
         }
         catch(error)
@@ -241,7 +235,6 @@ class APIController
                 if(dataItem.order_menu != null)
                 {
                     var orderMenuParse = JSON.parse(dataItem.order_menu);
-                    console.log(orderMenuParse)
                     if(orderMenuParse.length > 0)
                         orderMenu = JSON.parse(dataItem.order_menu).map(async (orderMenuObj)=>{
                             const menuName =  await getMenuById(orderMenuObj.order_menu_id);
@@ -331,7 +324,6 @@ class APIController
             const order = await getOrderById(orderId);
             const orderMenu = JSON.parse(order.order_menu);
             const newOrderMenu = orderMenu.filter(orderMenuItem=>orderMenuItem.order_menu_id !== orderMenuId);
-            console.log(newOrderMenu)
             const result = await deleteOrderMenu(orderId,newOrderMenu);
             res.json(result);
         }
@@ -345,12 +337,16 @@ class APIController
         try 
         {
             var order = req.body; 
-            const orderMenuFilter = order.order_menu.map(orderMenuItem=>
-            ({order_menu_id:orderMenuItem.order_menu_id,order_menu_note: orderMenuItem.order_menu_note,order_menu_quantity: orderMenuItem.order_menu_quantity }))
+            var orderMenuFilter;
+            if(order.order_menu.length > 0){
+                orderMenuFilter = order.order_menu.map(orderMenuItem=>
+                 ({order_menu_id:orderMenuItem.order_menu_id,order_menu_note: orderMenuItem.order_menu_note,order_menu_quantity: orderMenuItem.order_menu_quantity }))
+            }
+            else 
+                orderMenuFilter = order.order_menu;
             order = {...order, order_menu: orderMenuFilter}
-            console.log(order);
             const result = await insertOrder(order);
-            console.log(result)
+            res.json(result);
         }
         catch(error)
         {
@@ -361,12 +357,13 @@ class APIController
     {
         try 
         {
+            
             var order = req.body;
             const orderMenu = order.order_menu.map(orderMenuItem=>
             ({order_menu_id:orderMenuItem.order_menu_id,order_menu_note: orderMenuItem.order_menu_note,order_menu_quantity: orderMenuItem.order_menu_quantity }))
             order= {...order, order_menu:orderMenu};
+            console.log(order);
             const result = await updateOrderOther(order);
-            console.log(result);
             res.json(result)
         }
         catch(error)
@@ -388,14 +385,172 @@ class APIController
     {
         try 
         {
-            console.log(req.body)
             const orderId = req.body.order_id;
             const result = await deleteOrder(orderId);
-            console.log(result)
             res.json(result);
         }
         catch(error)
         {
+            throw(error)
+        }
+    }
+    async authentication(req, res)
+    {
+        try 
+        {
+            const result  = await login(req.body);
+            if(result.status == 'success')
+                res.cookie('client_token', result.token)
+            res.json(result);
+                
+        }
+        catch(error)
+        {
+            console.log(error)
+        }
+    }
+    logout(req, res)
+    {
+        res.clearCookie('client_token');
+        res.json({
+            status:'success',
+            message:'Đăng xuất thành công'
+        })
+    }
+    async verifyAccount(req, res, next){
+        try 
+        {
+            const token = req.cookies.client_token;
+            if(!token)
+                 return res.json({
+                    status:'error', 
+                    message: 'Bạn chưa xác thực'
+                 });
+            else 
+                jwt.verify(token, process.env.JWT_SECRET, (err, decode)=>{
+                    if(err)
+                        return res.json({
+                            status:'error', 
+                            message:'Xác thực thông tin thất bại'
+                        })
+                    else 
+                    {
+                        req.full_name= decode.full_name;
+                        next();
+                    }
+                })
+        }
+        catch(error)
+        {
+            throw(error);
+        }
+    }
+    async reception(req, res){
+        try 
+        {
+            return res.json({
+                status:'success',
+                full_name: req.full_name
+            })
+        }
+        catch(error)
+        {
+            throw(error)
+        }
+    }
+    async cashier(req, res){
+        try 
+        {
+            return res.json({
+                status:'success',
+                full_name: req.full_name
+            })
+        }
+        catch(error)
+        {
+            throw(error)
+        }
+    }
+    async updateOrderNote(req, res)
+    {
+        try {
+            const result = await updateOrderNote(req.body.id, req.body.note);
+            res.json(result)
+        }
+        catch(error)
+        {
+            throw(error)
+        }
+    }
+    async getClientById(req, res)
+    {
+        try{
+            const result =  await getClientById(req.query.id);
+            res.json(result)
+        }
+        catch(error)
+        {
+            throw(error)
+        }
+    }
+    async updateOrderStatus(req, res)
+    {
+        try{
+            const result  = await updateStatusOrder(req.body.id);
+            res.json(result);
+        }
+        catch(error)
+        {
+            throw(error)
+        }
+    }
+    async updateBookingStatus(req, res){
+        try 
+        {
+            const result  = await updateBookingStatus(req.body.id, req.body.status, req.body.booking_code);
+            res.json(result);
+        }
+        catch(error)
+        {
+            throw(error)
+        }
+    }
+    async getListMenuClient(req,res){
+        try 
+        {
+            const result = await getListMenuClient(req.query.menu_type_id, req.query.menu_group_id);
+            res.json(result)
+        }
+        catch(error){
+            throw(error)
+        }
+    }
+    async newClientFromClient(req,res){
+        try 
+        {
+            const result = await insertClientFromClient(req.body);
+            res.json(result)
+        }
+        catch(error){
+            throw(error)
+        }
+    }
+    async newBookingFromClient(req,res){
+        try 
+        {
+            const result = await insertBookingFromClient(req.body);
+            res.json(result)
+        }
+        catch(error){
+            throw(error)
+        }
+    }
+    async deleteOrderByBooking(req, res){
+        try {
+            const result  = await deleteOrderByBooking(req.body.booking_code)
+            res.json(result);
+        }
+        catch(error){
             throw(error)
         }
     }

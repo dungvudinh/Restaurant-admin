@@ -44,7 +44,6 @@
                     </button>
                 </div>
             </div>
-            {{#if (isHasData listMenuByGroup)}}
             <table class="table" >
                 <thead class="thead-dark">
                     <tr>
@@ -124,25 +123,22 @@
                         <ul class="pagination d-flex justify-content-center">
                             {{!-- {{pageQuantityRendering}} --}}
                             <li class="page-item">
-                                <p class="page-link" href="#" aria-label="previous">
+                                <p class="page-link"  aria-label="previous" style="cursor:pointer">
                                     <span aria-hidden="true">&laquo;</span>
                                 </p>
                             </li>
                             {{#each (pageQuantityRendering pageQuantity)}}
-                                <li class="page-item d-flex align-items-end"><p class="page-link" href="" aria-label="{{this}}">{{this}}</p></li>
+                                <li class="page-item d-flex align-items-end"><p class="page-link" style="font-size:12px;cursor:pointer" aria-label="{{this}}">{{this}}</p></li>
                             {{/each}}
                             <li class="page-item">
-                                <p class="page-link"  aria-label="next" >
+                                <p class="page-link"  aria-label="next" style="cursor:pointer">
                                     <span aria-hidden="true">&raquo;</span>
                                 </p>
                             </li>
                         </ul>
                     </nav>
                 {{/if}}
-                {{else}}
-                    <p class="text-center" style="width:100%">Không có dữ liệu
-                    </p>
-                {{/if}}
+               
         </div>
     </div>
 </main>
@@ -403,7 +399,7 @@
   </div>
 </div>
 <form action="" id="form-submit">
-    <input name="id" hidden id="id-input" value="1"/>
+    <input name="id" hidden id="id-input" value="2"/>
     <input type="text" name="page" hidden id="page-input" value="1"/>
 </form>
 <form action="" id="update-status-food-form">
@@ -521,9 +517,10 @@
         {
             var str= '';
             for(var i =1; i<= pageQuantity; i++)
-                str = str.concat('', `<li class="page-item d-flex align-items-end"><p class="page-link"  aria-label="${i}" style="font-size:12px">${i}</p></li>`);
+                str = str.concat('', `<li class="page-item d-flex align-items-end" style="cursor:pointer" ><p class="page-link"  aria-label="${i}" style="font-size:12px;cursor:pointer">${i}</p></li>`);
             return str;
         }
+       
         function displayMenu(res)
         {
             $('table tbody').empty();
@@ -592,17 +589,7 @@
             $('#menu-content').append(`
             <nav aria-label="Page navigation example">
                 <ul class="pagination d-flex justify-content-center">
-                    <li class="page-item">
-                        <p class="page-link" aria-label="previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </p>
-                    </li>
-                    ${displayNavPage(res.pageQuantity)}
-                    <li class="page-item">
-                    <p class="page-link" aria-label="next" >
-                        <span aria-hidden="true">&raquo;</span>
-                    </p>
-                    </li>
+                   
                 </ul>
             </nav>
             `)
@@ -615,7 +602,32 @@
                 type: 'GET',
                 data:{id: $('#form-submit #id-input').val(), page:$('#form-submit #page-input').val(), q:searchValue}, 
                 success: function(response){
+                    console.log(response)
                     displayMenu(response);
+                    if(response.pageQuantity > 1){
+                        $('.pagination').append(`
+                            <li class="page-item">
+                                <p class="page-link" aria-label="previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </p>
+                            </li>
+                            ${displayNavPage(response.pageQuantity)}
+                            <li class="page-item">
+                                <p class="page-link" aria-label="next" >
+                                    <span aria-hidden="true">&raquo;</span>
+                                </p>
+                            </li>
+                        `)
+                    }
+                   
+                    const list = document.querySelectorAll('.page-link');
+                    list.forEach(listItem=>{
+                        listItem.onclick= (e)=>{
+                            var page =listItem.getAttribute('aria-label');
+                             $('#form-submit #page-input').val(page)
+                            $('#form-submit').submit();
+                        }
+                    });
                 },
                 error: function(xhr, status, error){
                     console.error(error);
@@ -624,6 +636,7 @@
         })
         $('#food .nav-link').click(function(e){
             e.preventDefault();
+            console.log($(this).attr('id'))
             $('#form-submit #id-input').val($(this).attr('id'))
             $('#form-submit #page-input').val(1)
             $('#form-submit').submit();
@@ -636,8 +649,8 @@
                 $('#form-submit').submit();
         })
         $('.pagination .page-link').on('click', function(e){
-            console.log('click')
             var page =  $(this).attr('aria-label');
+            console.log(page)
             $('#form-submit #page-input').val(page)
             $('#form-submit').submit();
         })

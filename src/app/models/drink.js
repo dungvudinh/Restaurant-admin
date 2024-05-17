@@ -83,7 +83,7 @@ const insertDrink = (data, imgPaths)=>
 const recordQuantityDrink = (id)=>
 {
     return new Promise((resolve, reject)=>{
-        var sql = `SELECT COUNT(*) as recordQuantity FROM menu WHERE menu_group_id = ${id}`;
+        var sql = `SELECT COUNT(*) as recordQuantity FROM menu WHERE menu_group_id = ${id} AND menu_type_id = 2`;
         connection.query(sql, (err, res)=>{
             if(!err)
                  resolve(res[0].recordQuantity);
@@ -100,7 +100,7 @@ const drinkMenuFilter = (id, page, search)=>
 {
     return new Promise((resolve, reject)=>{
         
-        var sql = `SELECT menu.id, menu.name as menu_name , image_url, description,ingredient, menu_group.name as menu_group_name, menu_group_id, price, is_active FROM menu JOIN menu_group ON menu.menu_group_id = menu_group.id WHERE menu_type_id = 2 AND menu_group_id = ${id} AND menu.name ${search ? `LIKE '%${search}%'` : 'IS NOT NULL'} AND menu.deleted_at IS NULL LIMIT 5 OFFSET ${page-1}`;
+        var sql = `SELECT menu.id, menu.name as menu_name , image_url, description,ingredient, menu_group.name as menu_group_name, menu_group_id, price, is_active FROM menu JOIN menu_group ON menu.menu_group_id = menu_group.id WHERE menu_type_id = 2 AND menu_group_id = ${id} AND menu.name ${search ? `LIKE '%${search}%'` : 'IS NOT NULL'} AND menu.deleted_at IS NULL LIMIT 5 OFFSET ${page}`;
         connection.query(sql, (err, res)=>{
             if(!err)
                 resolve(res);

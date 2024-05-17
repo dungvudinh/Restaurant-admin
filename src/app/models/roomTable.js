@@ -87,7 +87,7 @@ const getAllRoomTable = (pageNumber = 0)=>
 {
     return new Promise((resolve, reject)=>
     {
-        var sql = `SELECT * FROM roomtable  WHERE deleted_at IS NULL LIMIT 4 OFFSET ${pageNumber}`;
+        var sql = `SELECT * FROM roomtable  WHERE deleted_at IS NULL `;
         connection.query(sql,  (err, res)=>
         {
             if(!err)
@@ -183,7 +183,9 @@ const getHistoryByTableId = (tableId)=>
 {
     return new Promise((resolve, reject)=>
     {
-        var sql = `SELECT bill_id, date, created_by, client.full_name, total FROM table_history JOIN client ON table_history.client_id = client.id WHERE table_id = ${tableId}`;
+        // var sql = `SELECT order_code, DATE(created_at), employee_id, full_name, total FROM table_history JOIN client ON table_history.client_id = client.id WHERE table_id = ${tableId}`;
+        var sql = `SELECT GROUP_CONCAT(order_menu SEPARATOR ',')  as order_menus, client.full_name as client_name, DATE(created_at) as date, order_code, user.full_name  as employee_name FROM order_menu 
+        JOIN client ON order_menu.client_id = client.id  JOIN user ON employee_id = user.id WHERE table_id = ${tableId} GROUP BY order_menu.client_id `;
         connection.query(sql,  (err, res)=>
         {
             if(!err)

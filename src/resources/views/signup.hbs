@@ -1,23 +1,23 @@
 <div class="signup-form">	
-    <form action="/examples/actions/confirmation.php" method="post">
+    <form id="signup-form" method="POST">
 		<h2>Đăng Ký</h2>
 		<p class="lead">It's free and hardly takes more than 30 seconds.</p>
         <div class="form-group">
 			<div class="input-group">
 				<span class="input-group-addon"><i class="fa fa-user"></i></span>
-				<input type="text" class="form-control" name="phonenumber" placeholder="Số điện thoại" required="required">
+				<input type="text" class="form-control" name="phone_number" placeholder="Số điện thoại" required="required">
 			</div>
         </div>
-        <div class="form-group">
+        {{!-- <div class="form-group">
 			<div class="input-group">
 				<span class="input-group-addon"><i class="fa fa-paper-plane"></i></span>
 				<input type="email" class="form-control" name="email" placeholder="Địa chỉ Email" required="required">
 			</div>
-        </div>
+        </div> --}}
 		<div class="form-group">
 			<div class="input-group">
 				<span class="input-group-addon"><i class="fa fa-lock"></i></span>
-				<input type="text" class="form-control" name="password" placeholder="Mật khẩu" required="required">
+				<input type="password" class="form-control" name="password" placeholder="Mật khẩu" required="required">
 			</div>
         </div>
 		<div class="form-group">
@@ -26,13 +26,58 @@
 					<i class="fa fa-lock"></i>
 					<i class="fa fa-check"></i>
 				</span>
-				<input type="text" class="form-control" name="confirm_password" placeholder="Confirm Password" required="required">
+				<input type="password" class="form-control" name="password_confirm" placeholder="Nhập lại mật khẩu" required="required">
 			</div>
         </div>        
 		<div class="form-group">
-            <button type="submit" class="btn btn-primary btn-block btn-lg">Sign Up</button>
+            <button type="submit" class="btn btn-primary btn-block btn-lg">Đăng ký</button>
         </div>
 		<p class="small text-center">By clicking the Sign Up button, you agree to our <br><a href="#">Terms &amp; Conditions</a>, and <a href="#">Privacy Policy</a>.</p>
     </form>
 	<div class="text-center">Already have an account? <a href="#">Login here</a>.</div>
 </div>
+
+<script src="/jquery/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+	$(document).ready(function(){
+		toastr.options = {
+            "closeButton": true,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-bottom-right",
+            "preventDuplicates": true,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+            }
+		$('#signup-form').submit(function(e){
+			e.preventDefault();
+			var formData = $(this).serialize();
+			$.ajax({
+                url: '/account/register',
+                type: 'POST',
+				data:formData, 
+                success: function(response){
+                    if(response.status == 'error')
+						toastr.error(response.message, "Đăng ký tài khoản thất bại");
+					else if(response.status == 'success')
+					{
+						toastr.success("Đăng ký tài khoản thành công");
+						setTimeout(()=>window.location.href = "http://localhost:4049", 1000)
+					}
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            })
+		})
+	})
+</script>

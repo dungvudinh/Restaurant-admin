@@ -5,10 +5,9 @@ const getListBooking  = (booking_code, statusConvert, table_id, timeline)=>{
     return new Promise((resolve, reject)=>{
         var sql = `SELECT booking.id as booking_id,time_unit, period_time,booking_time,DATE_FORMAT(booking_date, '%Y-%m-%d') as booking_date,
          booking_code,  booking.client_id, client.full_name,client.client_code,  phone_number,adult_quantity + children_quantity  as client_quantity,
-        booking.table_id, booking_status, booking.note as booking_note,adult_quantity, children_quantity, table_id FROM booking JOIN client ON booking.client_id = client.id 
-        WHERE booking_date = CURRENT_DATE  AND booking_status IN(${statusConvert}) AND booking_code ${booking_code ? `LIKE '%${booking_code}%'` : 'IS NOT NULL'}
+        booking.table_id, booking_status, booking.note as booking_note,adult_quantity, children_quantity, table_id, client.email FROM booking JOIN client ON booking.client_id = client.id 
+        WHERE booking_date = CURRENT_DATE  AND booking_status IN(${statusConvert !== '' ? statusConvert : '1,2,3,5'}) AND booking_code ${booking_code ? `LIKE '%${booking_code}%'` : 'IS NOT NULL'}
         AND booking_time ${overtime == 'true' ? ` < CURRENT_TIME` : 'IS NOT NULL'} AND booking_time ${coming == 'true' ? `> CURRENT_TIME` : 'IS NOT NULL'}`;
-       
         connection.query(sql, (err, res)=>{
             if(!err)
             {
@@ -66,10 +65,10 @@ const getListTable = (areaId, name)=>{
         })
     })
 }
-const getListClient = (client_name)=>
+const getListClient = (client_name, client_id)=>
     {
         return new Promise((resolve, reject)=>{
-            var sql =`SELECT * FROM client WHERE full_name ${ client_name ? ` LIKE '%${client_name}%'` : ' IS NOT NULL'}`;
+            var sql =`SELECT * FROM client WHERE full_name ${ client_name ? ` LIKE '%${client_name}%'` : ' IS NOT NULL'} AND id ${client_id ? ` = ${client_id}` : 'IS NOT NULL'}`;
             connection.query(sql, (err, res)=>{
                 if(!err)
                     resolve(res);
@@ -102,6 +101,25 @@ const insertBooking = (data)=>
         })
     })
 }
+const insertBookingFromClient = (data)=>
+    {
+        return new Promise((resolve, reject)=>{
+            var sql =`INSERT INTO booking(booking_time, booking_date, adult_quantity,children_quantity,  period_time, time_unit,client_id,note, booking_code) VALUE(?)`;
+            var values= [data.booking_time, data.booking_date, data.adult_quantity, data.children_quantity, data.period_time, data.time_unit,data.client_id,data.note, data.booking_code ];
+            connection.query(sql,[values],  (err, res)=>{
+                if(!err)
+                    resolve({
+                        status:'success', 
+                        message:"Thêm đơn đặt bàn thành công"
+                    });
+                else 
+                    resolve({
+                        status:'error', 
+                        debug:err
+                    })
+            })
+        })
+    }
 const getLastIdClient = ()=>
     {
         return new Promise((resolve,reject)=>{
@@ -165,6 +183,40 @@ const insertClient = (data)=>
         })
     })
 }
+const insertClientFromClient = (data)=>
+    {
+        return new Promise((resolve,reject)=>{
+            var sql = `INSERT INTO client(full_name, phone_number, client_code) VALUES(?)`;
+            var values = [data.full_name, data.phone_number, data.client_code];
+            connection.query(sql,[values],  (err, res)=>{
+                if(!err){
+                    connection.query(`SELECT id FROM client WHERE id=${res.insertId}`, (error, result)=>{
+                        if(!error)
+                            resolve({
+                                status: 'success', 
+                                message:'Thêm khách hàng thành công', 
+                                data: result[0].id
+                            })
+                        else 
+                        {
+                            resolve({
+                                status: 'error', 
+                                message:'Lỗi không lấy được thông tin khách hàng sau khi thêm', 
+                                debug:error
+                            })
+                        }
+                    })
+                }
+                    
+                else 
+                    resolve({
+                        status:'error', 
+                        message:'Thêm khách hàng thất bại', 
+                        debug:err
+                    })
+            })
+        })
+    }
 const getLastIdBooking = ()=>
     {
         return new Promise((resolve,reject)=>{
@@ -259,21 +311,21 @@ const getListMenu = (menu_group, search)=>
             })
         })
     }
-    const getListMenuGroup = (menu_group)=>
-        {
-            return new Promise((resolve,reject)=>{
-                var sql = `SELECT * FROM menu_group `;
-                connection.query(sql, (err, res)=>{
-                    if(!err)
-                        resolve(res)
-                    else 
-                        resolve({
-                            status:'error',     
-                            debug:err
-                        })
-                })
+const getListMenuGroup = (menu_group)=>
+    {
+        return new Promise((resolve,reject)=>{
+            var sql = `SELECT * FROM menu_group `;
+            connection.query(sql, (err, res)=>{
+                if(!err)
+                    resolve(res)
+                else 
+                    resolve({
+                        status:'error',     
+                        debug:err
+                    })
             })
-        }
+        })
+    }
 const updateTable = ({id,note})=>
     {
         return new Promise((resolve,reject)=>{
@@ -316,7 +368,7 @@ const insertMenu = (data)=>
     }
 const getListOrder = ()=>{
         return new Promise((resolve,reject)=>{
-            var sql = `SELECT order_menu.id, area.id as area, booking_code,client_id,client.full_name,client_code,phone_number, table_id, roomtable.name as table_name,
+            var sql = `SELECT order_menu.id, order_id, area.id as area, booking_code,client_id,client.full_name,client_code,phone_number, table_id, roomtable.name as table_name,
              order_menu.order_menu, client_quantity,order_menu.note as order_note, employee_id, booking_code, order_code  
              FROM order_menu LEFT JOIN roomtable ON order_menu.table_id  = roomtable.id LEFT JOIN area ON roomtable.area = area.id
              lEFT JOIN client ON order_menu.client_id = client.id
@@ -335,7 +387,7 @@ const getListOrder = ()=>{
 }
 const getLastIdOrder = ()=>{
     return new Promise((resolve,reject)=>{
-        var sql = `SELECT id FROM order_menu ORDER BY id DESC LIMIT 1`;
+        var sql = `SELECT order_id FROM order_menu ORDER BY id DESC LIMIT 1`;
         connection.query(sql, (err, res)=>{
             if(!err)
                 resolve(res[0])
@@ -437,8 +489,8 @@ const deleteOrderMenu = (orderId, orderMenu)=>{
 const insertOrder = (order)=>{
     const orderMenuJson =JSON.stringify(order.order_menu);
     return new Promise((resolve,reject)=>{
-        var sql = `INSERT INTO order_menu(client_id, table_id, order_menu, client_quantity, note,employee_id, booking_code, order_code) VALUES(?)`;
-        var value = [order.client_id,order.table_id, orderMenuJson, order.client_quantity, order.note, order.employee_id, order.booking_code, order.order_code];
+        var sql = `INSERT INTO order_menu(client_id, table_id, order_menu, client_quantity, note,employee_id, booking_code, order_code, order_id) VALUES(?)`;
+        var value = [order.client_id,order.table_id, orderMenuJson, order.client_quantity, order.note, order.employee_id, order.booking_code, order.order_code, order.order_id];
         connection.query(sql,[value],  (err, res)=>{
             if(!err)
             {
@@ -455,8 +507,8 @@ const insertOrder = (order)=>{
 const updateOrderOther = (order)=>{
     const orderMenuJson =JSON.stringify(order.order_menu);
     return new Promise((resolve,reject)=>{
-        var sql = `UPDATE order_menu SET table_id = ${order.table_id}, booking_code = '${order.booking_code}', client_id = ${order.client_id},
-        employee_id = ${order.employee_id}, client_quantity = ${order.client_quantity}, order_menu = '${orderMenuJson}' WHERE id = ${order.id}`;
+        var sql = `UPDATE order_menu SET table_id = ${order.table_id}, booking_code = ${order.booking_code !== null ? `'${order.booking_code}'` : `${order.booking_code}`}, client_id = ${order.client_id},
+        employee_id = ${order.employee_id}, client_quantity = ${order.client_quantity}, order_menu = '${orderMenuJson}' WHERE id  ${order.id !== null ? `=${order.id}` : 'IS NOT NULL'} AND order_code = '${order.order_code}'`;
        
         connection.query(sql,  (err, res)=>{
             if(!err)
@@ -488,10 +540,116 @@ const deleteOrder = (orderId)=>{
         })
     })
 }
+const deleteOrderByBooking = (bookingCode)=>{
+    return new Promise((resolve,reject)=>{
+        var sql = `DELETE FROM order_menu WHERE booking_code = '${bookingCode}'`;
+       
+        connection.query(sql,  (err, res)=>{
+            if(!err)
+            {
+                resolve(res)
+            }
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err, 
+                })
+        })
+    })
+}
 const updateTableStatus = ({table_id, status})=>{
-    console.log(table_id,status)
     return new Promise((resolve,reject)=>{
         var sql = `UPDATE roomtable SET status = ${status} WHERE id = ${table_id}`;
+        connection.query(sql,  (err, res)=>{
+            if(!err)
+            {
+                resolve(res)
+            }
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err, 
+                })
+        })
+    })
+}
+const updateOrderNote = (order_id, order_note)=>{
+    return new Promise((resolve,reject)=>{
+        var sql = `UPDATE order_menu SET note = '${order_note}' WHERE id = ${order_id}`;
+        connection.query(sql,  (err, res)=>{
+            if(!err)
+            {
+                resolve({
+                    status:'success',
+                    message:'Cập nhập ghi chú order thành công'
+                })
+            }
+            else 
+                resolve({
+                    status:'error', 
+                    message:'Cập nhập ghi chú order thất bại', 
+                    debug:err, 
+                })
+        })
+    })
+}
+
+const getClientById = (client_id)=>{
+    return new Promise((resolve,reject)=>{
+        var sql = `SELECT * FROM client WHERE id = ${client_id}`;
+        connection.query(sql,  (err, res)=>{
+            if(!err)
+            {
+                resolve(res[0])
+            }
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err, 
+                })
+        })
+    })
+}
+
+const updateStatusOrder = (id)=>{
+    return new Promise((resolve,reject)=>{
+        var sql = `UPDATE order_menu SET order_menu.status =  2  WHERE id = ${id}`;
+        connection.query(sql,  (err, res)=>{
+            if(!err)
+            {
+                resolve({
+                    status:'success', 
+                    message:'Thanh toán hóa đơn thành công'
+                })
+            }
+            else 
+                resolve({
+                    status:'error', 
+                    message:'Lỗi hệ thống.Thanh toán hóa đơn thất bại', 
+                    debug:err, 
+                })
+        })
+    })
+}
+const updateBookingStatus = (id, status, booking_code)=>{
+    return new Promise((resolve,reject)=>{
+        var sql = `UPDATE booking SET booking_status = ${status}  WHERE id  ${id ? `= ${id}` : 'IS NOT NULL'} AND booking_code ${booking_code ? ` = '${booking_code}'` : 'IS NOT NULL'}`;
+        connection.query(sql,  (err, res)=>{
+            if(!err)
+            {
+                resolve(res)
+            }
+            else 
+                resolve({
+                    status:'error', 
+                    debug:err, 
+                })
+        })
+    })
+}
+const getListMenuClient = (menuTypeId, menuGroupId)=>{
+    return new Promise((resolve,reject)=>{
+        var sql = `SELECT * FROM menu WHERE menu_type_id=${menuTypeId} AND menu_group_id = ${menuGroupId} LIMIT 10`;
         connection.query(sql,  (err, res)=>{
             if(!err)
             {
@@ -508,4 +666,5 @@ const updateTableStatus = ({table_id, status})=>{
 module.exports = {getListBooking, getListArea, getListTable, getListClient, insertBooking, getTableById, 
     insertClient,getLastIdClient, getLastIdBooking, updateBooking, deleteBooking, cancelBooking
 , getListMenu, getListMenuGroup, updateTable, insertMenu, getListOrder, getLastIdOrder, getMenuById, updateOrder, getOrderById,
- updateOrderQuantity, deleteOrderMenu, insertOrder, updateOrderOther,  updateTableStatus, deleteOrder};
+ updateOrderQuantity, deleteOrderMenu, insertOrder, updateOrderOther,  updateTableStatus, deleteOrder, updateOrderNote, getClientById, 
+ updateStatusOrder, updateBookingStatus, getListMenuClient, insertClientFromClient, insertBookingFromClient, deleteOrderByBooking};

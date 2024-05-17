@@ -9,12 +9,10 @@ class MenuController
        {
            
             var listMenuByGroupId = await getFirstMenu();
-            var pageQUantity = await recordQuantity(1);
-            console.log(listMenuByGroupId)
+            var pageQUantity = await recordQuantity(2);
             var listMenuByGroupPromise = await listMenuByGroupId.map(async (mainMenu)=>{
                 var imgUrls = mainMenu.image_url;
                 var ingredientName = null;
-                console.log(mainMenu.ingredient == 'null');
                 if(mainMenu.ingredient != null)
                 {
                     ingredientName = JSON.parse(mainMenu.ingredient).map(async (item)=>{
@@ -31,7 +29,7 @@ class MenuController
             res.render('menu/food', {
                 listMenuByGroup:listMenuByGroupConvert,
                 listIngredient,
-                pageQuantity: Math.ceil(pageQUantity/4)
+                pageQuantity: Math.ceil(pageQUantity/5)
             });  
        }
        catch(error)
@@ -58,12 +56,12 @@ class MenuController
     {
         try 
         {
-
             const menuGroupId = req.query.id;
             const pageId = req.query.page;
             const search = req.query.q;
-            var listMenuByGroupId = await menuFilter(menuGroupId, pageId, search);
+            var listMenuByGroupId = await menuFilter(menuGroupId,(pageId -1) *5, search);
             var pageQUantity = await recordQuantity(menuGroupId);
+            console.log(Math.ceil(pageQUantity/5))
             var listMenuByGroupPromise = await listMenuByGroupId.map(async (mainMenu)=>{
                 var imgUrls = mainMenu.image_url;
                 var ingredientName = null;
@@ -83,7 +81,7 @@ class MenuController
             res.json({
                 listMenuByGroup:listMenuByGroupConvert,
                 listIngredient,
-                pageQuantity: Math.ceil(pageQUantity/4)
+                pageQuantity: Math.ceil(pageQUantity/5)
             }); 
         }
         catch(error)
@@ -178,7 +176,7 @@ class MenuController
        {
            
             var listMenuByGroupId = await getFirstDrinkMenu();
-            var pageQUantity = await recordQuantityDrink(1);
+            var pageQUantity = await recordQuantityDrink(4);
             var listMenuByGroupPromise = await listMenuByGroupId.map(async (mainMenu)=>{
                 var imgUrls = mainMenu.image_url;
                 var ingredientName = null;
@@ -198,7 +196,7 @@ class MenuController
             res.render('menu/drink', {
                 listMenuByGroup:listMenuByGroupConvert,
                 listIngredient,
-                pageQuantity: Math.ceil(pageQUantity/4)
+                pageQuantity: Math.ceil(pageQUantity/5)
             });  
        }
        catch(error)
@@ -214,8 +212,7 @@ class MenuController
             const menuGroupId = req.query.id;
             const pageId = req.query.page;
             const search = req.query.q;
-            var listMenuByGroupId = await drinkMenuFilter(menuGroupId, pageId, search);
-            
+            var listMenuByGroupId = await drinkMenuFilter(menuGroupId, (pageId -1)* 5, search);
             var pageQUantity = await recordQuantityDrink(menuGroupId);
             var listMenuByGroupPromise = await listMenuByGroupId.map(async (mainMenu)=>{
                 var imgUrls = mainMenu.image_url;
@@ -228,7 +225,7 @@ class MenuController
                 }
                 if(mainMenu.image_url != null)
                     imgUrls = JSON.parse(mainMenu.image_url); 
-                var data =ingredientName != null ?  await Promise.all(ingredientName) : null;
+                var data = ingredientName != null ?  await Promise.all(ingredientName) : null;
                 return {...mainMenu, ingredient:data, image_url: imgUrls}      
             })
             var listMenuByGroupConvert = await Promise.all(listMenuByGroupPromise);
@@ -236,7 +233,7 @@ class MenuController
             res.json({
                 listMenuByGroup:listMenuByGroupConvert,
                 listIngredient,
-                pageQuantity: Math.ceil(pageQUantity/4)
+                pageQuantity: Math.ceil(pageQUantity/5)
             }); 
         }
         catch(error)

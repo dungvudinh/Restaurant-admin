@@ -124,7 +124,7 @@
                                 </p>
                             </li>
                             {{#each (pageQuantityRendering pageQuantity)}}
-                                <li class="page-item d-flex align-items-end"><p class="page-link" href="" aria-label="{{this}}">{{this}}</p></li>
+                                <li class="page-item d-flex align-items-end"><p class="page-link" href="" aria-label="{{this}}" style="font-size:12px;cursor:pointer">{{this}}</p></li>
                             {{/each}}
                             <li class="page-item">
                                 <p class="page-link"  aria-label="next" >
@@ -514,7 +514,7 @@
         {
             var str= '';
             for(var i =1; i<= pageQuantity; i++)
-                str = str.concat('', `<li class="page-item d-flex align-items-end"><p class="page-link"  aria-label="${i}" style="font-size:12px">${i}</p></li>`);
+                str = str.concat('', `<li class="page-item d-flex align-items-end"><p class="page-link"  aria-label="${i}" style="font-size:12px;cursor:pointer">${i}</p></li>`);
             return str;
         }
         function displayMenu(res)
@@ -585,17 +585,7 @@
             $('#menu-content').append(`
             <nav aria-label="Page navigation example">
                 <ul class="pagination d-flex justify-content-center">
-                    <li class="page-item">
-                        <p class="page-link" aria-label="previous">
-                            <span aria-hidden="true">&laquo;</span>
-                        </p>
-                    </li>
-                    ${displayNavPage(res.pageQuantity)}
-                    <li class="page-item">
-                    <p class="page-link" aria-label="next" >
-                        <span aria-hidden="true">&raquo;</span>
-                    </p>
-                    </li>
+                    
                 </ul>
             </nav>
             `)
@@ -609,6 +599,30 @@
                 data:{id: $('#form-submit #id-input').val(), page:$('#form-submit #page-input').val(), q:searchValue}, 
                 success: function(response){
                     displayMenu(response);
+                    if(response.pageQuantity >1){
+                        $('.pagination').append(`
+                            <li class="page-item">
+                                <p class="page-link" aria-label="previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </p>
+                            </li>
+                            ${displayNavPage(response.pageQuantity)}
+                            <li class="page-item">
+                                <p class="page-link" aria-label="next" >
+                                    <span aria-hidden="true">&raquo;</span>
+                                </p>
+                            </li>
+                        `)
+                    }
+                   
+                    const list = document.querySelectorAll('.page-link');
+                    list.forEach(listItem=>{
+                        listItem.onclick= (e)=>{
+                            var page =listItem.getAttribute('aria-label');
+                             $('#form-submit #page-input').val(page)
+                            $('#form-submit').submit();
+                        }
+                    });
                 },
                 error: function(xhr, status, error){
                     console.error(error);

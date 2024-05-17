@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const http = require('http');
 const port = 4049;
 const morgan = require('morgan');
 const path  = require('path');
@@ -8,11 +9,33 @@ const route = require('./routes');
 const dotenv = require('dotenv');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
+const { Server } = require('socket.io');
+const server  = http.createServer(app);
+const {insertBooking} = require('./app/models/api');
 require('./config/db');
-dotenv.config({ path: './src/.env' });
 
-app.use(cors());
+dotenv.config({ path: './src/.env' });
 app.use(cookieParser());
+app.use(cors({
+    origin:['http://localhost:3001', 'http://localhost:4001'], 
+    credentials:true
+}));
+const io = new Server(server, {
+    cors:{
+        origin:['http://localhost:3001', 'http://localhost:4001'], 
+        methods:["GET", 'POST']
+    }
+});
+io.on('connection',  (socket)=>{
+    socket.on('notification', async (data)=>{
+        const newBooking = {...data, booking_status: 0};
+        socket.broadcast.emit('notification', data);
+    })
+   
+    socket.on('disconnect', ()=>{
+        console.log('Client disconnected');
+    })
+})
 app.use(express.urlencoded({extended:true}));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -66,5 +89,4 @@ app.set('view engine', 'hbs');
 app.set('views',path.join(__dirname, "resources/views"));
 
 route(app);
-
-app.listen(port, ()=> console.log(`server is running on port:${port}`));
+server.listen(port, ()=> console.log(`server is running on port:${port}`));

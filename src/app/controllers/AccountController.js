@@ -22,7 +22,6 @@ class AccountController
         {
             const token = req.cookies.token;
             if(!token)
-                // return res.json({message:'Phiên đăng nhập đã hết hạn.Vui lòng đăng nhập lại'})
                 return res.redirect('/login');
             else 
                 jwt.verify(token, process.env.JWT_SECRET, (err, decode)=>{
@@ -30,7 +29,7 @@ class AccountController
                         return res.json({message:'Xác thực thông tin thất bại'})
                     else 
                     {
-                        req.name = decode.name;
+                        req.id = decode.id;
                         next();
                     }
                 })

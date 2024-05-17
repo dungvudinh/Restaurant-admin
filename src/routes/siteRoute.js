@@ -2,6 +2,10 @@ const express = require('express');
 const router = express.Router();
 const siteController = require('../app/controllers/SiteController');
 
+
+router.post('/order-status/:app_trans_id', siteController.orderStatus);
+router.post('/callback', siteController.callback);
+router.post('/payment', siteController.payment);
 router.post('/room-table/area/new',siteController.verifyAccount, siteController.newArea);
 router.post('/room-table/update', siteController.verifyAccount,siteController.updateRoomTable)
 router.post('/room-table/new', siteController.verifyAccount,siteController.newRoomTable);

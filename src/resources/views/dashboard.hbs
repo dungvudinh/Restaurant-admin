@@ -166,7 +166,7 @@
                     <option value="7">7 ngày qua</option>
                   </select>
               </div>
-              <canvas id="client-quantity-chart" class="d-none"></canvas>
+              <canvas id="client-quantity-chart" class="d-none" style="margin-top:70px"></canvas>
             </div>
           </div>
       </div>
@@ -207,7 +207,7 @@
   
   var totalMoneyYesterday  = {{totalMoneyYesterday}}
   var totalMoneyByHourYesterday = {{{totalMoneyByHourYesterday}}};
-
+  console.log(totalMoneyByHourYesterday)
   var totalMoney7Day = {{{totalMoney7Day}}};
   var totalMoneyByHour7Day  = {{{totalMoneyByHour7Day}}};
 
@@ -218,7 +218,7 @@
   var top10MenuToday = {{{top10MenuToday}}}
   var top10MenuYesterday = {{{top10MenuYesterday}}}
   var top10Menu7Day = {{{top10Menu7Day}}}
-  console.log("RESULT:")
+  console.log("RESULT:",  top10MenuToday)
   var timeActiveInit = ()=>{
     var arrInit = [];
     for(var i = 8; i<=20; i ++)
@@ -281,7 +281,7 @@
     type: 'bar',
     data: {
       labels: top10MenuToday.map((menu=>menu.name)),
-      datasets: [{label:'Số lượng', data: top10MenuToday.map((menu=>menu.total_quantity)) ,borderWidth: 1, barThickness: 80 }]
+      datasets: [{label:'Số lượng', data: top10MenuToday.map((menu=>menu.total_quantity)) ,borderWidth: 1, barThickness: 30 }]
     },
     options: {
       scales: {y: {beginAtZero: true} }
@@ -302,7 +302,7 @@
     type: 'line',
     data: {
       labels: timeActiveInit().map(item=>item + ":00"),
-      datasets: [{label: 'Số lượng khách',data: clientQuantityToday.map(client=>client.quantity),borderWidth: 1, tension:0.4}],
+      datasets: [{label: 'Số lượng khách',data:setDataIntoLabelChart(clientQuantityToday),borderWidth: 1, tension:0.4}],
     },
     options: {
       scales: {y: {beginAtZero: true} }
@@ -569,9 +569,10 @@ if(totalMoneyToday)
           clientQuantityChart.data.datasets.forEach((dataset) => {
               dataset.data = [];
           });
-          
+          console.log(clientQuantityToday)
           clientQuantityChart.data.datasets.forEach(dataset=>{
-            dataset.data.push = clientQuantityToday.map(client=>client.quantity);
+            {{!-- dataset.data.push = clientQuantityToday.map(client=>client.quantity); --}}
+            dataset.data = setDataIntoLabelChart(clientQuantityToday);
           })
           clientQuantityChart.update();
         }
@@ -638,6 +639,7 @@ if(totalMoneyToday)
         $("#top_menu-title").text("Top 10 món ăn bán chạy hôm nay")
         if(top10MenuToday.length > 0)
         {
+          console.log(top10MenuToday)
             topMenuCtx.removeClass('d-none');
             topMenuCtx.addClass('d-block');
 
