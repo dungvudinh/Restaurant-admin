@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const siteController = require('../app/controllers/SiteController');
 
-
+router.get('/employee', siteController.employee);
 router.post('/order-status/:app_trans_id', siteController.orderStatus);
 router.post('/callback', siteController.callback);
 router.post('/payment', siteController.payment);

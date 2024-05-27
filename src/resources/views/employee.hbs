@@ -1,0 +1,941 @@
+<main class="content px-3 py-4">
+    <div class="container-fluid">
+        <div class="mb-3" id="menu-content">
+            <!-- Tab items -->
+            <div class="d-flex justify-content-between mb-3">
+                {{!-- <ul class="nav nav-tabs mb-3" id="food" role="tablist">
+                    <li class="nav-item " role="presentation">
+                        <a
+                        data-mdb-tab-init class="nav-link active" id="2"  href=""
+                        role="tab" aria-controls="food-tabs-1" aria-selected="true">Món khai vị</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a
+                        data-mdb-tab-init class="nav-link " id="1" href=""
+                        role="tab" aria-controls="food-tabs-2"aria-selected="true">Món chính</a>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <a
+                        data-mdb-tab-init class="nav-link "id="3" href=""
+                        role="tab" aria-controls="food-tabs-3"aria-selected="true">Món tráng miệng</a>
+                    </li>
+                    
+                </ul> --}}
+                <div class="d-flex flex-row justify-content-end position-relative" style="height:35px; width:100%;">
+                    <div class="input-group mr-4 position-absolute"  style="width:350px; left:50%; transform:translateX(-50%)">
+                        <div class="form-outline" data-mdb-input-init>
+                            <input type="search" name="search" class="form-control" />
+                            <label class="form-label" for="form1">Tìm kiếm</label>
+                        </div>
+                        <button type="button" class="btn btn-primary" data-mdb-ripple-init id="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                    <button type="button" class="btn btn-primary btn-sm d-flex align-items-center"
+                        data-toggle="modal" data-target="#menuModal" data-whatever="@mdo" style="width:130px">
+                        <i class="lni lni-plus mr-2"></i>
+                        Cấp tài khoản
+                    </button>
+                    
+                    {{!-- <button type="button" class="btn btn-success btn-sm d-flex align-items-center ml-2"
+                    data-mdb-ripple-init data-mdb-modal-init  data-mdb-target="#binModal" style="width:120px">
+                       <i class="lni lni-shopping-basket mr-2 " style="font-size:17px"></i>
+                       Thùng rác
+                    </button> --}}
+                </div>
+            </div>
+            <table class="table" >
+                <thead class="thead-dark">
+                    <tr>
+                        <th scope="col">Họ và tên</th>
+                        <th scope="col">Giới tính</th>
+                        <th scope="col">Tuổi</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Số điện thoại</th>
+                        <th scope="col">Trạng thái</th>
+                        <th scope="col">Thao tác</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        {{!-- {{#each listMenuByGroup}} --}}
+                            <tr>
+                                <td>Vũ Đình Dũng</td>
+                                <td>
+                                    Nam
+                                </td>
+                                <td>
+                                    23
+                                </td>
+                                <td>anhkho881@gmail.com</td>
+                                <td>0869370492</td>
+                                <td>
+                                    {{#if (isRoomTableActive this.is_active)}}
+                                        <span class="badge badge-success rounded-pill d-inline">Đang làm việc</span>
+                                    {{else}}
+                                        <span class="badge badge-light rounded-pill d-inline">Đã nghỉ</span>
+                                    {{/if}}
+                                    
+                                </td>
+                                <td style="min-width: 200px;">
+                                    <button type="button" class="btn btn-success btn-sm mb-2" 
+                                      data-mdb-ripple-init data-mdb-modal-init  data-mdb-target="#updateMenuModal" data-mdb-whatever='{{jsonFormatter this}}'>
+                                        <i class="lni lni-check-box"></i>
+                                        Cập nhật
+                                    </button>
+                                    <br/>
+                                     {{!-- {{#if (isRoomTableActive this.is_active)}} --}}
+                                        <button type="button" class="btn btn-danger btn-sm " id="disactive-btn"
+                                        data-mdb-target="#exampleModal" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='{{jsonFormatter this}}' data-mdb-status="0">
+                                        <i class="lni lni-lock-alt"></i>
+                                        Đã nghỉ
+                                        </button>
+                                    {{!-- {{else}} --}}
+                                       {{!-- <button type="button" class="btn btn-primary btn-sm " id="active-btn" 
+                                       data-mdb-target="#exampleModal" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='{{jsonFormatter this}}' data-mdb-status="1">
+                                        <i class="lni lni-lock-alt"></i>
+                                        Đang bán
+                                        </button> --}}
+                                    {{!-- {{/if}} --}}
+                                    
+                                    {{!-- <button type="button" class="btn btn-danger btn-sm "
+                                    data-mdb-target="#exampleModal2" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='{{jsonFormatter this}}' >
+                                    <i class="lni lni-lock-alt"></i>
+                                    Xóa
+                                    </button> --}}
+                                        
+                                </td>
+                            </tr>
+                        {{!-- {{/each}} --}}
+                    </tbody>
+                </table>
+                {{#if (isMultiplePage pageQuantity)}}
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination d-flex justify-content-center">
+                            {{!-- {{pageQuantityRendering}} --}}
+                            <li class="page-item">
+                                <p class="page-link"  aria-label="previous" style="cursor:pointer">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </p>
+                            </li>
+                            {{#each (pageQuantityRendering pageQuantity)}}
+                                <li class="page-item d-flex align-items-end"><p class="page-link" style="font-size:14px;cursor:pointer" aria-label="{{this}}">{{this}}</p></li>
+                            {{/each}}
+                            <li class="page-item">
+                                <p class="page-link"  aria-label="next" style="cursor:pointer">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </p>
+                            </li>
+                        </ul>
+                    </nav>
+                {{/if}}
+               
+        </div>
+    </div>
+</main>
+
+
+<div class="modal fade" id="menuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="menuModalLabel">Thêm mới thực đơn</h5>
+                <button type="button" class="btn-close d-flex justify-content-center align-items-center border-none" data-mdb-dismiss="modal" aria-label="Close">
+                    <i class="lni lni-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+
+                    <form class="layout-modal" method="POST" action="new" id="add_food-form" enctype="multipart/form-data">
+
+                        <div class="layout-modal_item d-flex justify-content-between position-relative">
+                           <span class="position-absolute top-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle">
+                                <span class="visually-hidden">New alerts</span>
+                            </span>
+                            <div class="img-area d-flex  justify-content-center">
+                                <p class="text-center" style="color:#777">
+                                    <span style="font-size: 50px;color:#111" class="mb-2">
+                                        <i class="lni lni-cloud-upload fs-20"></i>
+                                    </span>
+                                    Không có hình ảnh đính kèm
+                                </p>
+
+                            </div>
+                             <button type="button" class="btn btn-secondary fs-12">
+                                <input type="file" id="imgPath" name="imgPath" class="d-none" accept="image/png, image/jpeg" multiple 
+                                enctype='multipart/form-data' required/>
+                                <label id="file-input-label" for="imgPath" class="mb-0">
+                                    Thêm hình ảnh
+                                </label>
+                             </button>
+                        </div>
+
+                        <div class="layout-modal_item ">
+                            
+                            <span class="modal-item_header">Tên thực đơn</span>
+                            <div class="input-group position-relative">
+                                <span class="position-absolute top-0 left-0 start-100 translate-middle p-2 bg-danger border border-light rounded-circle" 
+                                style="z-index:10">
+                                    <span class="visually-hidden">New alerts</span>
+                                </span>
+                                <input type="text" class="form-control" placeholder="Nhập tên thực đơn" name="menu_name" required>
+                            </div>
+                        </div>
+
+                        <div class="layout-modal_item">
+                             <span class="modal-item_header">Nhóm thực đơn</span>
+                           
+                            <div class=" position-relative" style="width:100%;">
+                                 <span class="position-absolute start-100 translate-middle p-2 bg-danger border border-light rounded-circle" 
+                                style="z-index:10">
+                                    <span class="visually-hidden">New alerts</span>
+                                </span>
+                                <select class="custom-select" name="menu_group" required id="menu-group-select">
+                                    <option value="3">Món tráng miệng</option>
+                                    <option value="1">Món chính</option>
+                                    <option value="2">Món khai vị</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="layout-modal_item">
+                             <span class="modal-item_header">Giá tiền</span>
+                            <div class="input-group position-relative">
+                                  <span class="position-absolute start-100 translate-middle p-2 bg-danger border border-light rounded-circle" 
+                                style="z-index:10">
+                                    <span class="visually-hidden">New alerts</span>
+                                </span>
+                                <input type="number" class="form-control" placeholder="Nhập giá tiền" name="menu_price" required>
+                            </div>
+                        </div>
+                      
+                       
+                        <div class="layout-modal_item">
+                           <span class="modal-item_header">Nguyên liệu</span>
+                            <select class="selectpicker show-tick" data-live-search="true" multiple title="Tìm nguyên liệu"
+                                data-width="100%" data-actions-box="true" data-selected-text-format="count > 2" id="ingredient" name="ingredient">
+                                {{#each listIngredient}}
+                                    <option data-tokens="{{this.id}}" value="{{this.id}}">{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                            
+                        </div>
+
+                          <div class="layout-modal_item">
+                             <span class="modal-item_header">Mô tả thực đơn</span>
+                            <div class="input-group">
+                                {{!-- <input type="text" class="form-control" placeholder="Nhập mô tả" > --}}
+                                 <textarea class="form-control" id="validationTextarea" placeholder="Nhập mô tả cho thực đơn" required name="menu_desc"></textarea>
+                            </div>
+                        </div>
+                      
+                    </form>
+                </div>
+                <div class="modal-footer mt-3">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="submit-new_food">Hoàn thành</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="updateMenuModal" tabindex="-1" aria-labelledby="menuModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="menuModalLabel">Cập nhập thực đơn</h5>
+                <button type="button" class="btn-close d-flex justify-content-center align-items-center border-none" data-mdb-dismiss="modal" aria-label="Close">
+                    <i class="lni lni-close"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+
+                    <form class="layout-modal" method="POST"  id="update_food-form" enctype="multipart/form-data">
+                        <div class="layout-modal_item d-flex justify-content-between ">
+                          
+                            <div class="img-area d-flex  justify-content-center">
+                                <p class="text-center" style="color:#777">
+                                    <span style="font-size: 50px;color:#111" class="mb-2">
+                                        <i class="lni lni-cloud-upload fs-20"></i>
+                                    </span>
+                                    Không có hình ảnh đính kèm
+                                </p>
+
+                            </div>
+                             <button type="button" class="btn btn-secondary fs-12">
+                                <input type="file" id="imgPath2" name="imgPath" class="d-none" accept="image/png, image/jpeg" multiple 
+                                enctype='multipart/form-data' required/>
+                                <label id="file-input-label" for="imgPath2" class="mb-0">
+                                    Thêm hình ảnh
+                                </label>
+                             </button>
+                        </div>
+
+                        <div class="layout-modal_item ">
+                            
+                            <span class="modal-item_header">Tên thực đơn</span>
+                            <div class="input-group ">
+                                <input type="text" class="form-control" placeholder="Nhập tên thực đơn" name="menu_name" required>
+                            </div>
+                        </div>
+
+                        <div class="layout-modal_item">
+                             <span class="modal-item_header">Nhóm thực đơn</span>
+                            <select class="custom-select" name="menu_group" required id="menu-group-select">
+                                <option value="3">Món tráng miệng</option>
+                                <option value="1">Món chính</option>
+                                <option value="2">Món khai vị</option>
+                            </select>
+                        </div>
+                        <div class="layout-modal_item">
+                            <span class="modal-item_header">Giá tiền</span>
+                            <div class="input-group">
+                                <input type="number" class="form-control" placeholder="Nhập giá tiền" name="menu_price" required>
+                            </div>
+                        </div>
+                      
+                       
+                        <div class="layout-modal_item">
+                           <span class="modal-item_header">Nguyên liệu</span>
+                            <select class="selectpicker show-tick" data-live-search="true" multiple title="Tìm nguyên liệu"
+                                data-width="100%" data-actions-box="true" data-selected-text-format="count > 2" id="ingredient" name="ingredient">
+                                {{#each listIngredient}}
+                                    <option data-tokens="{{this.id}}" value="{{this.id}}">{{this.name}}</option>
+                                {{/each}}
+                            </select>
+                            
+                        </div>
+
+                          <div class="layout-modal_item">
+                             <span class="modal-item_header">Mô tả thực đơn</span>
+                            <div class="input-group">
+                                {{!-- <input type="text" class="form-control" placeholder="Nhập mô tả" > --}}
+                                 <textarea class="form-control" id="validationTextarea" placeholder="Nhập mô tả cho thực đơn" required name="menu_desc"></textarea>
+                            </div>
+                        </div>
+                      
+                    </form>
+                </div>
+                <div class="modal-footer mt-3">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="submit-update_food">Hoàn thành</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cập nhập trạng thái món ăn</h5>
+        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 14px;"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-mdb-ripple-init id="submit-status">Đồng ý</button>
+        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Xóa thực đơn</h5>
+        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 14px;"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-mdb-ripple-init id="delete-submit">Đồng ý</button>
+        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="binModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-scrollable ">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Danh sách món ăn đã xóa</h5>
+        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table">
+            <thead class="thead-dark" >
+                <tr>
+                <th scope="col">Tên món</th>
+                <th scope="col">Nhóm thực đơn</th>
+                <th scope="col">Giá tiền</th>
+                <th scope="col">Trạng thái</th>
+                <th scope="col">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+            </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
+<form action="" id="form-submit">
+    <input name="id" hidden id="id-input" value="2"/>
+    <input type="text" name="page" hidden id="page-input" value="1"/>
+</form>
+<form action="" id="update-status-food-form">
+    <input type="number" name="menu_id" hidden>
+    <input type="number" name="status" hidden>
+</form>
+
+<form action="" id="delete-food_form">
+    <input type="number" name="menu_id" hidden>
+</form>
+
+<form action="" id="bin-form">
+    <input type="number" name="menu_type" hidden>
+</form>
+<form action="" id="bin-action_form">
+    <input type="number" name="menu_id" hidden>
+</form>
+<script src="/jquery/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<script>
+    toastr.options = {
+        "closeButton": true,
+        "debug": false,
+        "newestOnTop": false,
+        "progressBar": false,
+        "positionClass": "toast-bottom-right",
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+        }
+    $(document).ready(function()
+    {
+        //#region HANDLE SHOW MODAL
+        $('#menuModal').on('show.bs.modal', function (event) {
+            var button = $(event.relatedTarget)
+            var recipient = button.data('whatever') 
+        })
+        $('#menuModal').on('hide.bs.modal', function (event) {
+            var modal = $(this)
+            modal.find('.modal-body input').val('');
+            $('.custom-select option:selected').prop('selected', false);
+        })
+        $('#menuModal #imgPath').change(function(e){
+            for(var file of e.target.files)
+            {
+                 var imageURL = URL.createObjectURL(file);
+                 $('#menuModal .img-area').append
+                 (
+                    `<div class='img-wrapper'>
+                        <img src='${imageURL}'/>
+                        <span>&times;</span>
+                    <div>
+                    `
+                );
+            }
+            $('#menuModal .img-wrapper span').click(function(e){
+                const parentElm = e.target.parentElement;
+                parentElm.remove();
+                if($('#menuModal .img-area').children('#menuModal .img-wrapper').length === 0)
+                    $('#menuModal .img-area p').show();
+                })
+            $('#menuModal .img-area p').hide();
+        })
+        //#endregion
+        $('#add_food-form').submit(function(e){
+            e.preventDefault();
+             var formData =new FormData(this)
+            $.ajax({
+                url: '/menu/food/new',
+                type: 'POST',
+                data: formData,
+                processData:false,
+                contentType:false, 
+                success: function(response){
+                    if(response.status == 'success')
+                    {
+                        toastr.success('Thêm món ăn thành công');
+                         $('#menuModal').modal('hide');
+                        setTimeout(()=>{
+                            if(confirm("Trang web cần tải lại để hiển thị bản ghi đã thêm") == true)
+                            location.reload();
+                        },1000)
+                    }
+                    else 
+                        toastr['error']('Tên món ăn đã tồn tại','Thêm món ăn không thành công');
+                        
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                    
+                }
+            });
+        })
+        $('#submit-new_food').on('click', function(){
+            if($('input[name="imgPath"]').val().trim() === "" || 
+            $('input[name="menu_name"]').val().trim() === "" || 
+            $('#menu-group-select').val().trim() === "" || 
+            $('input[name="menu_price"]').val().trim() === "" )
+            {
+                alert("Vui lòng điền đầy đủ thông tin");
+                    return;
+            }
+            else 
+                $('#add_food-form').submit();
+        })
+        
+        function displayNavPage(pageQuantity)
+        {
+            var str= '';
+            for(var i =1; i<= pageQuantity; i++)
+                str = str.concat('', `<li class="page-item d-flex align-items-end" style="cursor:pointer" ><p class="page-link"  aria-label="${i}" style="font-size:14px;cursor:pointer">${i}</p></li>`);
+            return str;
+        }
+       
+        function displayMenu(res)
+        {
+            $('table tbody').empty();
+            $('#menu-content nav').empty();
+            res.listMenuByGroup.forEach(item=>{
+                $('table tbody').append(`<tr>
+                    <td>${item.menu_name}</td>
+                    <td>
+                        ${item.image_url 
+                        ?
+                            `<div class="d-inline-flex position-relative">
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill badge-danger">
+                                    ${item.image_url.length}
+                                    <span class="visually-hidden">New alerts</span>
+                                </span>
+                                <img src="${item.image_url[0]}" class="rounded-4 shadow-4" style="width: 50px; height: 50px;"/>
+                            </div>`
+                        : 
+                        ''
+                        }
+                    </td>
+                    <td>
+                        ${item.ingredient ? item.ingredient.map(ing=> `${ing.name}`) : ''}
+                    </td>
+                    <td>${item.menu_group_name}</td>
+                    <td>${item.price}</td>
+                     <td>
+                        ${item.is_active == 1
+                        ? 
+                            ' <span class="badge badge-success rounded-pill d-inline">Đang bán</span>'
+                        :
+                            '<span class="badge badge-light rounded-pill d-inline">Ngừng bán</span>'
+                        }
+                    </td>
+                    <td style="min-width:200px">
+                        <button type="button" class="btn btn-success btn-sm mb-2" 
+                            data-mdb-target="#updateMenuModal" data-mdb-whatever='${JSON.stringify(item)}' 
+                            data-mdb-ripple-init data-mdb-modal-init >
+                            <i class="lni lni-check-box"></i>
+                            Cập nhật
+                        </button>
+                        <br/>
+                        
+                        ${item.is_active == 1
+                        ? 
+                            `  <button type="button" class="btn btn-danger btn-sm " id="disactive-btn"
+                                data-mdb-target="#exampleModal" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='${JSON.stringify(item)}' data-mdb-status="0">
+                                <i class="lni lni-lock-alt"></i>
+                                Ngừng bán
+                                </button>`
+                        : 
+                            ` <button type="button" class="btn btn-primary btn-sm " id="active-btn" 
+                                data-mdb-target="#exampleModal" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='${JSON.stringify(item)}' data-mdb-status="1">
+                                <i class="lni lni-lock-alt"></i>
+                                Đang bán
+                                </button>`
+                        }
+                         <button type="button" class="btn btn-danger btn-sm "
+                            data-mdb-target="#exampleModal2" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='${JSON.stringify(item)}' >
+                            <i class="lni lni-lock-alt"></i>
+                            Xóa
+                        </button>
+                    </td>
+                </tr>`)
+            })
+            $('#menu-content').append(`
+            <nav aria-label="Page navigation example">
+                <ul class="pagination d-flex justify-content-center">
+                   
+                </ul>
+            </nav>
+            `)
+        }
+        $('#form-submit').submit(function(e){
+            e.preventDefault();
+             var searchValue = $('input[name="search"]').val();
+            $.ajax({
+                url: '/menu/food/filter',
+                type: 'GET',
+                data:{id: $('#form-submit #id-input').val(), page:$('#form-submit #page-input').val(), q:searchValue}, 
+                success: function(response){
+                    console.log(response)
+                    displayMenu(response);
+                    if(response.pageQuantity > 1){
+                        $('.pagination').append(`
+                            <li class="page-item">
+                                <p class="page-link" aria-label="previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </p>
+                            </li>
+                            ${displayNavPage(response.pageQuantity)}
+                            <li class="page-item">
+                                <p class="page-link" aria-label="next" >
+                                    <span aria-hidden="true">&raquo;</span>
+                                </p>
+                            </li>
+                        `)
+                    }
+                   
+                    const list = document.querySelectorAll('.page-link');
+                    list.forEach(listItem=>{
+                        listItem.onclick= (e)=>{
+                            var page =listItem.getAttribute('aria-label');
+                             $('#form-submit #page-input').val(page)
+                            $('#form-submit').submit();
+                        }
+                    });
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        })
+        $('#food .nav-link').click(function(e){
+            e.preventDefault();
+            console.log($(this).attr('id'))
+            $('#form-submit #id-input').val($(this).attr('id'))
+            $('#form-submit #page-input').val(1)
+            $('#form-submit').submit();
+        })
+        $('#search-btn').on('click',function(){
+            $('#form-submit').submit();
+        } )
+        $('input[name="search"]').on('input', function(){
+            if(!$(this).val())
+                $('#form-submit').submit();
+        })
+        $('.pagination .page-link').on('click', function(e){
+            var page =  $(this).attr('aria-label');
+            console.log(page)
+            $('#form-submit #page-input').val(page)
+            $('#form-submit').submit();
+        })
+        
+        
+        //update menu modal 
+        
+    const updateMenuModal = document.getElementById('updateMenuModal');
+    updateMenuModal.addEventListener('show.mdb.modal', function(e){
+        const button = e.relatedTarget;
+        const data = JSON.parse(button.getAttribute('data-mdb-whatever'));
+        $('#updateMenuModal .img-wrapper').remove();
+        $('#updateMenuModal .img-area p').show();
+        var newListImg = data.image_url;
+        $('#imgPath2').on('change', function(e){
+            for(var file of e.target.files)
+            {
+                var imageURL = URL.createObjectURL(file);
+                $('#updateMenuModal .img-area').append
+                (
+                    `<div class='img-wrapper'>
+                        <img src='${imageURL}'/>
+                        <span>&times;</span>
+                    <div>
+                    `
+                );
+            }
+             $('#updateMenuModal .img-area p').hide();
+        })
+        if(data.image_url && data.image_url.length > 0)
+        {
+            data.image_url.forEach(image=>{
+                $('#updateMenuModal .img-area').append
+                 (`<div class='img-wrapper'>
+                        <img src='${image}'/>
+                        <span >&times;</span>
+                <div>`)
+            })
+            $('#updateMenuModal .img-area p').hide();
+        }
+        else 
+        {
+            $('#updateMenuModal .img-area p').show();
+        }
+        
+        $('#updateMenuModal .img-wrapper span').click(function(e){
+            const parentElm = e.target.parentElement;
+            const currentClickIndex = $('#updateMenuModal .img-wrapper span').index($(this));
+            newListImg = newListImg.filter((img, index)=>index !== currentClickIndex);
+            parentElm.remove();
+            if($('#updateMenuModal .img-area .img-wrapper').length === 0)
+                $('#updateMenuModal .img-area p').show();
+        })
+        $('#updateMenuModal input[name="menu_name"]').val(data.menu_name)
+        $('#updateMenuModal input[name="menu_price"]').val(data.price)
+        $('#updateMenuModal input[name="menu_desc"]').val(data.description);
+        $('#updateMenuModal #menu-group-select option').each((index, item)=>{
+            if(item.value == data.menu_group_id)
+                item.setAttribute('selected', true)
+        })
+        if(data.ingredient !== null)
+        {
+            $('#updateMenuModal #ingredient option').each((index, item)=>
+            {
+                data.ingredient.forEach(dataItem=>{
+                    if(item.value == dataItem.id)
+                    {
+                        item.setAttribute('selected', 'true');
+                        return;
+                    }
+                })
+            })
+        }
+        $('#update_food-form').submit(function(e){
+            e.preventDefault();
+             var formData =new FormData(this)
+             formData.append('image_url',JSON.stringify(newListImg));
+             formData.append('id', data.id);
+            $.ajax({
+                url: '/menu/food/update',
+                type: 'POST',       
+                data: formData, 
+                processData:false,
+                contentType:false, 
+                success: function(response){
+                    if(response.status == 'success')
+                    {
+                        toastr.success('Cập nhập món ăn thành công');
+                         $('#updateMenuModal').modal('hide')
+                        setTimeout(()=>{
+                            if(confirm("Trang web cần tải lại để hiển thị bản ghi đã cập nhập") == true)
+                            location.reload();
+                        },1000)
+                    }
+                    else 
+                        toastr['error']('Cập nhập món ăn không thành công');
+                        
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        })
+        $('#submit-update_food').click(function(){
+            $('#update_food-form').submit();
+        })
+
+    })
+
+   
+    const updateStatusMenuModal = document.getElementById('exampleModal');
+    updateStatusMenuModal.addEventListener('show.mdb.modal', function(e){
+        const button = e.relatedTarget;
+        const data = JSON.parse(button.getAttribute('data-mdb-whatever'));
+        const dataStatus = button.getAttribute('data-mdb-status')
+        $('#exampleModal .modal-body p').text(`Bạn có chắc chắn muốn thay đổi trạng thái món ăn ${data.menu_name}`);
+        $('#update-status-food-form').submit(function(e){
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: '/menu/food/update-status',
+                type: 'POST',       
+                data: formData, 
+                success: function(response){
+                    if(response.status == 'success')
+                    {
+                        toastr.success('Cập nhập trạng thái món ăn thành công');
+                        $('#exampleModal').modal('hide')
+                        setTimeout(()=>{
+                            if(confirm("Trang web cần tải lại để hiển thị bản ghi đã cập nhập") == true)
+                            location.reload();
+                        },1000)
+                    }
+                    else 
+                        toastr['error']('Cập nhập trạng thái món ăn không thành công');
+                        
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        })
+        $('#submit-status').click(function(){
+            $('input[name="menu_id"]').val(data.id)
+            $('input[name="status"]').val(dataStatus)
+            $('#update-status-food-form').submit();
+        })
+
+    })
+
+   
+    const deleteMenuModal = document.getElementById('exampleModal2');
+    deleteMenuModal.addEventListener('show.mdb.modal', function(e){
+        const button = e.relatedTarget;
+        const data = JSON.parse(button.getAttribute('data-mdb-whatever'));
+        $('#exampleModal2 .modal-body p').text(`Bạn có chắc chắn muốn xóa món ăn ${data.menu_name}`);
+        $('#delete-food_form').submit(function(e){
+            e.preventDefault();
+            var formData = $(this).serialize();
+            $.ajax({
+                url: '/menu/food/delete',
+                type: 'POST',       
+                data: formData, 
+                success: function(response){
+                    if(response.status == 'success')
+                    {
+                        toastr.success('Xóa món ăn thành công');
+                        $('#exampleModal').modal('hide')
+                        setTimeout(()=>{
+                            if(confirm("Trang web cần tải lại để hiển thị bản ghi đã cập nhập") == true)
+                            location.reload();
+                        },1000)
+                    }
+                    else 
+                        toastr['error']('Xóa món ăn không thành công');
+                        
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        })
+        $('#delete-submit').click(function(){
+            $('input[name="menu_id"]').val(data.id)
+            $('#delete-food_form').submit();
+        })
+
+    })
+    
+    const binModal = document.getElementById('binModal');
+    binModal.addEventListener('show.mdb.modal', function(e){
+        const button = e.relatedTarget;
+        const data = JSON.parse(button.getAttribute('data-mdb-whatever'));
+        function displayBinTable(data)
+        {
+            data.forEach(item=>{
+                $('#binModal table tbody').append(`
+                <tr>
+                    <th scope="row">${item.menu_name}</th>
+                    <td>${item.menu_group_name}</td>
+                    <td>${item.price}</td>
+                    <td>
+                         ${item.is_active == 1
+                         ? 
+                         `<span class="badge badge-success rounded-pill d-inline">Đang bán</span>`
+                         :
+                         `<span class="badge badge-light rounded-pill d-inline">Ngừng bán</span>`
+                         }
+                    </td>
+                    <td class="d-flex flex-row " >
+                        <button type="button" class="btn btn-danger btn-sm d-flex align-items-center" id="delete_perm" data-mdb-id= '${item.id}'>
+                            Xóa vĩnh viễn
+                        </button>
+                        <button type="button" class="btn btn-success btn-sm d-flex align-items-center ml-2" id="restore-btn" data-mdb-id= '${item.id}'>
+                            Khôi phục
+                        </button>
+                    </td>
+                </tr>`)
+            })
+            $('#delete_perm').click(function(){
+                const menuId = $(this).attr('data-mdb-id');
+                $('#bin-action_form').submit(function(e){
+                    e.preventDefault();
+                    $.ajax({
+                        url: '/menu/food/delete-perm',
+                        type: 'GET',       
+                        data: {menu_id: menuId}, 
+                        success: function(response){
+                            if(response.status == 'success')
+                            {
+                                toastr.success('Xóa món ăn thành công');
+                                $('#binModal').modal('hide')
+                                setTimeout(()=>{
+                                    if(confirm("Trang web cần tải lại để hiển thị bản ghi đã cập nhập") == true)
+                                    location.reload();
+                                },1000)
+                            }
+                            else 
+                                toastr['error']('Xóa món ăn không thành công');
+                        },
+                        error: function(xhr, status, error){
+                            console.error(error);
+                        }
+                    })
+              })
+                $('#bin-action_form').submit();
+            })
+            
+            $('#restore-btn').click(function(){
+                 const menuId = $(this).attr('data-mdb-id');
+                $('#bin-action_form').submit(function(e){
+                    e.preventDefault();
+                    $.ajax({
+                        url: '/menu/food/restore',
+                        type: 'GET',       
+                        data: {menu_id: menuId}, 
+                        success: function(response){
+                            if(response.status == 'success')
+                            {
+                                toastr.success('Khôi phục thành công');
+                                $('#binModal').modal('hide')
+                                setTimeout(()=>{
+                                    if(confirm("Trang web cần tải lại để hiển thị bản ghi đã cập nhập") == true)
+                                    location.reload();
+                                },1000)
+                            }
+                            else 
+                                toastr['error']('Khôi phục không thành công');
+                        },
+                        error: function(xhr, status, error){
+                            console.error(error);
+                        }
+                    })
+              })
+                $('#bin-action_form').submit();
+            })
+        }
+        $('#bin-form').submit(function(e){
+            e.preventDefault();
+            $.ajax({
+                url: '/menu/food/bin',
+                type: 'GET',       
+                data: {menu_type: 1}, 
+                success: function(response){
+                    displayBinTable(response.data);
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        })
+          $('#bin-form').submit();
+       
+    })
+    })
+    
+</script>
+

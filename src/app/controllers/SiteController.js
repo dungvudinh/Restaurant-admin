@@ -495,6 +495,17 @@ class SiteController
             console.log(error)
         }
     }
+    async employee(req, res){
+        try 
+        {
+            res.render('employee');
+            
+        }
+        catch(error){
+            console.log(error)
+        }
+    }
+
    
 }
 
