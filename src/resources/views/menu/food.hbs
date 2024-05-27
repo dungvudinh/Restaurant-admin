@@ -128,7 +128,7 @@
                                 </p>
                             </li>
                             {{#each (pageQuantityRendering pageQuantity)}}
-                                <li class="page-item d-flex align-items-end"><p class="page-link" style="font-size:12px;cursor:pointer" aria-label="{{this}}">{{this}}</p></li>
+                                <li class="page-item d-flex align-items-end"><p class="page-link" style="font-size:14px;cursor:pointer" aria-label="{{this}}">{{this}}</p></li>
                             {{/each}}
                             <li class="page-item">
                                 <p class="page-link"  aria-label="next" style="cursor:pointer">
@@ -517,7 +517,7 @@
         {
             var str= '';
             for(var i =1; i<= pageQuantity; i++)
-                str = str.concat('', `<li class="page-item d-flex align-items-end" style="cursor:pointer" ><p class="page-link"  aria-label="${i}" style="font-size:12px;cursor:pointer">${i}</p></li>`);
+                str = str.concat('', `<li class="page-item d-flex align-items-end" style="cursor:pointer" ><p class="page-link"  aria-label="${i}" style="font-size:14px;cursor:pointer">${i}</p></li>`);
             return str;
         }
        
