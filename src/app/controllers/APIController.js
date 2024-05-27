@@ -3,10 +3,10 @@ getLastIdBooking, updateBooking, deleteBooking, cancelBooking,
 getListMenu, getListMenuGroup, updateTable, insertMenu, getListOrder, getLastIdOrder, getMenuById, updateOrder, getOrderById, 
 updateOrderQuantity, deleteOrderMenu, insertOrder, updateOrderOther, updateTableStatus, deleteOrder, updateOrderNote, getClientById, 
 updateStatusOrder, updateBookingStatus, getListMenuClient, insertClientFromClient, insertBookingFromClient, deleteOrderByBooking}  = require('../models/api');
-const {login} = require('../models/account');
+const {login, changePassword, resetPassword} = require('../models/account');
 const jwt = require('jsonwebtoken');
-
-
+const client = require('twilio')(process.env.ACCOUNT_SID, process.env.AUTH_TOKEN)
+console.log(process.env.ACCOUNT_SID)
 class APIController 
 {
     async getListBooking(req,res)
@@ -50,7 +50,6 @@ class APIController
         {
            
             const result = await insertBooking(req.body);
-            res.json(result)
         }
         catch(error)
         {
@@ -165,7 +164,6 @@ class APIController
         try 
         {
             const result = await cancelBooking(req.body.data.booking_code);
-            res.json(result)
         }
         catch(error)
         {
@@ -400,13 +398,38 @@ class APIController
         {
             const result  = await login(req.body);
             if(result.status == 'success')
-                res.cookie('client_token', result.token)
+                res.cookie('client_token', result.token, { expires: new Date(Date.now() + 900000), httpOnly: true })
             res.json(result);
                 
         }
         catch(error)
         {
             console.log(error)
+        }
+    }
+    async changePasswordAuthen(req, res){
+        try 
+        {
+            const result  = await changePassword(req.body);
+            if(result.status == 'success')
+                res.cookie('client_token', result.token, { expires: new Date(Date.now() + 900000), httpOnly: true })
+            res.json(result);
+                
+        }
+        catch(error)
+        {
+            console.log(error)
+        }
+    }
+    async resetPasswordAuthen(req,res){
+        try {
+            const result  = await resetPassword(req.body);
+            if(result.status == 'success')
+                res.cookie('client_token', result.token, { expires: new Date(Date.now() + 900000), httpOnly: true })
+            res.json(result);
+        }
+        catch(error){
+            console.log(error);
         }
     }
     logout(req, res)
@@ -435,7 +458,7 @@ class APIController
                         })
                     else 
                     {
-                        req.full_name= decode.full_name;
+                        req.info_user= decode;
                         next();
                     }
                 })
@@ -450,7 +473,20 @@ class APIController
         {
             return res.json({
                 status:'success',
-                full_name: req.full_name
+                info_user: req.info_user
+            })
+        }
+        catch(error)
+        {
+            throw(error)
+        }
+    }
+    async getUser(req, res){
+        try 
+        {
+            return res.json({
+                status:'success',
+                info_user: req.info_user
             })
         }
         catch(error)
@@ -463,7 +499,7 @@ class APIController
         {
             return res.json({
                 status:'success',
-                full_name: req.full_name
+                info_user: req.info_user
             })
         }
         catch(error)
@@ -553,6 +589,23 @@ class APIController
         catch(error){
             throw(error)
         }
+    }
+    async testSMS(req, res){
+        try 
+        {
+            let msgOption = {
+                from: '+13852009345', 
+                to: '+84559507343',
+                body:"Hey this is message from server"
+            }
+            const message = await client.messages.create(msgOption);
+            console.log(message)
+            res.json(message);
+        }
+        catch(error){
+            console.log(error)
+        }
+       
     }
 }
 module.exports = new APIController;

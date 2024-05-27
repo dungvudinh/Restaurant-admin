@@ -1,9 +1,9 @@
 const connection = require('../../config/db');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const signToken = (full_name)=>
+const signToken = (data)=>
 {
-    return jwt.sign({full_name}, process.env.JWT_SECRET, {
+    return jwt.sign(data, process.env.JWT_SECRET, {
         expiresIn:process.env.JWT_EXPIRES_IN
     })
 }
@@ -92,7 +92,7 @@ const login = (data)=>
             })
         else 
         {
-            connection.query(`SELECT full_name, password FROM account JOIN user ON account.id = user.account_id WHERE phone_number = ${phone_number}`, async (err, res)=>{
+            connection.query(`SELECT full_name, password, phone_number FROM account JOIN user ON account.id = user.account_id WHERE phone_number = ${phone_number}`, async (err, res)=>{
                 if(!err)
                 {
                     if(res.length > 0)
@@ -105,8 +105,8 @@ const login = (data)=>
                             })
                         else 
                         {
-                            console.log(res[0].full_name)
-                            const token = signToken(res[0].full_name);
+                            const token = signToken({full_name:res[0].full_name,phone_number: res[0].phone_number, password: password });
+                            console.log(token);
                             resolve({
                                 status:'success', 
                                 message:'Đăng nhập thành công', 
@@ -131,4 +131,147 @@ const login = (data)=>
     })
 }
 
-module.exports = {register, login}
+const changePassword = (data)=>
+    {
+        return new Promise((resolve, reject)=>{
+            
+            const {phone_number, password, new_password, new_confirm_password}= data;
+            if(!phone_number || !password || !new_password || !new_confirm_password)
+                resolve({
+                    status:'error', 
+                    message: 'Vui lòng điền đầy đủ thông tin'
+                })
+            else {
+                var sql = `SELECT phone_number, password FROM account WHERE phone_number = ${phone_number}`;
+                connection.query(sql, async (err, res)=>{
+                    if(!err)
+                    {
+                        if(res.length > 0){
+                            //số điện thoại tồn tại
+                            //compare password 
+                            const correct = await correctPassword(password, res[0].password);
+                            console.log(password); 
+                            console.log(res[0].password);
+                            if(!correct)
+                                resolve({
+                                    status:'error', 
+                                    message: 'Mật khẩu không đúng. Vui lòng thử lại'
+                                })
+                            else{
+                                if(new_password  != new_confirm_password)
+                                    resolve({
+                                        status:'error', 
+                                        message: 'Mật khẩu xác nhận không khớp. Vui lòng thử lại'
+                                    });
+                                else {
+                                    // mật khẩu xác nhận khớp 
+                                    let hashedPassword = await bcrypt.hash(new_password, 10);
+                                    connection.query(`UPDATE account SET password = '${hashedPassword}' WHERE phone_number = ${phone_number}`, (error, result)=>{
+                                        if(!error)
+                                        {
+                                            connection.query(`SELECT full_name, password, phone_number FROM account JOIN user ON account.id = user.account_id WHERE phone_number = ${phone_number}`, (er,rs)=>{
+                                                const token = signToken({full_name:res[0].full_name,phone_number: res[0].phone_number, password: password });
+                                                resolve({
+                                                    status:'success', 
+                                                    message: 'Thay đổi mật khẩu thành công', 
+                                                    token, 
+                                                    });
+                                            })
+                                            
+                                        }
+                                        else 
+                                        resolve({
+                                            status:'error', 
+                                            message:'Cập nhập mật khẩu không thành công', 
+                                            debug: error
+                                        });
+                                    })
+                                }
+                            }
+                        }
+                        else {
+                            resolve({
+                                status:'error', 
+                                message: 'Số điện thoại không tồn tại.Vui lòng thử lại'
+                            });
+                        }
+                    }
+                       
+                    else 
+                        resolve({
+                            status:'error', 
+                            message:'Gặp lỗi khi truy xuất thông tin tài khoản', 
+                            debug:err
+                        })
+                })
+
+            }
+        })
+    }
+    const resetPassword = (data)=>
+        {
+            return new Promise((resolve, reject)=>{
+                
+                const {phone_number,  new_password, new_confirm_password}= data;
+                if(!new_password || !new_confirm_password)
+                    resolve({
+                        status:'error', 
+                        message: 'Vui lòng điền đầy đủ thông tin'
+                    })
+                else {
+                    var sql = `SELECT phone_number, password FROM account WHERE phone_number = ${phone_number}`;
+                    connection.query(sql, async (err, res)=>{
+                        if(!err)
+                        {
+                            if(res.length > 0){
+                                
+                                    if(new_password  != new_confirm_password)
+                                        resolve({
+                                            status:'error', 
+                                            message: 'Mật khẩu xác nhận không khớp. Vui lòng thử lại'
+                                        });
+                                    else {
+                                        // mật khẩu xác nhận khớp 
+                                        let hashedPassword = await bcrypt.hash(new_password, 10);
+                                        connection.query(`UPDATE account SET password = '${hashedPassword}' WHERE phone_number = ${phone_number}`, (error, result)=>{
+                                            if(!error)
+                                            {
+                                                connection.query(`SELECT full_name, password, phone_number FROM account JOIN user ON account.id = user.account_id WHERE phone_number = ${phone_number}`, (er,rs)=>{
+                                                    const token = signToken({full_name:res[0].full_name,phone_number: res[0].phone_number, password: res[0].password });
+                                                    resolve({
+                                                        status:'success', 
+                                                        message: 'Thay đổi mật khẩu thành công', 
+                                                        token, 
+                                                        });
+                                                })
+                                            }
+                                            else 
+                                            resolve({
+                                                status:'error', 
+                                                message:'Cập nhập mật khẩu không thành công', 
+                                                debug: error
+                                            });
+                                        })
+                                    }
+                                
+                            }
+                            else {
+                                resolve({
+                                    status:'error', 
+                                    message: 'Số điện thoại không tồn tại.Vui lòng thử lại'
+                                });
+                            }
+                        }
+                           
+                        else 
+                            resolve({
+                                status:'error', 
+                                message:'Gặp lỗi khi truy xuất thông tin tài khoản', 
+                                debug:err
+                            })
+                    })
+    
+                }
+            })
+        }
+module.exports = {register, login, changePassword, resetPassword}

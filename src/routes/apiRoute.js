@@ -42,7 +42,11 @@ router.post('/booking/new', apiController.insertBooking);
 router.get('/area', apiController.getListArea);
 router.get('/table',apiController.getListTable)
 router.post('/authentication', apiController.authentication);
+router.post('/change-password', apiController.changePasswordAuthen);
+router.post('/reset-password', apiController.resetPasswordAuthen);
 router.get('/logout', apiController.logout);
+router.get('/user', apiController.verifyAccount,  apiController.getUser);
 router.get('/cashier', apiController.verifyAccount,  apiController.cashier);
 router.get('/reception',apiController.verifyAccount,  apiController.reception);
+router.get('/testsms', apiController.testSMS);
 module.exports = router;

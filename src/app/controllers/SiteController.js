@@ -223,7 +223,6 @@ class SiteController
         {
             const listArea = await getAllArea();
             const listRoomTable = await getAllRoomTable();
-            console.log(listRoomTable)
             var recordNumber = await recordQuantity();
             res.render('room-table', {
                 listArea, 
@@ -495,7 +494,15 @@ class SiteController
             console.log(error)
         }
     }
-   
+    async employee(req, res){
+        try 
+        {
+            res.render('employee');
+        }
+        catch(error){
+            console.log(error)
+        }
+    }
 }
 
 module.exports = new SiteController;
