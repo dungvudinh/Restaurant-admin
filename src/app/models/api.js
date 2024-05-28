@@ -53,7 +53,7 @@ const getListArea = ()=>{
 }
 const getListTable = (areaId, name)=>{
     return new Promise((resolve, reject)=>{
-        var sql = `SELECT * FROM roomtable WHERE  area  ${ areaId ? `= ${areaId}` : 'IS NOT NULL'} AND name ${ name ? ` LIKE '%${name}%'` : 'IS NOT NULL'}`;
+        var sql = `SELECT * FROM roomtable WHERE  area  ${ areaId ? `= ${areaId}` : 'IS NOT NULL'} AND name ${ name ? ` LIKE '%${name}%'` : 'IS NOT NULL'} AND is_active = 1`;
         connection.query(sql, (err, res)=>{
             if(!err)
                 resolve(res);

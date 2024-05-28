@@ -151,7 +151,7 @@ const updateRoomTable = (data)=>
 {
     return new Promise((resolve, reject)=>
     {
-        var sql = `UPDATE roomtable SET name = '${data.name}', area =${data.area}, chair_quantity=${data.chair_quantity}, note='${data.note}', status='${data.status}' WHERE id= ${data.id}`;
+        var sql = `UPDATE roomtable SET name = '${data.name}', area = ${data.area}, chair_quantity=${data.chair_quantity}, note='${data.note}', status='${data.status}' WHERE id= ${data.id}`;
         connection.query(sql, (err, res)=>
         {
             if(!err)
@@ -179,6 +179,25 @@ const updateRoomTable = (data)=>
         })
     })
 }
+const updateStatusTable = (data)=>
+    {
+        return new Promise((resolve, reject)=>{
+          
+            var sql = `UPDATE roomtable SET is_active = ${data.status} WHERE id = ${data.table_id}`;
+            connection.query(sql, (err, res)=>{
+                if(!err)
+                    resolve({
+                        status:'success', 
+                        data:res
+                    });
+                else 
+                    resolve({
+                        status:'error', 
+                        debug:err
+                    })
+            })
+        })
+    }
 const getHistoryByTableId = (tableId)=>
 {
     return new Promise((resolve, reject)=>
@@ -225,4 +244,4 @@ const deleteTable = (tableName)=>
     })
 }
 module.exports= {getAllArea, insertArea, searchQuery, filterData, getAllRoomTable, recordQuantity, 
-    insertRoomTable,updateRoomTable, getHistoryByTableId, deleteTable}
+    insertRoomTable,updateRoomTable, getHistoryByTableId, deleteTable, updateStatusTable}

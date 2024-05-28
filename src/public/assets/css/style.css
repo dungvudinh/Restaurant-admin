@@ -271,9 +271,17 @@ a.sidebar-link:hover {
   grid-template-columns: 0.5fr 0.5fr 1.5fr 1.5fr;
   grid-template-rows: 70px 70px 70px 70px;
   grid-gap: 20px;
-  grid-template-areas: "h1 h1 h2 h3" "h1 h1 h4 h5" "h1 h1 h6 h6" "h1 h1 h8 h9"; }
+  grid-template-areas: "h1 h1 h2 h3" "h1 h1 h4 h5" "h1 h1 h6 h6" "h1 h1 h8 h9"; }
 
 .layout-modal_item {
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  flex-direction: column;
+  padding: 10px; }
+
+.form-group_item {
   border-radius: 10px;
   display: flex;
   justify-content: center;

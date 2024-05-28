@@ -2,8 +2,8 @@
     <div class="container-fluid">
         <div class="mb-3" id="menu-content">
             <!-- Tab items -->
-            <div class="d-flex justify-content-between">
-                <ul class="nav nav-tabs mb-3" id="food" role="tablist">
+            <div class="d-flex justify-content-between containter">
+                <ul class="nav nav-tabs mb-3 col-6" id="food" role="tablist">
                     <li class="nav-item " role="presentation">
                         <a
                         data-mdb-tab-init class="nav-link active" id="2"  href=""
@@ -21,24 +21,24 @@
                     </li>
                     
                 </ul>
-                <div class="d-flex flex-row justify-content-around" style="height:35px;">
-                    <div class="input-group mr-4 " >
+                <div class="d-flex flex-row justify-content-around col-6 mt-2" style="height:35px;">
+                    <div class="input-group mr-4" >
                         <div class="form-outline" data-mdb-input-init>
                             <input type="search" name="search" class="form-control" />
-                            <label class="form-label" for="form1">Search</label>
+                            <label class="form-label" for="form1">Tìm kiếm</label>
                         </div>
                         <button type="button" class="btn btn-primary" data-mdb-ripple-init id="search-btn">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
                     <button type="button" class="btn btn-primary btn-sm d-flex align-items-center"
-                        data-toggle="modal" data-target="#menuModal" data-whatever="@mdo" style="width:150px">
+                        data-toggle="modal" data-target="#menuModal" data-whatever="@mdo" style="width:170px">
                         <i class="lni lni-plus mr-2"></i>
                         Thêm mới
                     </button>
                     
                     <button type="button" class="btn btn-success btn-sm d-flex align-items-center ml-2"
-                    data-mdb-ripple-init data-mdb-modal-init  data-mdb-target="#binModal" style="width:180px">
+                    data-mdb-ripple-init data-mdb-modal-init  data-mdb-target="#binModal" style="width:200px">
                        <i class="lni lni-shopping-basket mr-2 " style="font-size:17px"></i>
                        Thùng rác
                     </button>
@@ -602,7 +602,6 @@
                 type: 'GET',
                 data:{id: $('#form-submit #id-input').val(), page:$('#form-submit #page-input').val(), q:searchValue}, 
                 success: function(response){
-                    console.log(response)
                     displayMenu(response);
                     if(response.pageQuantity > 1){
                         $('.pagination').append(`
@@ -636,7 +635,6 @@
         })
         $('#food .nav-link').click(function(e){
             e.preventDefault();
-            console.log($(this).attr('id'))
             $('#form-submit #id-input').val($(this).attr('id'))
             $('#form-submit #page-input').val(1)
             $('#form-submit').submit();

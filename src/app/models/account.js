@@ -95,6 +95,7 @@ const login = (data)=>
             connection.query(`SELECT full_name, password, phone_number FROM account JOIN user ON account.id = user.account_id WHERE phone_number = ${phone_number}`, async (err, res)=>{
                 if(!err)
                 {
+                    console.log(res);
                     if(res.length > 0)
                     {
                         const correct = await correctPassword(password, res[0].password);
@@ -274,4 +275,74 @@ const changePassword = (data)=>
                 }
             })
         }
-module.exports = {register, login, changePassword, resetPassword}
+const newAccount = (data)=>{
+    return new Promise((resolve, reject)=>{
+        console.log(data);
+        const {full_name, gender, age, email, phone_number, password}= data;
+        var sql = `SELECT phone_number FROM account WHERE phone_number = ${phone_number}`;
+        connection.query(sql, async (err, res)=>{
+            if(!err)
+            {
+                if(res.length > 0)
+                    resolve({
+                        status:'error', 
+                        message: 'Số điện thoại đã được đăng kí. Vui lòng thử lại'
+                    });
+                else 
+                {
+                        let hashedPassword = await bcrypt.hash(password, 10);
+                        connection.query(`INSERT INTO account(phone_number, password) VALUES("${phone_number}", "${hashedPassword}")`, (error, result)=>{
+                            if(!error)
+                            {
+                                var sql = `INSERT INTO user(account_id, full_name, gender, email, age) VALUES(${result.insertId}, '${full_name}', ${gender}, '${email}', ${age})`;
+                                connection.query(sql, (bug, re)=>{
+                                    if(!bug){
+                                        connection.query(`SELECT full_name, gender, age, email, phone_number FROM account  INNER JOIN user ON account.id = user.account_id WHERE account.id = ${result.insertId}`, (er, rs)=>{
+                                            if(!er){
+                                                resolve({
+                                                    status:'success', 
+                                                    message: 'Đăng ký tài khoản thành công', 
+                                                    data:rs
+                                                });
+
+                                            }
+                                            else 
+                                                resolve({
+                                                    status:'error', 
+                                                    message:'Lỗi khi truy xuất thông tin người dùng', 
+                                                    debug: er
+                                                });
+                                        })
+                                    }
+                                    else{
+                                        resolve({
+                                            status:'error', 
+                                            message:'Gặp lỗi khi thêm thông tin nhân viên', 
+                                            debug: bug
+                                        });
+                                    }
+                                })
+                                
+                                
+                            }
+                            else 
+                            resolve({
+                                status:'error', 
+                                message:'Tạo tài khoản không thành công', 
+                                debug: error
+                            });
+                        });
+                }
+
+            }
+               
+            else 
+                resolve({
+                    status:'error', 
+                    message:'Gặp lỗi khi truy xuất thông tin tài khoản', 
+                    debug:err
+                })
+        })
+    })
+}
+module.exports = {register, login, changePassword, resetPassword, newAccount}

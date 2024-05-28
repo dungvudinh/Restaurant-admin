@@ -1,4 +1,4 @@
-const {register, login} = require('../models/account');
+const {register, login, newAccount} = require('../models/account');
 const jwt = require('jsonwebtoken');
 class AccountController
 {
@@ -58,7 +58,15 @@ class AccountController
         }
         
     }
-
+    async newAccount(req,res){
+        try {
+            const result = await newAccount(req.body);
+            res.json(result);
+        }
+        catch(error){
+            throw(error);
+        }
+    }
 }
 
 module.exports = new AccountController;

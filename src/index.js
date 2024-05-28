@@ -81,7 +81,8 @@ app.engine('hbs', engine({
         }, 
         isMultiplePage: (pageQuantity)=>pageQuantity >1  ? true : false, 
         isRoomTableActive:(status) => status == 0 ? false :true, 
-        jsonFormatter:(obj)=>JSON.stringify(obj)
+        jsonFormatter:(obj)=>JSON.stringify(obj),
+        genderConvert:(gender)=>gender === 0 ? 'Nữ' : 'Nam'
     }
 }));
 

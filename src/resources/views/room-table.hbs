@@ -69,23 +69,23 @@
                 <div class="main-right_header d-flex flex-row justify-content-between align-items-center">
                     <h5 class="fw-bold mb-3 mt-3">Phòng/Bàn</h5>
                     <div class="button-group">
-                        <button type="button" class="btn btn-success btn-sm " data-mdb-target="#exampleModal" 
+                        <button type="button" class="btn btn-success btn-sm mr-2" data-mdb-target="#exampleModal" style="height:35px;"
                          data-mdb-ripple-init data-mdb-modal-init >
                             <i class="lni lni-plus"></i>
                             Thêm phòng/bàn
                         </button>
 
 
-                        <button type="button" class="btn btn-success btn-sm">
+                        {{!-- <button type="button" class="btn btn-success btn-sm"  style="height:35px;" id="export-file_btn">
                             <i class="fa-solid fa-file-export"></i>
-                            export
-                        </button>
+                            Xuất file
+                        </button> --}}
 
                     </div>
                     
                 </div>
 
-                <div class="main-right_content mt-2" style="height:700px;overflow:auto">
+                <div class="main-right_content mt-2" style="height:550px;overflow:auto">
                     <table class="table table-light" border="1">
                         <thead class="thead-dark" >
                             <tr>
@@ -120,12 +120,22 @@
                                     </button>
                                     
                                     <br/>
-                                    <button type="button" class="btn btn-danger btn-sm mb-2" style="width:100%;">
+                                    {{#if (isRoomTableActive this.is_active)}}
+                                         <button type="button" class="btn btn-danger btn-sm mb-2" style="width:100%;" data-mdb-ripple-init data-mdb-modal-init
+                                        data-mdb-target="#exampleModal5" data-mdb-whatever='{{jsonFormatter this}}' data-mdb-status="0">
+                                            <i class="lni lni-lock-alt"></i>
+                                            Ngừng hoạt động
+                                        </button>
+                                    {{else}}
+                                        <button type="button" class="btn btn-primary btn-sm mb-2" id="active-btn" 
+                                       data-mdb-target="#exampleModal5" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='{{jsonFormatter this}}' data-mdb-status="1">
                                         <i class="lni lni-lock-alt"></i>
-                                        Ngừng hoạt động
-                                    </button>
+                                        Đang hoạt động
+                                        </button>
+                                    {{/if}}
+                                   
                                     <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init
-                                    data-mdb-target="#exampleModal4" data-mdb-whatever='{{ this.name}}'>
+                                    data-mdb-target="#exampleModal4" data-mdb-whatever='{{this.name}}'>
                                         <i class="lni lni-trash-can"></i>
                                         Xóa
                                     </button>
@@ -383,17 +393,40 @@
     </div>
   </div>
 </div>
+<div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel5" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Cập nhập trạng Phòng/Bàn</h5>
+        <button type="button" class="btn-close" data-mdb-ripple-init data-mdb-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 14px;"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-mdb-ripple-init id="submit-status">Đồng ý</button>
+        <button type="button" class="btn btn-secondary" data-mdb-ripple-init data-mdb-dismiss="modal">Đóng</button>
+      </div>
+    </div>
+  </div>
+</div>
 <form action="" id="form-submit">
     <input name="area" hidden/>
     <input type="text" name="status" hidden>
 </form>
-
+<form action="" id="update-status-table-form">
+    <input type="number" name="table_id" hidden>
+    <input type="number" name="status" hidden>
+</form>
 <form action="" id="history-submit">
     <input type="text" name="tableId" hidden>
 </form>
 
 <form action="" id="delete-table_submit">
     <input type="text" name="tableName" hidden>
+</form>
+<form action="" id="export-file_form">
+   
 </form>
 <script src="/jquery/jquery.min.js"></script>
 <script src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
@@ -435,10 +468,22 @@
                             Cập nhật
                         </button>
                         <br/>
-                        <button type="button" class="btn btn-danger btn-sm mb-2">
+                         ${item.is_active === 1 ? 
+                         `
+                           <button type="button" class="btn btn-danger btn-sm mb-2" style="width:100%;" data-mdb-ripple-init data-mdb-modal-init
+                            data-mdb-target="#exampleModal5" data-mdb-whatever='${JSON.stringify(item)}' data-mdb-status="0">
+                                <i class="lni lni-lock-alt"></i>
+                                Ngừng hoạt động
+                            </button>
+                         `
+                         :
+                         ` <button type="button" class="btn btn-primary btn-sm mb-2" id="active-btn" 
+                            data-mdb-target="#exampleModal5" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='${JSON.stringify(item)}' data-mdb-status="1">
                             <i class="lni lni-lock-alt"></i>
-                            Ngừng hoạt động
-                        </button>
+                            Đang hoạt động
+                            </button>`
+                         }
+                       
                         <button type="button" class="btn btn-danger btn-sm ">
                             <i class="lni lni-trash-can"></i>
                             Xóa
@@ -579,7 +624,6 @@
         if(button.getAttribute('modal-type') == 'update')
         {
                 const data = JSON.parse(button.getAttribute('data-mdb-whatever'));
-                console.log(data)
                 const modalTitle = updateRoomTableModal.querySelector('.modal-title');
                 $('#exampleModal3 input[name="id"]').val(data.id);
                 $('#exampleModal3 input[name="name"]').val(data.name);
@@ -597,6 +641,47 @@
         }
     })
    
+    const updateStatusRoomTable = document.getElementById('exampleModal5');
+    updateStatusRoomTable.addEventListener('show.mdb.modal', function(e){
+        const button = e.relatedTarget;
+        const data = JSON.parse(button.getAttribute('data-mdb-whatever'));
+        const dataStatus = button.getAttribute('data-mdb-status')
+        $('#exampleModal5 .modal-body p').text(`Bạn có chắc chắn muốn thay đổi trạng thái ${data.name}`);
+        $('#update-status-table-form').submit(function(e){
+            e.preventDefault();
+            var formData = $(this).serialize();
+
+            $.ajax({
+                url: '/room-table/update-status',
+                type: 'POST',       
+                data: formData, 
+                success: function(response){
+                    if(response.status == 'success')
+                    {
+                        toastr.success('Cập nhập trạng thái phòng/bàn thành công');
+                        $('#exampleModal5').modal('hide')
+                        setTimeout(()=>{
+                            if(confirm("Trang web cần tải lại để hiển thị bản ghi đã cập nhập") == true)
+                            location.reload();
+                        },1000)
+                    }
+                    else 
+                        toastr['error']('Cập nhập trạng thái phòng/bàn không thành công');
+                        
+                },
+                error: function(xhr, status, error){
+                    console.error(error);
+                }
+            });
+        })
+        $('#submit-status').click(function(){
+            $('input[name="table_id"]').val(data.id)
+            $('input[name="status"]').val(dataStatus)
+            $('#update-status-table-form').submit();
+        })
+
+    })
+
     $('#saveUpdateRoomTable').on('click', function(){
         $('#updateRoomTable').submit(function(e){
             e.preventDefault();
@@ -695,10 +780,27 @@
         })
                 
     })
+
+    $('#export-file_form').submit(function(e){
+        e.preventDefault();
+         $.ajax({
+            url: '/room-table/export-file',
+            type: 'GET',
+            success: function(response){
+               console.log(response)
+            },
+            error: function(xhr, status, error){
+                console.error(error);
+            }
+        });
+        
+    })
+    $('#export-file_btn').on('click', ()=>{
+        $('#export-file_form').submit();
+    })
 </script>
-{{!-- <script>
-    $('#newAreaModal').modal('show');
-</script> --}}
+
+
 
 
 

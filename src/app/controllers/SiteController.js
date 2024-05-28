@@ -5,12 +5,15 @@ const {getOrderCompleted, getTotalMoneyToday,getTotalMoneyYesterday, getOrderBei
     getTop10Menu7Day, getMenuPriceById, getMenuNameById}  = require('../models/dashboard');
 
 const {getAllArea, insertArea, searchQuery, filterData, getAllRoomTable, recordQuantity
-, insertRoomTable, updateRoomTable, getHistoryByTableId, deleteTable} = require('../models/roomTable');
+, insertRoomTable, updateRoomTable, getHistoryByTableId, deleteTable, updateStatusTable} = require('../models/roomTable');
+const {getAllEmployee, searchQueryEmployee, updateStatusEmployee}  = require('../models/employee');
 const jwt = require('jsonwebtoken');
 const axios = require('axios'); // npm install axios
 const CryptoJS = require('crypto-js'); // npm install crypto-js
 const moment = require('moment'); // npm install moment
-const qs = require('qs')
+const qs = require('qs');
+const XLSX = require('xlsx');
+const saveAs = require('file-saver');
 // APP INFO
 const config = {
     app_id: "2553",
@@ -18,7 +21,15 @@ const config = {
     key2: "kLtgPl8HHhfvMuDHPwKfgfsY4Ydm9eIz",
     endpoint: "https://sb-openapi.zalopay.vn/v2/create"
 };
-
+function createData( data ) {
+    return { 
+        'Tên phòng/bàn' : data.name,
+        'Khu vực': data.area,
+        'Số ghế': data.chair_quantity,
+        'Ghi chú': data.note,
+        'Trạng thái': data.is_active, 
+    };
+  }
 
 class SiteController 
 {
@@ -497,12 +508,64 @@ class SiteController
     async employee(req, res){
         try 
         {
-            res.render('employee');
+            const listEmployee = await getAllEmployee();
+            res.render('employee', {
+                listEmployee
+            });
         }
         catch(error){
             console.log(error)
         }
     }
+    async filterEmployee(req,res){
+        try 
+        {
+            const result = await searchQueryEmployee(req.query.q);
+            console.log(result);
+            res.json(result);
+        }
+        catch(error){
+            console.log(error);
+        }
+    }
+   async updateStatusEmployee(req,res){
+    try{
+        const result = await updateStatusEmployee(req.body);
+        res.json(result);
+    }
+    catch(error){
+        console.log(error);
+    }
+   } 
+   async updateStatusTable(req,res){
+    try{
+        const result = await updateStatusTable(req.body);
+        console.log(result);
+        res.json(result);
+    }
+    catch(error){
+        console.log(error)
+    }
+   }
+   async exportFile(req, res){
+    try{
+        const listRoomTable = await getAllRoomTable();
+        const excelData = async (listRoomTable)=>{
+            return await listRoomTable.map(roomTable=>createData(roomTable))
+          }
+        var data = await excelData(listRoomTable);
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'BaoCaoDatBan');
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const fileData = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+        saveAs(fileData, 'baoCaoDatBan' + '.xlsx');
+        res.send(excelBuffer)
+    }
+    catch(error){
+        console.log(error);
+    }
+   }
 }
 
 module.exports = new SiteController;
