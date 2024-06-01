@@ -24,6 +24,7 @@ class APIController
             if(status.canceled == 'true')
                 statusConvert.push(5)
             var result = await getListBooking(booking_code,statusConvert, table_id, timeline);
+            console.log(result);
             var response = await result.map(async (dataItem)=>{
                 var tableObj = null;
                 if(dataItem.table_id != null)
@@ -37,6 +38,7 @@ class APIController
                 return {...dataItem, table:data, table_id: JSON.parse(dataItem.table_id)}      
             })
             const dataConvert =  await Promise.all(response);
+            console.log(dataConvert);
             res.json(dataConvert);
         }
         catch(error)
@@ -48,8 +50,8 @@ class APIController
     {
         try 
         {
-           
             const result = await insertBooking(req.body);
+            res.json(result);
         }
         catch(error)
         {
@@ -97,7 +99,7 @@ class APIController
     {
         try 
         {
-            const areaId = req.query.area;
+            const areaId = req.query.area_id;
             const name = req.query.q;
             var result = await getListTable(areaId, name);
             res.json(result);

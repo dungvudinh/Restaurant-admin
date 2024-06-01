@@ -56,7 +56,7 @@ app.engine('hbs', engine({
             if(totalYesterday == 0)
                 return 100;
             else 
-                return (((totalToday - totalYesterday)/totalYesterday) *100).toFixed(1)
+                return ((totalToday/totalYesterday) *100).toFixed(1)
         }, 
         isHasRevenue: (numOfOrderCompleted) => numOfOrderCompleted > 0 ? true : false, 
         isHasClient: (totalClientToday)=>totalClientToday > 0 ? true : false, 

@@ -46,7 +46,7 @@ class SiteController
                     var orderItemParse = JSON.parse(orderItem.order_menu);
                     var total = await orderItemParse.reduce(async (acc, orderMenuItem)=>{
                         var menuPrice = await getMenuPriceById(orderMenuItem.order_menu_id);
-                        return await acc + menuPrice[0].price;
+                        return await acc + (menuPrice[0].price * orderMenuItem.order_menu_quantity);
                     }, 0)
                       
                     return await stored + total;
@@ -59,7 +59,7 @@ class SiteController
                     var orderItemParse = JSON.parse(orderItem.order_menu);
                     var total = await orderItemParse.reduce(async (acc, orderMenuItem)=>{
                         var menuPrice = await getMenuPriceById(orderMenuItem.order_menu_id);
-                        return await acc + menuPrice[0].price;
+                        return await acc + (menuPrice[0].price * orderMenuItem.order_menu_quantity);
                     }, 0)
                       
                     return await stored + total;
@@ -67,18 +67,19 @@ class SiteController
             }
             var orderServed = await getOrderBeingServed();
             var order = await getTotalMoneyServed();
+            console.log(order)
             var totalMoneyServed = 0;
             if(order.length > 0){
                 totalMoneyServed = await order.reduce(async(stored, orderItem)=>{
                     var orderItemParse = JSON.parse(orderItem.order_menu);
                     var total = await orderItemParse.reduce(async (acc, orderMenuItem)=>{
                         var menuPrice = await getMenuPriceById(orderMenuItem.order_menu_id);
-                        return await acc + menuPrice[0].price;
+                        return await acc + (menuPrice[0].price * orderMenuItem.order_menu_quantity);
                     }, 0)
                     return await stored + total;
                 }, 0)
             }
-            
+            console.log(totalMoneyServed)
             var totalClientToday = await getTotalClientToday();
             var totalClientYesterday = await getTotalClientYesterday();
             let match2;
@@ -94,7 +95,7 @@ class SiteController
                         var totalChild = await array.reduce(async (total, arrayChild)=>{
                             
                             var menuPrice = await getMenuPriceById(arrayChild.order_menu_id);
-                            return await total + menuPrice[0].price;
+                            return await total + (menuPrice[0].price * arrayChild.order_menu_quantity);
                         }, 0)
                         
                         return await acc + totalChild;
@@ -115,7 +116,7 @@ class SiteController
                         var totalChild = await array.reduce(async (total, arrayChild)=>{
                             
                             var menuPrice = await getMenuPriceById(arrayChild.order_menu_id);
-                            return await total + menuPrice[0].price;
+                            return await total + (menuPrice[0].price * arrayChild.order_menu_quantity);
                         }, 0)
                         
                         return await acc + totalChild;
@@ -136,7 +137,7 @@ class SiteController
                         var totalChild = await array.reduce(async (total, arrayChild)=>{
                             
                             var menuPrice = await getMenuPriceById(arrayChild.order_menu_id);
-                            return await total + menuPrice[0].price;
+                            return await total + (menuPrice[0].price * arrayChild.order_menu_quantity);
                         }, 0)
                         
                         return await acc + totalChild;
@@ -156,7 +157,7 @@ class SiteController
                         var totalChild = await array.reduce(async (total, arrayChild)=>{
                             
                             var menuPrice = await getMenuPriceById(arrayChild.order_menu_id);
-                            return await total + menuPrice[0].price;
+                            return await total + (menuPrice[0].price * arrayChild.order_menu_quantity);
                         }, 0)
                         return await acc + totalChild;
                 }, 0)

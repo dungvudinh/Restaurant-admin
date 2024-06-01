@@ -15,11 +15,11 @@ button
 
 textarea 
 {
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 input 
 {
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 input:focus 
 {
@@ -54,7 +54,7 @@ a:hover
 }
 a {
     text-decoration: none;
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 
 li {
@@ -62,7 +62,7 @@ li {
 }
 select 
 {
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 p 
 {
@@ -70,7 +70,7 @@ p
 }
 body {
     font-family: 'Poppins', sans-serif;
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 
 .wrapper {
@@ -78,7 +78,7 @@ body {
 }
 table, nav
 {
-    font-size: 12px !important;
+    font-size: 14px !important;
 }
 .main {
     display: flex;
@@ -89,12 +89,12 @@ table, nav
     transition: all 0.35s ease-in-out;
     background-color: #fff;
     min-width: 0;
-    margin-left:220px;
+    margin-left:250px;
 }
 
 #sidebar {
-    width: 220px;
-    min-width: 220px;
+    width: 300px;
+    min-width: 250px;
     z-index: 1000;
     transition: all .25s ease-in-out;
     background-color: #0e2238;
@@ -103,7 +103,7 @@ table, nav
 }
 
 #sidebar.expand {
-    width: 220px;
+    width: 250px;
     min-width: 220px;
 }
 

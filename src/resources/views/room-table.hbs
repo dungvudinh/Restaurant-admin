@@ -1,8 +1,4 @@
-{{!-- <script>
-    var queryParameters = new URLSearchParams(window.location.search);
-    console.log(queryParameters.get(status));
-</script> --}}
-<main class="content">
+<main class="content" style="height: 680px;">
   <div class="container-fluid">
     <div class="mb-3">
      
@@ -121,26 +117,26 @@
                                     
                                     <br/>
                                     {{#if (isRoomTableActive this.is_active)}}
-                                         <button type="button" class="btn btn-danger btn-sm mb-2" style="width:100%;" data-mdb-ripple-init data-mdb-modal-init
+                                         <button type="button" class="btn btn-danger btn-sm mb-2 d-flex align-items-center" data-mdb-ripple-init data-mdb-modal-init
                                         data-mdb-target="#exampleModal5" data-mdb-whatever='{{jsonFormatter this}}' data-mdb-status="0">
-                                            <i class="lni lni-lock-alt"></i>
+                                            <i class="lni lni-lock-alt" style="margin-right:2px;"></i>
                                             Ngừng hoạt động
                                         </button>
                                     {{else}}
-                                        <button type="button" class="btn btn-primary btn-sm mb-2" id="active-btn" 
+                                        <button type="button" class="btn btn-primary btn-sm mb-2 d-flex align-items-center" id="active-btn" 
                                        data-mdb-target="#exampleModal5" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='{{jsonFormatter this}}' data-mdb-status="1">
-                                        <i class="lni lni-lock-alt"></i>
+                                        <i class="lni lni-lock-alt" style="margin-right:2px;"></i>
                                         Đang hoạt động
                                         </button>
                                     {{/if}}
                                    
-                                    <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init
+                                    {{!-- <button type="button" class="btn btn-danger btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init
                                     data-mdb-target="#exampleModal4" data-mdb-whatever='{{this.name}}'>
                                         <i class="lni lni-trash-can"></i>
                                         Xóa
                                     </button>
                                    
-                                    <br/ >
+                                    <br/ > --}}
                                     <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
                                      data-mdb-target="#exampleModal2" data-mdb-whatever='{{this.id}}' >
                                        <i class="fa-solid fa-clock-rotate-left"></i>
@@ -453,14 +449,13 @@
             }
         function addRowTable(response)
         {
-             $('table tbody').empty();
             response.forEach(item=>{
                 $('table tbody').append(`<tr id="row-id-${item.id}">
                     <td>${item.name}</td>   
                     <td>${item.area}</td>
                     <td>${item.chair_quantity}</td>
                     <td>${item.note}</td>
-                    <td><span class="badge badge-${item.status ==1 ? 'success' :'light'}">${item.status == 1 ? 'Đang hoạt động' : 'Ngừng hoạt động'}</span></td>
+                    <td><span class="badge badge-${item.is_active ==1 ? 'success' :'light'}">${item.is_active == 1 ? 'Đang hoạt động' : 'Ngừng hoạt động'}</span></td>
                     <td>
                          <button type="button" class="btn btn-success btn-sm mb-2" data-mdb-ripple-init data-mdb-modal-init 
                             data-mdb-target="#exampleModal3" data-mdb-whatever='${JSON.stringify(item)}' modal-type="update">
@@ -470,26 +465,20 @@
                         <br/>
                          ${item.is_active === 1 ? 
                          `
-                           <button type="button" class="btn btn-danger btn-sm mb-2" style="width:100%;" data-mdb-ripple-init data-mdb-modal-init
+                           <button type="button" class="btn btn-danger btn-sm  d-flex align-items-center"  data-mdb-ripple-init data-mdb-modal-init
                             data-mdb-target="#exampleModal5" data-mdb-whatever='${JSON.stringify(item)}' data-mdb-status="0">
-                                <i class="lni lni-lock-alt"></i>
+                                <i class="lni lni-lock-alt" style="margin-right:2px "></i>
                                 Ngừng hoạt động
                             </button>
                          `
                          :
-                         ` <button type="button" class="btn btn-primary btn-sm mb-2" id="active-btn" 
+                         ` <button type="button" class="btn btn-primary btn-sm  d-flex align-items-center" id="active-btn" 
                             data-mdb-target="#exampleModal5" data-mdb-ripple-init data-mdb-modal-init data-mdb-whatever='${JSON.stringify(item)}' data-mdb-status="1">
-                            <i class="lni lni-lock-alt"></i>
+                            <i class="lni lni-lock-alt" style="margin-right:2px"></i>
                             Đang hoạt động
                             </button>`
                          }
-                       
-                        <button type="button" class="btn btn-danger btn-sm ">
-                            <i class="lni lni-trash-can"></i>
-                            Xóa
-                        </button>
-                        <br/ >
-                            <button type="button" class="btn btn-info btn-sm mt-2" data-mdb-ripple-init 
+                            <button type="button" class="btn btn-success btn-sm mt-2" data-mdb-ripple-init 
                             data-mdb-modal-init data-mdb-target="#exampleModal2">
                             <i class="fa-solid fa-clock-rotate-left"></i>
                             Lịch sử giao dịch
@@ -507,12 +496,16 @@
                 type: 'POST',
                 data: formData,
                 success: function(response){
-                    $('#area-select').append(`
+                    {{!-- $('#area-select').append(`
                     <option value=${response[0].id}>
                         ${response[0].name}
-                    </option>`)
+                    </option>`) --}}
                     $('#newAreaModal').modal('hide');
                     toastr.success('Thêm khu vực thành công');
+                        setTimeout(()=>{
+                            if(confirm("Trang web cần tải lại để hiển thị bản ghi đã cập nhập") == true)
+                            location.reload();
+                        },1000)
                 },
                 error: function(xhr, status, error){
                     console.error(error);
@@ -533,6 +526,7 @@
                 data: { status:queryParams.get('status'), area:queryParams.get('area'), q:searchValue },
                 success: function(response){
                     console.log(response);
+                    $('table tbody').empty();
                     addRowTable(response)
                 },
                 error: function(xhr, status, error){
@@ -591,7 +585,7 @@
                 success: function(response){
                     if(response.status == 'success')
                     {
-                        addRowTable(response.data)
+                        {{!-- addRowTable(response.data) --}}
                         toastr.success('Thêm phòng bàn thành công');
                          $('#exampleModal').modal('hide')
                         setTimeout(()=>{
@@ -632,7 +626,7 @@
                         item.setAttribute('selected', true)
                 })
                 $('#exampleModal3 #status-select option').each((index, item)=>{
-                    if(item.value == data.status)
+                    if(item.value == data.is_active)
                         item.setAttribute('selected', true)
                 })
                 $('#exampleModal3 input[name="chair_quantity"]').val(data.chair_quantity);
@@ -686,6 +680,7 @@
         $('#updateRoomTable').submit(function(e){
             e.preventDefault();
             var formData = $(this).serialize();
+            console.log(formData);
             $.ajax({
                 url: '/room-table/update',
                 type: 'POST',

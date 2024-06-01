@@ -67,7 +67,7 @@ const filterData = (status, area, q)=>
     {
         console.log(status)
         console.log(area);
-        var sql = `SELECT * FROM roomtable WHERE area ${area == 'all' ? 'IS NOT NULL' : `LIKE '%${area}%'`} AND status ${status =='all' ? 'IS NOT NULL' : `= 0`} AND name ${(q == null || q== '') ? 'IS NOT NULL' : `LIKE '%${q}%'`} AND deleted_at IS NULL`;
+        var sql = `SELECT * FROM roomtable WHERE area ${area == 'all' ? 'IS NOT NULL' : `LIKE '%${area}%'`} AND is_active ${status =='all' ? 'IS NOT NULL' : `= ${status}`} AND name ${(q == null || q== '') ? 'IS NOT NULL' : `LIKE '%${q}%'`} AND deleted_at IS NULL`;
         console.log(sql)
         connection.query(sql,  (err, res)=>
         {
@@ -123,8 +123,8 @@ const insertRoomTable = (data)=>
 {
     return new Promise((resolve, reject)=>
     {
-        var sql = "INSERT INTO roomtable (name, area,chair_quantity, note, status) VALUES(?)";
-        var values = [data.name, data.area, data.chair_quantity, data.note, 1];
+        var sql = "INSERT INTO roomtable (name, area,chair_quantity, note) VALUES(?)";
+        var values = [data.name, data.area, data.chair_quantity, data.note];
         connection.query(sql,[values],  (err, res)=>
         {
             if(!err)
@@ -151,7 +151,7 @@ const updateRoomTable = (data)=>
 {
     return new Promise((resolve, reject)=>
     {
-        var sql = `UPDATE roomtable SET name = '${data.name}', area = ${data.area}, chair_quantity=${data.chair_quantity}, note='${data.note}', status='${data.status}' WHERE id= ${data.id}`;
+        var sql = `UPDATE roomtable SET name = '${data.name}', area = ${data.area}, chair_quantity=${data.chair_quantity}, note='${data.note}', is_active='${data.status}' WHERE id= ${data.id}`;
         connection.query(sql, (err, res)=>
         {
             if(!err)
