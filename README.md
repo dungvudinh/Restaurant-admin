@@ -6,7 +6,7 @@ Website admin allows viewing statistics about business situation. In addition, a
 
 - #### Dashboard 
 
-![](https://drive.google.com/file/d/1JzzA8Oj1x-yTTSCe17FyrXLs5bVSfV-K/view?usp=sharing)
+![](./src/public/assets/readMeImg/img1.png)
 
 
 ![](./src/public/assets/readMeImg/img2.png)
