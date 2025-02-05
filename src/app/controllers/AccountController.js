@@ -8,7 +8,7 @@ class AccountController
         {
             const result = await register(req.body);
             console.log(result)
-             res.json(result);
+            res.json(result);
         }
         catch(error)
         {
